@@ -1,0 +1,77 @@
+{
+  "_comment": "target -> { group, help }. The splitter errors on any target missing here, so a new upstream target can never be silently dropped. `help` becomes the target's `## ...` annotation, which the generated `help` rule greps out of $(MAKEFILE_LIST).",
+
+  "dev":                        { "group": "docker-dev", "help": "Foreground compose up (logs attached)" },
+  "start":                      { "group": "docker-dev", "help": "Start the full stack detached" },
+  "stop":                       { "group": "docker-dev", "help": "Stop containers (keeps volumes)" },
+  "restart":                    { "group": "docker-dev", "help": "Phased force-recreate + health checks" },
+  "rebuild":                    { "group": "docker-dev", "help": "Rebuild all images, recreate, health check" },
+  "rebuild-api":                { "group": "docker-dev", "help": "Rebuild and recreate the API container only" },
+  "health":                     { "group": "docker-dev", "help": "compose ps + API/realtime health curls" },
+  "fresh":                      { "group": "docker-dev", "help": "Tear down volumes + rebuild (destructive DB reset)" },
+  "dev-infra":                  { "group": "docker-dev", "help": "MongoDB + Redis only (for api-watch)" },
+  "dev-logs":                   { "group": "docker-dev", "help": "Follow logs for the whole stack" },
+  "logs":                       { "group": "docker-dev", "help": "Follow logs for one service (S=api)" },
+  "dev-shell":                  { "group": "docker-dev", "help": "Shell into the API container" },
+  "db-shell":                   { "group": "docker-dev", "help": "Open a mongosh shell on the project database" },
+
+  "jwt-secret":                 { "group": "setup", "help": "Generate a strong JWT_SECRET into api/.env (idempotent)" },
+  "api-install":                { "group": "setup", "help": "pnpm install in api/" },
+  "api-auth-dist":              { "group": "setup", "help": "Rebuild shared auth/core package dist into api/node_modules" },
+  "design-system-setup":        { "group": "setup", "help": "Check out a branch of the shared design system" },
+  "wyscan-dev-setup":           { "group": "setup", "help": "Clone the shared package repos into ../<ecosystem>" },
+
+  "api-watch":                  { "group": "api-dev", "help": "Infra in Docker, API on the host with hot reload" },
+  "api-watch-debug":            { "group": "api-dev", "help": "As api-watch, with the inspector (BRK=1 to break on start)" },
+  "realtime-dev":               { "group": "api-dev", "help": "Run the Socket.IO realtime service on the host" },
+  "log-agent":                  { "group": "api-dev", "help": "Run the log agent on the host" },
+
+  "api-build":                  { "group": "api-build", "help": "Compile the API (tsc)" },
+  "api-lint":                   { "group": "api-build", "help": "Lint the API (biome)" },
+  "api-format":                 { "group": "api-build", "help": "Format the API (biome)" },
+  "api-test":                   { "group": "api-build", "help": "Run API unit tests (vitest)" },
+
+  "push-check":                 { "group": "verify", "help": "Run every selected workspace's pre-push gate" },
+  "push-verify":                { "group": "verify", "help": "Show push-notification verification usage" },
+  "push-verify-run":            { "group": "verify", "help": "Run push-notification verification (needs ACCESS_TOKEN)" },
+
+  "api-docker-check":           { "group": "docker-release", "help": "Lint + test gate before building an image" },
+  "api-docker-validate-version":{ "group": "docker-release", "help": "Assert the release version is x.y.z" },
+  "api-docker-build":           { "group": "docker-release", "help": "Build the production API image" },
+  "api-docker-push":            { "group": "docker-release", "help": "Push the API image to the registry" },
+  "api-docker-login":           { "group": "docker-release", "help": "Log in to the container registry" },
+  "api-docker-release":         { "group": "docker-release", "help": "Lint, test, build, push, then bump the patch version" },
+  "api-deploy-bundle":          { "group": "docker-release", "help": "Tar docker/deploy for rsync to a server" },
+
+  "api-production-upgrade":     { "group": "production", "help": "Server: pull + restart api and realtime" },
+  "api-production-health":      { "group": "production", "help": "Server: compose ps + health curls" },
+  "api-production-restart":     { "group": "production", "help": "Server: recreate the full stack" },
+  "api-production-restart-api": { "group": "production", "help": "Server: recreate the api container" },
+  "api-production-restart-app": { "group": "production", "help": "Server: recreate the app container" },
+
+  "site-dev":                   { "group": "web:site",  "help": "Run the marketing site dev server" },
+  "admin-dev":                  { "group": "web:admin", "help": "Run the admin dev server" },
+  "app-dev":                    { "group": "web:app",   "help": "Run the member app dev server" },
+
+  "mobile-dev":                 { "group": "mobile", "help": "Start Expo (Metro) on the LAN" },
+  "mobile-ios":                 { "group": "mobile", "help": "Native iOS debug build on a simulator" },
+  "mobile-ios-device":          { "group": "mobile", "help": "Native iOS build on a physical iPhone" },
+  "mobile-ios-list":            { "group": "mobile", "help": "List available iPhone simulators" },
+  "mobile-android":             { "group": "mobile", "help": "Native Android debug build" },
+  "mobile-android-device":      { "group": "mobile", "help": "Native Android build on a physical device" },
+  "mobile-android-list":        { "group": "mobile", "help": "List bootable AVDs and attached devices" },
+  "mobile-android-emulator":    { "group": "mobile", "help": "Boot an emulator (AVD=name, WIPE=1)" },
+  "mobile-android-up":          { "group": "mobile", "help": "Boot emulator, wait, build and install (one shot)" },
+  "mobile-android-wait":        { "group": "mobile", "help": "Block until the emulator finishes booting" },
+  "mobile-android-kill":        { "group": "mobile", "help": "Stop emulators and clear stale AVD locks" },
+  "mobile-android-reverse":     { "group": "mobile", "help": "adb reverse 8081/8080 for localhost access" },
+  "mobile-typecheck":           { "group": "mobile", "help": "Type-check the mobile app (tsc --noEmit)" },
+  "mobile-test":                { "group": "mobile", "help": "Run mobile unit tests (vitest)" },
+  "mobile-check":               { "group": "mobile", "help": "Mobile type-check + tests" },
+
+  "ship-it":                    { "group": "ship", "help": "Detect changes, pre-flight, confirm, ship a release" },
+
+  "features-archive":           { "group": "docs", "help": "Archive docs/features up to UP_TO=NNNN" },
+  "features-index":             { "group": "docs", "help": "Regenerate the docs/features index" },
+  "docs-links-check":           { "group": "docs", "help": "Verify relative links across docs and AI configs" }
+}

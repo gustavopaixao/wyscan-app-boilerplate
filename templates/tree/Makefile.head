@@ -1,0 +1,36 @@
+# __PROJECT_NAME__ monorepo: Wyscan sources live in ../__ECOSYSTEM_DIR__/{Packages,DesignSystem} (see make wyscan-dev-setup).
+
+# Production API Docker
+IMAGE_REGISTRY ?= __IMAGE_REGISTRY__
+IMAGE_NAME ?= __PROJECT_SLUG__-api
+TAG ?= latest
+# Target OS/arch for GHCR images (production servers are usually linux/amd64)
+DOCKER_PLATFORM ?= linux/amd64
+# WYSCAN_SOURCE=local (Mode A: WyscanPackages clone) | registry (Mode B: GitHub npm + NPM_TOKEN)
+WYSCAN_SOURCE ?= local
+WYSCAN_PACKAGES ?= ../__ECOSYSTEM_DIR__/Packages
+DOCKER_DEPLOY_ENV := $(if $(filter registry,$(WYSCAN_SOURCE)),production,development)
+GIT_SHA ?= $(shell git rev-parse --short HEAD 2>/dev/null)
+API_IMAGE := $(IMAGE_REGISTRY)/$(IMAGE_NAME)
+API_DEPLOY_DIR ?= docker/deploy
+# Build machine GHCR/npm credentials (see docker/build.env.example)
+DOCKER_BUILD_ENV_FILE := docker/build.env
+DOCKER_BUILD_ENV = set -a; [ -f $(DOCKER_BUILD_ENV_FILE) ] && . $(DOCKER_BUILD_ENV_FILE); set +a;
+API_PKG_VERSION := $(shell node -p "JSON.parse(require('fs').readFileSync('api/package.json','utf8')).version" 2>/dev/null)
+DOCKER_VERSION := $(if $(VERSION),$(VERSION),$(API_PKG_VERSION))
+
+DEV_COMPOSE := docker compose -f docker/docker-compose.yml
+
+# Group fragments. `wildcard` means a deselected group is simply absent,
+# not an error.
+include $(wildcard make/*.mk)
+
+.DEFAULT_GOAL := help
+.PHONY: help
+help: ## Show this help
+	@echo "__PROJECT_NAME__"
+	@echo ""
+	@grep -hE '^[a-zA-Z0-9_.-][a-zA-Z0-9_ .-]*:.*##' $(MAKEFILE_LIST) \
+	  | sed 's/:.*##/##/' \
+	  | sort \
+	  | awk -F'##' '{printf "  \033[36m%-28s\033[0m %s\n", $$1, $$2}'

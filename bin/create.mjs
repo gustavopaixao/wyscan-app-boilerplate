@@ -5,7 +5,8 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 
 import { derive, validate, DEFAULT_PORTS, ALL_WORKSPACES } from "../src/config/derive.mjs";
-import { planFiles } from "../src/generate/plan.mjs";
+import { planFiles, ALL_MAKE_GROUPS } from "../src/generate/plan.mjs";
+import { ALL_SERVICES } from "../src/generate/compose.mjs";
 import { writeProject } from "../src/generate/write.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -25,6 +26,8 @@ Options
   --bundle-id <id>       mobile bundle id      (default: com.<slug>.app)
   --dev-host <host>      mobile LAN dev host   (default: localhost)
   --workspaces <list>    ${ALL_WORKSPACES.join(",")}
+  --make-groups <list>   Make target groups to include (default: all applicable)
+  --services <list>      compose services       (default: ${ALL_SERVICES.join(",")})
   --ai <list>            claude,cursor,github  (default: claude,github)
   --wyscan <mode>        local | registry | standalone   (default: standalone)
   --config <file.json>   load answers from a file
@@ -46,6 +49,8 @@ function main() {
       "bundle-id": { type: "string" },
       "dev-host": { type: "string" },
       workspaces: { type: "string" },
+      "make-groups": { type: "string" },
+      services: { type: "string" },
       ai: { type: "string" },
       wyscan: { type: "string" },
       config: { type: "string" },
@@ -82,6 +87,8 @@ function main() {
     bundleId: values["bundle-id"] ?? fromFile.bundleId,
     devHost: values["dev-host"] ?? fromFile.devHost,
     workspaces: values.workspaces?.split(",") ?? fromFile.workspaces ?? ALL_WORKSPACES,
+    makeGroups: values["make-groups"]?.split(",") ?? fromFile.makeGroups ?? ALL_MAKE_GROUPS,
+    services: values.services?.split(",") ?? fromFile.services ?? ALL_SERVICES,
     aiTools: values.ai?.split(",") ?? fromFile.aiTools ?? ["claude", "github"],
     wyscanMode: values.wyscan ?? fromFile.wyscanMode ?? "standalone",
     ports: { ...DEFAULT_PORTS, ...(fromFile.ports ?? {}) },

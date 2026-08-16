@@ -8,9 +8,49 @@ import { renderPath } from "../tokens/apply.mjs";
 /** Groups that are always emitted regardless of selection. */
 const ALWAYS = new Set(["core", "make", "scripts", "docs"]);
 
+/**
+ * A Make fragment needs both its group selected AND the workspace it drives.
+ * Selecting `mobile` targets in an api-only project would produce rules that
+ * cd into a directory that was never generated.
+ */
+const MAKE_GROUP_REQUIRES = {
+  "docker-dev": "api",
+  "api-dev": "api",
+  "api-build": "api",
+  "docker-release": "api",
+  production: "api",
+  mobile: "mobile",
+  "web:site": "web:site",
+  "web:app": "web:app",
+  "web:admin": "web:admin",
+};
+
+export const ALL_MAKE_GROUPS = [
+  "setup",
+  "docker-dev",
+  "api-dev",
+  "api-build",
+  "web:site",
+  "web:app",
+  "web:admin",
+  "mobile",
+  "docker-release",
+  "production",
+  "ship",
+  "verify",
+  "docs",
+];
+
 /** Map a manifest group to the config flag that gates it. */
 function isGroupSelected(group, cfg) {
   if (ALWAYS.has(group)) return true;
+
+  if (group.startsWith("make:")) {
+    const mk = group.slice(5);
+    if (!cfg.makeGroups.includes(mk)) return false;
+    const required = MAKE_GROUP_REQUIRES[mk];
+    return !required || cfg.workspaces.includes(required);
+  }
 
   switch (group) {
     case "api":

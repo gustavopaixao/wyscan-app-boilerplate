@@ -869,14 +869,6 @@
       "dotEscaped": false
     },
     {
-      "src": "tree/Makefile",
-      "dest": "Makefile",
-      "group": "make",
-      "mode": 644,
-      "raw": false,
-      "dotEscaped": false
-    },
-    {
       "src": "tree/api/_env.example",
       "dest": "api/.env.example",
       "group": "api",
@@ -3008,6 +3000,118 @@
       "src": "tree/web/_site/vitest.setup.ts",
       "dest": "web/__PROJECT_SLUG__-site/vitest.setup.ts",
       "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/Makefile.head",
+      "dest": "Makefile",
+      "group": "core",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/make/docker-dev.mk",
+      "dest": "make/docker-dev.mk",
+      "group": "make:docker-dev",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/make/setup.mk",
+      "dest": "make/setup.mk",
+      "group": "make:setup",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/make/api-dev.mk",
+      "dest": "make/api-dev.mk",
+      "group": "make:api-dev",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/make/api-build.mk",
+      "dest": "make/api-build.mk",
+      "group": "make:api-build",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/make/verify.mk",
+      "dest": "make/verify.mk",
+      "group": "make:verify",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/make/docker-release.mk",
+      "dest": "make/docker-release.mk",
+      "group": "make:docker-release",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/make/production.mk",
+      "dest": "make/production.mk",
+      "group": "make:production",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/make/web-site.mk",
+      "dest": "make/web-site.mk",
+      "group": "make:web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/make/web-admin.mk",
+      "dest": "make/web-admin.mk",
+      "group": "make:web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/make/web-app.mk",
+      "dest": "make/web-app.mk",
+      "group": "make:web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/make/mobile.mk",
+      "dest": "make/mobile.mk",
+      "group": "make:mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/make/ship.mk",
+      "dest": "make/ship.mk",
+      "group": "make:ship",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/make/docs.mk",
+      "dest": "make/docs.mk",
+      "group": "make:docs",
       "mode": 644,
       "raw": false,
       "dotEscaped": false

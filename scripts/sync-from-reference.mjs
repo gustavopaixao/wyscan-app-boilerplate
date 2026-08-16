@@ -22,6 +22,7 @@ import { fileURLToPath } from "node:url";
 
 import { tokenize, findResidue } from "../src/tokens/apply.mjs";
 import { applyPatches } from "../src/tokens/patches.mjs";
+import { splitMakefile } from "./split-makefile.mjs";
 import { DENYLIST, PREDECESSOR_TOKENS, RESIDUE_TOKENS } from "../src/tokens/catalog.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -190,6 +191,52 @@ function main() {
     for (const { path, hits } of residueHits) console.error(`  ${path} (${hits})`);
     console.error("\nThe token catalog is incomplete. Add the missing literal to src/tokens/catalog.mjs.\n");
     process.exit(1);
+  }
+
+  // --- restructure: Makefile -> Makefile.head + make/<group>.mk -------------
+  const mkIndex = files.findIndex((f) => f.dest === "Makefile");
+  if (mkIndex !== -1) {
+    const groupMap = JSON.parse(
+      readFileSync(join(TEMPLATES, "makefile-groups.json"), "utf8"),
+    );
+    const { head, fragments, unmapped } = splitMakefile(
+      files[mkIndex]._content.toString("utf8"),
+      groupMap,
+    );
+
+    if (unmapped.length) {
+      console.error(
+        `\nerror: ${unmapped.length} Makefile target(s) are not in makefile-groups.json:\n`,
+      );
+      for (const t of unmapped) console.error(`  ${t}`);
+      console.error("\nAdd them (with a help string) so they cannot be silently dropped.\n");
+      process.exit(1);
+    }
+
+    files.splice(mkIndex, 1);
+    files.push({
+      src: "tree/Makefile.head",
+      dest: "Makefile",
+      group: "core",
+      mode: 644,
+      raw: false,
+      dotEscaped: false,
+      _storage: "Makefile.head",
+      _content: Buffer.from(head, "utf8"),
+    });
+    for (const [group, text] of fragments) {
+      const name = group.replace(":", "-");
+      files.push({
+        src: `tree/make/${name}.mk`,
+        dest: `make/${name}.mk`,
+        group: `make:${group}`,
+        mode: 644,
+        raw: false,
+        dotEscaped: false,
+        _storage: `make/${name}.mk`,
+        _content: Buffer.from(text, "utf8"),
+      });
+    }
   }
 
   const manifest = {

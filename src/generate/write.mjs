@@ -13,6 +13,7 @@ import { mkdirSync, readFileSync, writeFileSync, chmodSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 import { render, residualSentinels } from "../tokens/apply.mjs";
+import { transform } from "./transforms.mjs";
 
 export function writeProject(ops, { templatesDir, targetDir, values, dryRun = false }) {
   const written = [];
@@ -26,7 +27,7 @@ export function writeProject(ops, { templatesDir, targetDir, values, dryRun = fa
     if (op.raw) {
       data = readFileSync(srcPath);
     } else {
-      const text = render(readFileSync(srcPath, "utf8"), values);
+      const text = transform(op.dest, render(readFileSync(srcPath, "utf8"), values), values);
       const left = residualSentinels(text);
       if (left.length) leftovers.push({ dest: op.dest, sentinels: left });
       data = Buffer.from(text, "utf8");
