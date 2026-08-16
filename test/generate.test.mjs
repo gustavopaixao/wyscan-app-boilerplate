@@ -17,6 +17,8 @@ const FORBIDDEN = ["botonistas", "gustavopaixao", "gmpaixao", "palpitepro"];
 
 function walk(dir, out = []) {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
+    // .git holds the committer's own identity, which is not template content.
+    if (e.name === ".git") continue;
     const p = join(dir, e.name);
     if (e.isDirectory()) walk(p, out);
     else out.push(p);

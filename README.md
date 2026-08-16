@@ -13,15 +13,18 @@ npx github:<owner>/wyscan-app-boilerplate my-app
 | Phase | State |
 |---|---|
 | 1. Template extraction from the reference project | done |
-| 2. Makefile / compose decomposition | not started |
-| 3. CLI core (flags, config, dry-run) | done (prompts pending) |
-| 4. Shared-package modes, generated `CLAUDE.md`, `.cursor` mirror | partial |
-| 5. git init + post-scaffold | not started |
-| 6. Ship | not started |
+| 2. Makefile / compose decomposition | done |
+| 3. CLI, including interactive prompts | done |
+| 4. Shared-package modes, generated `CLAUDE.md`, defect fixes | done |
+| 5. git init + post-scaffold | done |
+| 6. Ship (own CI, push to a remote) | not started |
 
-Today the CLI is flag- and config-file-driven. Interactive prompts land in Phase 3.
+Deferred: generating `.cursor/` from `.claude/`. The vendored copies work; only
+maintenance drift between the two trees is unaddressed.
 
 ## Usage
+
+Run it with no arguments for an interactive setup, or drive it entirely by flag:
 
 ```bash
 node bin/create.mjs --slug my-app --owner my-org ./my-app
@@ -32,13 +35,37 @@ node bin/create.mjs --slug my-app --owner my-org ./my-app
   --domain <host>      default: <slug>.com
   --bundle-id <id>     default: com.<slug-without-hyphens>.app
   --workspaces <list>  api,web:site,web:app,web:admin,mobile
+  --make-groups <list> Make target groups to include
+  --services <list>    compose services to include
   --ai <list>          claude,cursor,github
   --wyscan <mode>      local | registry | standalone
   --config <file>      JSON answers file
   --print-config       resolve and print config, then exit
   --dry-run            show the file plan without writing
+  --no-git             skip git init and the initial commit
+  --install            run pnpm install per workspace afterwards
+  --gh-repo            create a GitHub repo via gh and push
   --force              allow a non-empty target directory
+  -y, --yes            accept all defaults, ask nothing
 ```
+
+Prompts are numbered rather than arrow-driven, so they work over pipes and in
+terminals that mishandle raw mode. A non-TTY run falls back to defaults and
+errors on a required field instead of hanging.
+
+## Shared-package modes
+
+The reference project's `api/` and `mobile/` consume a sibling repo pair through
+pnpm `file:` links — fine on the author's machine, fatal anywhere else. Pick one:
+
+| Mode | Behaviour |
+|---|---|
+| `standalone` (default) | Linkage removed; local stubs under `packages/stubs/` stand in. Installs from public npm alone. |
+| `local` | Unchanged from the reference; `make wyscan-dev-setup` clones the siblings. |
+| `registry` | `file:` specs become version ranges resolved from a scoped registry. |
+
+Import specifiers are never rewritten, so moving from `standalone` to `local`
+later is a dependency swap, not a code change.
 
 ## How it works
 

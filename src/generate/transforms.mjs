@@ -92,6 +92,16 @@ export function transform(dest, text, cfg) {
   // The reference CLAUDE.md is stale and imports nothing; generate a real one.
   if (dest === "CLAUDE.md") out = buildClaudeMd(cfg);
 
+  // The reference relies on the author's *global* gitignore to keep machine-local
+  // assistant settings out of the repo, so anyone else cloning it would commit
+  // their own allowlist. Make the ignore explicit.
+  if (dest === ".gitignore" && !out.includes("settings.local.json")) {
+    out +=
+      "\n# Machine-local assistant config (never commit an allowlist)\n" +
+      ".claude/settings.local.json\n" +
+      ".cursor/*.local.*\n";
+  }
+
   // The reference hooks hardcode a workspace list that omits web/<slug>-app.
   if (dest === ".claude/hooks/pre-commit-gate.sh") out = rewritePreCommitGate(out, cfg);
   if (dest === ".claude/hooks/validate-edit.sh") out = rewriteValidateEdit(out, cfg);
