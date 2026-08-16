@@ -1,0 +1,16 @@
+# Known-broken doc links (scripts/check-doc-links.mjs baseline).
+# TODO: burn these down — remove a line once its link is fixed.
+
+.claude/agents/explorer.md :: ../../definitions/palpite_pro_mvp_document.md
+.claude/agents/explorer.md :: ../../definitions/palpite_pro_prd.md
+.claude/agents/feature-spec.md :: ../../definitions/palpite_pro_mvp_document.md
+.claude/agents/feature-spec.md :: ../../definitions/palpite_pro_prd.md
+.claude/agents/ship-it.md :: ../../docs/features/archive/0107-cursor-ship-it-command/spec.md
+.claude/agents/ship-it.md :: ../../docs/runbooks/release-deploy-checklist.md
+.cursor/agents/explorer.mdc :: ../../definitions/palpite_pro_mvp_document.md
+.cursor/agents/explorer.mdc :: ../../definitions/palpite_pro_prd.md
+.cursor/agents/feature-spec.mdc :: ../../definitions/palpite_pro_mvp_document.md
+.cursor/agents/feature-spec.mdc :: ../../definitions/palpite_pro_prd.md
+.cursor/agents/ship-it.mdc :: ../../docs/features/archive/0107-cursor-ship-it-command/spec.md
+.cursor/agents/ship-it.mdc :: ../../docs/runbooks/release-deploy-checklist.md
+.cursor/rules/web-react-architecture.mdc :: web/__PROJECT_SLUG__-admin/src/components/ui/AppModal.tsx

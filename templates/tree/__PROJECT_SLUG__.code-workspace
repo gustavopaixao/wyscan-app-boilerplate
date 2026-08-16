@@ -1,0 +1,27 @@
+{
+  "folders": [
+    {
+      "name": "__PROJECT_NAME__",
+      "path": ".",
+    },
+    {
+      "name": "WyscanDesignSystem",
+      "path": "../__ECOSYSTEM_DIR__/DesignSystem",
+    },
+    {
+      "name": "WyscanPackages",
+      "path": "../__ECOSYSTEM_DIR__/Packages",
+    },
+  ],
+  "settings": {
+    "files.watcherExclude": {
+      "**/node_modules/**": true,
+      "**/.git/objects/**": true,
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/.expo": true,
+    },
+  },
+}

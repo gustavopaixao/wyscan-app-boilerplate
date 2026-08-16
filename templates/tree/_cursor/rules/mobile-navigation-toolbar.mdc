@@ -1,0 +1,76 @@
+---
+alwaysApply: false
+description: Mobile (Expo) — Wyscan toolbar (back + centered title) on stack screens; tab scroll areas and RefreshControl aligned below AppMainToolbar.
+globs: ["mobile/**/*.tsx"]
+---
+
+# Mobile navigation & chrome (Expo + Wyscan React Native)
+
+__PROJECT_NAME__ mobile (`mobile/`) uses **`wyscan-react-native`** for shared chrome aligned with **WyscanDesignSystem** (see `references.mdc`). This rule covers **stack toolbars**, **tab root layout** under the transparent **`AppMainToolbar`**, and **pull-to-refresh** placement.
+
+---
+
+## A — Stack screens (back + centered title)
+
+### When this applies
+
+- Any **full-screen** or **stack-pushed** view under `mobile/app/(app)/` (or future stack routes) where the user expects **back** + **title** (settings, invites, league preview, editors, confirmations, etc.).
+
+### Required pattern
+
+1. **Back control:** Import and use **`ToolbarBackButton`** from `wyscan-react-native` with `colorScheme`, `onPress`, and `accessibilityLabel={t("toolbar_action_back_a11y")}` (or equivalent a11y key).
+2. **Title:** A single **`Text`** in the **horizontal center** of the same row as the back button (`flex: 1`, `alignItems: "center"`, `numberOfLines={1}`), using `typography.body` (or title token if the screen is title-heavy) and semantic `c.text`. Prefer **localized** strings via `useStrings()` / `t("…")`—no hard-coded titles.
+3. **Layout:** Wrap the row in `paddingTop: insets.top` from `useSafeAreaInsets()` so content clears the status bar. Use `TOOLBAR_ICON_BUTTON_MIN_SIZE` for **`minHeight`** on the row and for a **trailing spacer** `View` when there is no right action, so the title stays visually centered (same approach as `LeagueDetailToolbar`).
+4. **Right actions:** Optional icons or buttons go in a trailing container with the same min touch size as the back button so the title remains balanced.
+
+### Do not (stack screens)
+
+- Do **not** implement back navigation with **`Pressable` + `Text`** styled as a link (e.g. `{t("profile_action_back")}` only) **without** the shared **`ToolbarBackButton`** on stack-style screens.
+- Do **not** use **raw `@expo/vector-icons` chevrons** for the primary back affordance on these screens unless `wyscan-react-native` exposes no suitable control (should be rare—prefer extending Wyscan / filing a design-system gap).
+- Do **not** place the **screen title only in `ScrollView` body** while the back control floats separately without a shared top bar; back + title belong in the **same toolbar row** above scrollable content.
+
+### Reference implementations (stack)
+
+- `mobile/components/leagues/LeagueDetailToolbar.tsx` — back, centered league name, optional right actions with symmetric min width.
+- `mobile/app/(app)/league-preview/[id].tsx` — stack-style toolbar with centered title and trailing spacer.
+- `mobile/app/(app)/leagues/[id]/invite-members.tsx`, `mobile/app/(app)/leagues/[id]/edit.tsx` — same toolbar ingredients.
+
+---
+
+## B — Tab root content + transparent `AppMainToolbar`
+
+Tabs use a **custom transparent header** (`header: () => <AppMainToolbar />` in `mobile/app/(app)/(tabs)/_layout.tsx`). Tab **body** scroll views must sit **below** that toolbar without double-counting safe area.
+
+### Layout
+
+- Use **`useHeaderHeight()`** from `@react-navigation/elements` for vertical offset of scroll **content** below the toolbar (same pattern as `mobile/app/(app)/(tabs)/leagues/index.tsx`, `explore.tsx`).
+- Do **not** add **`paddingTop: insets.top`** on the **same** outer container that already relies on `headerHeight` for tab content unless you have verified the combined insets (usually **avoid** — causes overlap or double spacing).
+
+### Pull to refresh (`RefreshControl`)
+
+**Problem:** If you only use **`contentContainerStyle.paddingTop`** to clear the toolbar, the native **`RefreshControl`** indicator is still anchored to the **top of the `ScrollView`/`FlatList`**, so the spinner can appear **under the status bar / logo** (wrong — feels broken).
+
+**Required:**
+
+1. Define a single constant, e.g. `topInset = useHeaderHeight() + 16` (or the project’s chosen gap), matching where list content should start.
+2. Pass **`progressViewOffset={topInset}`** on **`RefreshControl`** so the system refresh control is drawn **below the main toolbar** (iOS `RCTRefreshControl` and Android `SwipeRefreshLayout` both honor this in React Native).
+3. Prefer a **leading spacer** as the first scroll child — `<View style={{ height: topInset }} />` — and **omit** equivalent **`paddingTop`** on `contentContainerStyle` for that region (spacer + `progressViewOffset` stay in sync). Padding-only layouts are easy to get wrong with overscroll.
+
+**Reference:** `mobile/app/(app)/(tabs)/leagues/index.tsx` (pull-to-refresh + `AppMainToolbar`).
+
+---
+
+## Checklist (agent / PR)
+
+**Stack screens**
+
+- [ ] `ToolbarBackButton` used for back
+- [ ] Title centered in the same row; trailing balance if no right actions
+- [ ] `useSafeAreaInsets().top` on the toolbar container
+- [ ] Strings from i18n; a11y label on back control
+
+**Tab scroll + refresh**
+
+- [ ] Top inset derived from **`useHeaderHeight()`** (no duplicate safe-area stack)
+- [ ] **`RefreshControl`** uses **`progressViewOffset`** equal to that inset when pull-to-refresh is used under transparent header
+- [ ] Prefer **spacer `View`** + shared `topInset` constant over padding-only top gap when combining refresh + toolbar

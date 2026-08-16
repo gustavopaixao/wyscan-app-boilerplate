@@ -1,0 +1,34 @@
+# Production API environment - copy to the server as api/.env (never commit secrets).
+
+NODE_ENV=production
+PORT=3000
+
+# External MongoDB (replica set recommended)
+MONGODB_URL=mongodb://user:pass@mongodb-host:27017/__PROJECT_SLUG__?authSource=admin
+
+# Required for multi-instance API and async workers
+REDIS_URL=redis://redis:6379
+
+# Behind nginx / load balancer (required in production)
+TRUST_PROXY=true
+
+# Comma-separated browser origins (admin + public site)
+CORS_ORIGIN=https://admin.example.com,https://www.example.com
+
+# Required - generate: openssl rand -base64 48
+JWT_SECRET=
+INTERNAL_API_CLIENT_ID=admin-bff
+INTERNAL_API_SECRET=
+
+# OAuth (set all providers you enable in the app)
+GOOGLE_CLIENT_ID=
+APPLE_CLIENT_ID=
+FACEBOOK_APP_ID=
+FACEBOOK_APP_SECRET=
+
+# Push notifications - Firebase service account JSON (single line)
+# FIREBASE_SERVICE_ACCOUNT_JSON={"type":"service_account","project_id":"...",...}
+
+# Public URLs - site origin only (no path)
+# PUBLIC_INVITE_BASE_URL=https://www.example.com
+# API_PUBLIC_BASE_URL=https://api.example.com

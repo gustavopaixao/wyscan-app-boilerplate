@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "siteTitle": "__PROJECT_NAME__",
+    "siteDescription": "__PROJECT_NAME__ — officiële website"
+  },
+  "landing": {
+    "site_landing_title": "Welkom bij __PROJECT_NAME__"
+  },
+  "theme": {
+    "toggle": "Thema wisselen"
+  }
+}

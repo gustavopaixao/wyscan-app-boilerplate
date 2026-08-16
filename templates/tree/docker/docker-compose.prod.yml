@@ -1,0 +1,52 @@
+# Legacy production stack (full monorepo checkout on server).
+# Prefer docker/deploy/ for minimal server layout — see docs/runbooks/production-api-docker.md
+# Host nginx (not in Compose) proxies to the API on localhost.
+#
+# Usage (on server, from repo root):
+#   export VERSION=1.0.0
+#   export IMAGE_REGISTRY=__IMAGE_REGISTRY__
+#   docker compose -f docker/docker-compose.prod.yml pull
+#   docker compose -f docker/docker-compose.prod.yml up -d
+#
+# Copy api/.env.production.example → api/.env on the host before first deploy.
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: __PROJECT_SLUG__-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - __PROJECT_SLUG__-network
+
+  api:
+    image: ${IMAGE_REGISTRY:-__IMAGE_REGISTRY__}/__PROJECT_SLUG__-api:${VERSION:?Set VERSION e.g. 1.0.0}
+    container_name: __PROJECT_SLUG__-api
+    restart: unless-stopped
+    env_file:
+      - ../api/.env
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - "${API_BIND:-127.0.0.1}:${API_PORT:-3000}:3000"
+    networks:
+      - __PROJECT_SLUG__-network
+
+volumes:
+  redis_data:
+    name: __PROJECT_SLUG__-redis-data-prod
+
+networks:
+  __PROJECT_SLUG__-network:
+    name: __PROJECT_SLUG__-network-prod

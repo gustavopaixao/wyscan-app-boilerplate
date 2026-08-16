@@ -1,0 +1,41 @@
+---
+alwaysApply: false
+description: Apply when editing the __PROJECT_NAME__ API under api/ — Hono + TypeScript; align with Wyscan packages when integrated.
+globs: ["api/**"]
+---
+
+# __PROJECT_NAME__ API architecture
+
+## Single source of truth
+
+- Prefer **thin route handlers** in `api/src/` (Hono routes, shared `createApp` in `app.ts`).
+- When you introduce Wyscan package routes or a layered layout, document the pattern in **`docs/backend/API_ARCHITECTURE.md`** (create when the API grows) and treat that doc as authoritative.
+
+## Workflow
+
+1. **Before implementing:** Check existing `api/src/` patterns, env (`MONGODB_URL`, `REDIS_URL`, `CORS_ORIGIN` in production).
+2. **After implementing:** Run `pnpm lint` and `pnpm test` from `api/`.
+
+## Background workers (BullMQ / jobs)
+
+Any **new worker** added under `api/src/jobs/*Worker.ts` MUST be wired into **every** run surface — local foreground, local Docker (`make restart`), and production (`docker/deploy/`) — or jobs enqueue to Redis with nothing consuming them (the championship stuck-`completing` class of bug). Mirror an existing worker (e.g. `scoring-worker`, `championship-completion-worker`) across all of:
+
+- [ ] `api/package.json` — `job:<name>-worker` script (`tsx … src/jobs/<name>Worker.ts`)
+- [ ] Root `Makefile` — `<name>-worker` target + `.PHONY` entry + help line (foreground dev)
+- [ ] `scripts/dev-stack.sh` — add the service to the `cmd_restart` force-recreate list (so `make restart` starts it)
+- [ ] `docker/docker-compose.yml` — service definition (local Docker stack, `target: development`, `exec pnpm job:<name>-worker`)
+- [ ] `docker/deploy/docker-compose.yml` — production service (`command: ["node", "dist/jobs/<name>Worker.js"]`)
+- [ ] `docker/deploy/docker-compose.mongodb-external.yml` **and** `docker-compose.mongodb-bundled.yml` — add the service to the network/`depends_on` overrides **if it touches MongoDB**
+- [ ] `docker/deploy/Makefile` — add the service to the `upgrade` (pull + up) **and** `restart-app` service lists
+- [ ] (optional) `docker/docker-compose.prod.yml` — the full-repo-checkout alternative stack, for parity
+
+Validate with `docker compose -f <file> config` (base + each override) before committing.
+
+## Compact checklist
+
+- [ ] Validation for inputs (e.g. Zod) at the edge
+- [ ] Auth / rate limits when endpoints are protected (future Wyscan auth)
+- [ ] No sensitive data in logs
+- [ ] Health and infra checks stay coherent with Docker Compose
+- [ ] New BullMQ worker wired into local + deploy stacks (see **Background workers** above)
+- [ ] Tests for new behavior (`*.test.ts` colocated or under `src/`)

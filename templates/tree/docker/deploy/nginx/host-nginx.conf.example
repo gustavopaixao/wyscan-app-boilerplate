@@ -1,0 +1,82 @@
+# Host nginx (native on the server) — reference config for proxying to Docker API.
+# API listens on 127.0.0.1:3000 by default (see docker-compose.yml API_BIND / API_PORT).
+#
+# Example install:
+#   sudo cp nginx/host-nginx.conf.example /etc/nginx/sites-available/__PROJECT_SLUG__-api
+#   sudo ln -s /etc/nginx/sites-available/__PROJECT_SLUG__-api /etc/nginx/sites-enabled/
+#   sudo nginx -t && sudo systemctl reload nginx
+
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''      close;
+}
+
+upstream __PROJECT_SLUG___api {
+    server 127.0.0.1:3000;
+}
+
+upstream __PROJECT_SLUG___realtime {
+    server 127.0.0.1:3001;
+}
+
+server {
+    listen 80;
+    server_name api.example.com;
+
+    # Redirect HTTP → HTTPS when TLS is enabled on this host:
+    # return 301 https://$host$request_uri;
+
+    location /api/ {
+        proxy_pass http://__PROJECT_SLUG___api/api/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 60s;
+        proxy_send_timeout 60s;
+    }
+
+    location /socket.io/ {
+        proxy_pass http://__PROJECT_SLUG___realtime/socket.io/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 86400s;
+        proxy_send_timeout 86400s;
+        proxy_buffering off;
+        proxy_cache off;
+    }
+
+    location /health {
+        proxy_pass http://__PROJECT_SLUG___api/api/health;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# Uncomment for TLS on the host (cert paths depend on your cert tooling):
+#
+# server {
+#     listen 443 ssl http2;
+#     server_name api.example.com;
+#
+#     ssl_certificate     /etc/letsencrypt/live/api.example.com/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/api.example.com/privkey.pem;
+#
+#     location /api/ {
+#         proxy_pass http://__PROJECT_SLUG___api/api/;
+#         proxy_http_version 1.1;
+#         proxy_set_header Host $host;
+#         proxy_set_header X-Real-IP $remote_addr;
+#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto $scheme;
+#     }
+#     # … mirror socket.io and /health blocks from port 80 server …
+# }

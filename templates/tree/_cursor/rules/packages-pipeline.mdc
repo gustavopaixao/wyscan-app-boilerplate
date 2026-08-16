@@ -1,0 +1,42 @@
+---
+alwaysApply: false
+description: Apply when editing WyscanPackages (../__ECOSYSTEM_DIR__/Packages), root Jenkinsfile, ci/jenkins/, or scripts/publish-packages.sh
+globs: ["../__ECOSYSTEM_DIR__/Packages/**", "Packages/**", "**/Jenkinsfile", "**/ci/jenkins/**"]
+---
+
+# WyscanPackages Pipeline Rules
+
+When adding or changing packages or Jenkins pipeline config, enforce these rules so all related repos (Packages + __PROJECT_NAME__ API) stay consistent.
+
+## Single Source of Truth
+
+- **Package list and dependency order**: `../__ECOSYSTEM_DIR__/Packages/ci/package-order.json`
+- **Scripts**: `../__ECOSYSTEM_DIR__/Packages/scripts/get-package-order.js`, `../__ECOSYSTEM_DIR__/Packages/scripts/build-in-order.sh`, `../__ECOSYSTEM_DIR__/Packages/scripts/changed-packages.js`
+- Root `../__ECOSYSTEM_DIR__/Packages/Jenkinsfile` and `../__ECOSYSTEM_DIR__/Packages/scripts/publish-packages.sh` read from the manifest; do not hardcode package names or order.
+
+## Dependency Graph Rules
+
+1. Every API package under `../__ECOSYSTEM_DIR__/Packages/packages/*/api/nextjs` must be listed in `../__ECOSYSTEM_DIR__/Packages/ci/package-order.json` with `name`, `path`, and `deps` (array of package names it depends on).
+2. Order in the manifest must be topological (dependencies before dependents). No package may depend on a package that appears after it.
+3. When adding a new package: add one entry to `../__ECOSYSTEM_DIR__/Packages/ci/package-order.json`; the root Jenkinsfile and publish script use `get-package-order.js` so no Groovy changes are required for the list. Per-package child Jenkins jobs are **deprecated**; use the root multibranch pipeline only (see `../__ECOSYSTEM_DIR__/Packages/ci/jenkins/README.md`).
+
+## New Package Checklist
+
+1. **package.json** (under `../__ECOSYSTEM_DIR__/Packages/packages/<name>/api/nextjs/`):
+   - `name`: `__NPM_SCOPE__/<name>-api` (or `-shared` as appropriate)
+   - `version`, `exports`, `publishConfig`, `files`
+   - Internal `__NPM_SCOPE__/*` deps in `dependencies` with `workspace:*` (or in `peerDependencies` if adopting that model)
+   - Host deps (mongoose, next, zod, etc.) in `peerDependencies`
+2. **Manifest**: Add entry to `../__ECOSYSTEM_DIR__/Packages/ci/package-order.json` with correct `deps` array.
+3. **Consumer**: If the host app (e.g. __PROJECT_NAME__ `api/`) uses this package, add the dependency there, `pnpm.overrides` for local dev, and extend `dev:watch` / Makefile package build lists if applicable (and satisfy any new peerDependencies).
+
+## Publish and CI
+
+- Publish script: one install and one build at repo root at start; then per package only mutate version, build, publish (no per-package install). Order from `get-package-order.js`.
+- STAGING/PRODUCTION: Single-workspace build in root Jenkinsfile (Install and build all, Test all).
+- PR: Same root pipeline (install, build-in-order, test all, lint packages); change detection is informational.
+- Do not rely on workspace resolution for final validation of published graph; optional "validate from registry" step can run after publish.
+
+## Consumers
+
+When a new package is added or an internal dependency is added to an existing package, update the consumer (e.g. __PROJECT_NAME__ `api/package.json`) to add the new dependency or satisfy new peerDependencies.

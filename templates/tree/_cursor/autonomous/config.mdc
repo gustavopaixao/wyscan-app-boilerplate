@@ -1,0 +1,232 @@
+---
+name: autonomous-config
+description: Configuration for automatic agent invocation and autonomous operation
+alwaysApply: true
+---
+
+# Autonomous Operation Configuration
+
+This file configures when agents and skills are automatically invoked, and enables autonomous operation.
+
+## Automatic Agent Invocation Rules
+
+### When to Auto-Invoke Agents
+
+#### UX Senior Agent
+**Auto-trigger when:**
+- New UI file created (`*.swift` in `Views/`, `*.kt` in `ui/`)
+- UI file modified with >10 lines changed
+- User mentions "UI", "UX", "design", "screen", "view"
+- Before committing UI changes
+
+**Command:** `/ux-review {platform} feature "{description}"`
+
+#### Architect Expert Agent
+**Auto-trigger when:**
+- New architecture file created (`ViewModels/`, `Repositories/`, `UseCases/`)
+- API route file modified (`api/src/app/api/v1/**/*.ts`)
+- User mentions "architecture", "pattern", "SOLID", "design pattern"
+- Before committing architecture changes
+
+**Command:** `/architect-review {platform} patterns`
+
+#### Security Agent
+**Auto-trigger when:**
+- Authentication/authorization code modified
+- API route with user input created/modified
+- User mentions "security", "vulnerability", "OWASP"
+- Before committing security-sensitive code
+- New dependency added (`package.json`, `Package.swift`)
+
+**Command:** `/security-scan {platform} code`
+
+#### Code Review Agent
+**Auto-trigger when:**
+- Before committing changes (if >50 lines changed)
+- User asks to review code
+- Pull request created
+- User mentions "review", "code quality", "best practices"
+
+**Command:** `/code-review {platform}`
+
+#### Testing Agent
+**Auto-trigger when:**
+- New feature file created without tests
+- Test file modified
+- User mentions "test", "coverage", "testing"
+- Before committing if test coverage <80%
+
+**Command:** `/test-agent {platform} generate`
+
+#### Builder Agent
+**Auto-trigger when:**
+- After code changes (always)
+- Before committing
+- User mentions "build", "compile", "verify"
+
+**Action:** Automatically verify builds
+
+#### Git Agent
+**Auto-trigger when:**
+- User asks to commit
+- User asks to push
+- User mentions "git", "commit", "push"
+
+**Action:** Run smart commit process (lint/test/build)
+
+## Autonomous Operation Modes
+
+### Mode 1: Reactive (Default)
+- Agents invoked when specific conditions are met
+- Skills auto-apply based on context
+- User-driven workflow
+
+### Mode 2: Proactive
+- Agents run automatically before commits
+- Full audits before releases
+- Continuous quality checks
+
+### Mode 3: Fully Autonomous
+- AI makes decisions on when to run agents
+- Creates task lists for complex work
+- Executes multi-step workflows
+- Reports progress and asks for approval when needed
+
+## Autonomous Workflow Rules
+
+### When to Work Autonomously
+
+**Enable autonomous mode when:**
+- User asks to "implement", "add", "create", "build"
+- Task requires multiple steps (>3)
+- User explicitly asks for autonomous operation
+- Complex feature implementation
+
+**Disable autonomous mode when:**
+- User asks specific questions
+- User wants step-by-step guidance
+- Debugging or troubleshooting
+- User explicitly says "don't do it automatically"
+
+### Autonomous Operation Process
+
+1. **Analyze Task**
+   - Break down into subtasks
+   - Identify dependencies
+   - Estimate complexity
+
+2. **Create Task List**
+   - Use `todo_write` to create structured tasks
+   - Mark tasks as pending/in_progress/completed
+
+3. **Execute Tasks**
+   - Work through tasks systematically
+   - Run relevant agents automatically
+   - Verify builds after changes
+
+4. **Report Progress**
+   - Update task status
+   - Report completion
+   - Ask for approval if needed
+
+5. **Quality Checks**
+   - Run code review agent
+   - Run security scan
+   - Run UX review (if UI changes)
+   - Verify builds
+
+6. **Finalize**
+   - Commit changes (with user approval)
+   - Generate summary report
+
+## Decision-Making Rules
+
+### When to Ask for Approval
+
+**Always ask before:**
+- Committing changes
+- Pushing to remote
+- Deleting files
+- Making breaking changes
+- Running destructive commands
+
+**Proceed autonomously:**
+- Reading files
+- Searching codebase
+- Running non-destructive agents
+- Creating new files (for features)
+- Making code changes (for requested features)
+
+### When to Run Agents Automatically
+
+**Run automatically:**
+- UX review after UI changes
+- Security scan after auth/API changes
+- Code review before commits
+- Builder after code changes
+- Testing agent when tests missing
+
+**Ask before running:**
+- Full architecture audit
+- Load testing
+- Deployment checks
+- Large-scale refactoring
+
+## Task Complexity Thresholds
+
+### Simple Tasks (< 3 steps)
+- Execute immediately
+- No task list needed
+- Report completion
+
+### Medium Tasks (3-5 steps)
+- Create task list
+- Execute autonomously
+- Report progress
+
+### Complex Tasks (> 5 steps)
+- Create detailed task list
+- Execute with progress updates
+- Run quality checks automatically
+- Ask for approval at milestones
+
+## Quality Gates
+
+### Before Committing
+- ✅ Linter passes
+- ✅ Tests pass (if applicable)
+- ✅ Build succeeds
+- ✅ Code review agent run
+- ✅ Security scan run (if security-sensitive)
+
+### Before Pushing
+- ✅ All commits reviewed
+- ✅ Branch is up to date
+- ✅ No conflicts
+
+### Before Release
+- ✅ Full UX review
+- ✅ Full architecture review
+- ✅ Full security audit
+- ✅ Load testing
+- ✅ Deployment checks
+
+## Configuration Overrides
+
+Users can override automatic behavior:
+
+```
+"Don't run agents automatically"
+"Ask before running security scan"
+"Run full audit before committing"
+"Work autonomously on this feature"
+```
+
+## Implementation Notes
+
+- Use `todo_write` for task management
+- Use `codebase_search` to understand context
+- Run agents via their commands when conditions met
+- Always verify builds after code changes
+- Report progress clearly
+- Ask for approval when needed

@@ -1,0 +1,45 @@
+# Dedicated __PROJECT_NAME__ MongoDB — same Compose network as the API (recommended on wyscan-server).
+#
+# Host port defaults to 127.0.0.1:27019 (Stiksy uses 27018). Override: MONGODB_HOST_PORT=27020
+#
+# First-time setup:
+#   export __PROJECT_CONST___MONGO_PASSWORD='…'   # optional — script generates one if unset
+#   ./scripts/setup-bundled-mongodb.sh
+#
+# Day-to-day:
+#   docker compose -f docker-compose.yml -f docker-compose.mongodb-bundled.yml up -d
+#
+# .env (API uses Docker service name mongodb, not 127.0.0.1):
+#   MONGODB_URL=mongodb://__PROJECT_SLUG___user:PASSWORD@mongodb:27017/__PROJECT_SLUG__?authSource=__PROJECT_SLUG__
+
+services:
+  mongodb:
+    image: mongo:8
+    container_name: __PROJECT_SLUG__-mongodb
+    restart: unless-stopped
+    command: ["--bind_ip_all"]
+    ports:
+      - "${MONGODB_BIND:-127.0.0.1}:${MONGODB_HOST_PORT:-27019}:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mongosh --quiet --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 1)'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 40s
+    networks:
+      - __PROJECT_SLUG__-network
+
+  api:
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+volumes:
+  mongodb_data:
+    name: __PROJECT_SLUG__-mongodb-data-prod

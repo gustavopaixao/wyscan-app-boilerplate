@@ -1,0 +1,143 @@
+---
+name: agent-registry
+description: Agent Registry - Central registry of all available Cursor agents
+alwaysApply: true
+---
+
+# Cursor Agents Registry
+
+This file serves as the central registry for all Cursor-native agents. When a user invokes an agent command, use this registry to find and activate the appropriate agent.
+
+## Available Agents
+
+### UX Senior Agent
+- **File**: `.cursor/agents/ux-senior.mdc`
+- **Commands**: `/ux-review`, `ux review`, `run ux review`
+- **Purpose**: UI/UX consistency, platform standards, accessibility
+
+### Architect Expert Agent
+- **File**: `.cursor/agents/architect-expert.mdc`
+- **Commands**: `/architect-review`, `architect review`, `run architect review`
+- **Purpose**: Architecture, design patterns, clean code, technical debt
+
+### Security Agent
+- **File**: `.cursor/agents/security.mdc`
+- **Commands**: `/security-scan`, `security scan`, `run security scan`
+- **Purpose**: OWASP Top 10, vulnerability scanning, secrets detection
+
+### Code Review Agent
+- **File**: `.cursor/agents/code-review.mdc`
+- **Commands**: `/code-review`, `code review`, `run code review`
+- **Purpose**: Security, performance, best practices, API/DTO contracts
+
+### UI Expert Agent
+- **File**: `.cursor/agents/ui-expert.mdc`
+- **Commands**: `/ui-review`, `ui review`, `run ui review`
+- **Purpose**: Component architecture, design systems, refactoring
+
+### Frontend Expert Agent
+- **File**: `.cursor/agents/frontend-expert.mdc`
+- **Commands**: `/frontend-dev`, `/frontend-expert`, `frontend expert`, `build this screen`, `implement this UI`
+- **Purpose**: React/Next.js and React Native (Expo) UI implementation — feature-first layout, component reuse, architecture compliance; stops on conflicts
+
+### Testing Agent
+- **File**: `.cursor/agents/testing.mdc`
+- **Commands**: `/test-agent`, `test agent`, `run test`, `generate tests`
+- **Purpose**: Test execution, generation, coverage analysis
+
+### Load Test Agent
+- **File**: `.cursor/agents/load-test.mdc`
+- **Commands**: `/loadtest`, `load test`, `performance test`
+- **Purpose**: API performance, load testing, bottleneck identification
+
+### Deployment Agent
+- **File**: `.cursor/agents/deployment.mdc`
+- **Commands**: `/deploy-check`, `deployment check`, `pre-deployment`
+- **Purpose**: Pre-deployment checks, build validation, migrations
+
+### Translator Agent
+- **File**: `.cursor/agents/translator.mdc`
+- **Commands**: `/translator`, `translation`, `localization`, `i18n`
+- **Purpose**: Translation management, missing keys, validation
+
+### Android Docs Agent
+- **File**: `.cursor/agents/android-docs.mdc`
+- **Commands**: `/android-docs`, `android docs`, `generate android docs`
+- **Purpose**: Cross-platform documentation, Android guides
+
+### Feature Parity Agent
+- **File**: `.cursor/agents/feature-parity.mdc`
+- **Commands**: `/feature-parity`, `feature parity`, `parity check`, `new feature parity`
+- **Purpose**: iOS/Android feature parity, OpenAPI validation per package, UI/UX validation, implementation plan for missing platform
+
+### Feature Spec Agent
+- **File**: `.cursor/agents/feature-spec.mdc`
+- **Commands**: `/feature-spec`, `feature spec`, `feature-spec`
+- **Purpose**: Create a feature spec under `docs/features/NNNN-<slug>/spec.md` from context. Researches existing features and code, asks clarifying questions, covers edge cases; two-phase (questions then write); no commit/push; does not create implementation plan unless asked.
+
+### Bugfix Agent
+- **File**: `.cursor/agents/bugfix.mdc`
+- **Commands**: `/bugfix`, `bug fix`, `bugfix`
+- **Purpose**: Create a bugfix spec under `docs/bugsfixes/NNNN-<slug>/bugfix.md` from context. Reproduces the issue, researches root cause and affected surfaces, asks clarifying questions, covers edge cases and regression tests; two-phase (questions then write); no commit/push; does not apply the fix unless asked.
+
+### Implement Feature Agent
+- **File**: `.cursor/agents/implement-feature.mdc`
+- **Commands**: `/implement-feature`, `implement feature`, `implement-feature`
+- **Purpose**: Implement a feature from its implementation plan (feature ID). Loads spec + plan from `docs/features/<ID>-<slug>/`, considers architecture, reviews codebase; stops with pending questions if unclear; otherwise implements autonomously; runs tests/validation; no commit/push.
+
+### Ship-it Agent
+- **File**: `.cursor/agents/ship-it.mdc`
+- **Commands**: `/ship-it`, `ship it`, `ship-it`
+- **Purpose**: Detect API/mobile changes since release markers, pre-flight, confirmation-gated ship (`api-docker-release`, `mobile-beta-parallel`); parallel API ∥ mobile when both changed; print server upgrade commands; never push or SSH to production. Spec: `docs/features/archive/0107-cursor-ship-it-command/spec.md`.
+
+### Business Explorer Agent
+- **File**: `.cursor/agents/explorer.mdc`
+- **Commands**: `/explorer`, `business explorer`, `explore idea`, `explore options`, `evaluate business impact`, `go-to-market ideas`
+- **Purpose**: Product/business exploration — expand an idea or context into options and variants, stress-test edge cases, evaluate business & marketing impact, and shape positioning ("how to sell it"). Diverges then recommends one bet + the cheapest test; writes `docs/explorations/NNNN-<slug>/exploration.md`. A thinking partner, not an implementer — no spec, no code, no commit/push; hands off to `/feature-spec` when a bet is worth building.
+
+## Agent Invocation
+
+When a user types a command or asks for an agent:
+
+1. **Parse Command**: Identify agent name and parameters
+2. **Load Agent**: Read the corresponding `.mdc` file
+3. **Extract Prompt**: Use the agent's prompt structure
+4. **Execute**: Run the agent using Cursor's tools
+5. **Report**: Provide structured output
+
+## Command Parsing
+
+Commands can be in various formats:
+- `/agent-name [options]`
+- `run agent-name [options]`
+- `agent-name review [options]`
+- Natural language: "run a UX review on iOS"
+
+## Agent Structure
+
+Each agent file contains:
+- **Metadata**: Name, description, tools, triggers
+- **Purpose**: What the agent does
+- **Process**: How to execute the agent
+- **Output Format**: How to structure results
+- **Examples**: Usage examples
+
+## Tool Usage
+
+Agents use Cursor's built-in tools:
+- `codebase_search`: Semantic code search
+- `read_file`: Read specific files
+- `grep`: Pattern matching
+- `list_dir`: Directory exploration
+- `run_terminal_cmd`: Execute commands
+- `read_lints`: Get linting errors
+- `mcp_web_fetch`: Web research (for best-practices)
+
+## Best Practices
+
+- Always start with agent activation message
+- Use structured output format
+- Provide actionable recommendations
+- Include code examples when helpful
+- Reference relevant documentation
+- Check project-specific rules (`.cursor/rules/`)

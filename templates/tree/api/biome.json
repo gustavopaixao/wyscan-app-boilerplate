@@ -1,0 +1,24 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.14/schema.json",
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["src/**", "biome.json", "vitest.config.ts", "tsconfig.json"]
+  },
+  "root": true,
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "defaultBranch": "main",
+    "useIgnoreFile": false
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  }
+}

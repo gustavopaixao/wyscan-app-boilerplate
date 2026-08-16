@@ -1,0 +1,3016 @@
+{
+  "generatedFrom": {
+    "repo": "/Users/gustavopaixao/websites/vhosts/botonistas",
+    "commit": "70fc065"
+  },
+  "files": [
+    {
+      "src": "tree/_claude/README.md",
+      "dest": ".claude/README.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/android-docs.md",
+      "dest": ".claude/agents/android-docs.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/architect-expert.md",
+      "dest": ".claude/agents/architect-expert.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/bugfix.md",
+      "dest": ".claude/agents/bugfix.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/code-review.md",
+      "dest": ".claude/agents/code-review.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/deployment.md",
+      "dest": ".claude/agents/deployment.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/explorer.md",
+      "dest": ".claude/agents/explorer.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/feature-parity.md",
+      "dest": ".claude/agents/feature-parity.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/feature-spec.md",
+      "dest": ".claude/agents/feature-spec.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/frontend-expert.md",
+      "dest": ".claude/agents/frontend-expert.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/implement-feature.md",
+      "dest": ".claude/agents/implement-feature.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/load-test.md",
+      "dest": ".claude/agents/load-test.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/packages-pipeline.md",
+      "dest": ".claude/agents/packages-pipeline.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/security.md",
+      "dest": ".claude/agents/security.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/ship-it.md",
+      "dest": ".claude/agents/ship-it.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/testing.md",
+      "dest": ".claude/agents/testing.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/translator.md",
+      "dest": ".claude/agents/translator.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/ui-expert.md",
+      "dest": ".claude/agents/ui-expert.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/agents/ux-senior.md",
+      "dest": ".claude/agents/ux-senior.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/android-docs.md",
+      "dest": ".claude/commands/android-docs.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/architect-review.md",
+      "dest": ".claude/commands/architect-review.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/bugfix.md",
+      "dest": ".claude/commands/bugfix.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/code-review.md",
+      "dest": ".claude/commands/code-review.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/deploy-check.md",
+      "dest": ".claude/commands/deploy-check.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/explorer.md",
+      "dest": ".claude/commands/explorer.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/feature-parity.md",
+      "dest": ".claude/commands/feature-parity.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/feature-spec.md",
+      "dest": ".claude/commands/feature-spec.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/frontend-dev.md",
+      "dest": ".claude/commands/frontend-dev.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/implement-feature.md",
+      "dest": ".claude/commands/implement-feature.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/loadtest.md",
+      "dest": ".claude/commands/loadtest.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/packages-pipeline.md",
+      "dest": ".claude/commands/packages-pipeline.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/security-scan.md",
+      "dest": ".claude/commands/security-scan.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/ship-it.md",
+      "dest": ".claude/commands/ship-it.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/test-agent.md",
+      "dest": ".claude/commands/test-agent.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/translator.md",
+      "dest": ".claude/commands/translator.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/ui-review.md",
+      "dest": ".claude/commands/ui-review.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/commands/ux-review.md",
+      "dest": ".claude/commands/ux-review.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/hooks/allow-cd-redirect.sh",
+      "dest": ".claude/hooks/allow-cd-redirect.sh",
+      "group": "ai:claude",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/hooks/pre-commit-gate.sh",
+      "dest": ".claude/hooks/pre-commit-gate.sh",
+      "group": "ai:claude",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/hooks/prompt-nudge.sh",
+      "dest": ".claude/hooks/prompt-nudge.sh",
+      "group": "ai:claude",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/hooks/suggest-ux-review.sh",
+      "dest": ".claude/hooks/suggest-ux-review.sh",
+      "group": "ai:claude",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/hooks/validate-edit.sh",
+      "dest": ".claude/hooks/validate-edit.sh",
+      "group": "ai:claude",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/rules/error-handling.md",
+      "dest": ".claude/rules/error-handling.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/rules/mobile-safe-area.md",
+      "dest": ".claude/rules/mobile-safe-area.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/rules/references.md",
+      "dest": ".claude/rules/references.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/rules/requirements.md",
+      "dest": ".claude/rules/requirements.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/rules/shell-commands.md",
+      "dest": ".claude/rules/shell-commands.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/settings.json",
+      "dest": ".claude/settings.json",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/android-docs/SKILL.md",
+      "dest": ".claude/skills/android-docs/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/architect/SKILL.md",
+      "dest": ".claude/skills/architect/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/builder/SKILL.md",
+      "dest": ".claude/skills/builder/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/ci-cd/SKILL.md",
+      "dest": ".claude/skills/ci-cd/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/deployment/SKILL.md",
+      "dest": ".claude/skills/deployment/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/explorer/SKILL.md",
+      "dest": ".claude/skills/explorer/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/feature-parity/SKILL.md",
+      "dest": ".claude/skills/feature-parity/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/frontend-expert/SKILL.md",
+      "dest": ".claude/skills/frontend-expert/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/git/SKILL.md",
+      "dest": ".claude/skills/git/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/load-test/SKILL.md",
+      "dest": ".claude/skills/load-test/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/release-manager-tech-writer/SKILL.md",
+      "dest": ".claude/skills/release-manager-tech-writer/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/security/SKILL.md",
+      "dest": ".claude/skills/security/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/testing/SKILL.md",
+      "dest": ".claude/skills/testing/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/translator/SKILL.md",
+      "dest": ".claude/skills/translator/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/ui-expert/SKILL.md",
+      "dest": ".claude/skills/ui-expert/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_claude/skills/ux-senior/SKILL.md",
+      "dest": ".claude/skills/ux-senior/SKILL.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/README.md",
+      "dest": ".cursor/agents/README.md",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/android-docs.mdc",
+      "dest": ".cursor/agents/android-docs.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/architect-expert.mdc",
+      "dest": ".cursor/agents/architect-expert.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/bugfix.mdc",
+      "dest": ".cursor/agents/bugfix.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/code-review.mdc",
+      "dest": ".cursor/agents/code-review.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/deployment.mdc",
+      "dest": ".cursor/agents/deployment.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/explorer.mdc",
+      "dest": ".cursor/agents/explorer.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/feature-parity.mdc",
+      "dest": ".cursor/agents/feature-parity.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/feature-spec.mdc",
+      "dest": ".cursor/agents/feature-spec.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/frontend-expert.mdc",
+      "dest": ".cursor/agents/frontend-expert.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/implement-feature.mdc",
+      "dest": ".cursor/agents/implement-feature.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/load-test.mdc",
+      "dest": ".cursor/agents/load-test.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/packages-pipeline.mdc",
+      "dest": ".cursor/agents/packages-pipeline.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/registry.mdc",
+      "dest": ".cursor/agents/registry.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/security.mdc",
+      "dest": ".cursor/agents/security.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/ship-it.mdc",
+      "dest": ".cursor/agents/ship-it.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/testing.mdc",
+      "dest": ".cursor/agents/testing.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/translator.mdc",
+      "dest": ".cursor/agents/translator.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/ui-expert.mdc",
+      "dest": ".cursor/agents/ui-expert.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/agents/ux-senior.mdc",
+      "dest": ".cursor/agents/ux-senior.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/autonomous/README.md",
+      "dest": ".cursor/autonomous/README.md",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/autonomous/config.mdc",
+      "dest": ".cursor/autonomous/config.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/autonomous/examples.md",
+      "dest": ".cursor/autonomous/examples.md",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/autonomous/workflows.mdc",
+      "dest": ".cursor/autonomous/workflows.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/commands/bugfix.md",
+      "dest": ".cursor/commands/bugfix.md",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/commands/explorer.md",
+      "dest": ".cursor/commands/explorer.md",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/commands/feature-spec.md",
+      "dest": ".cursor/commands/feature-spec.md",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/commands/frontend-expert.md",
+      "dest": ".cursor/commands/frontend-expert.md",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/commands/ship-it.md",
+      "dest": ".cursor/commands/ship-it.md",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/rules/api-architecture.mdc",
+      "dest": ".cursor/rules/api-architecture.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/rules/error-handling.mdc",
+      "dest": ".cursor/rules/error-handling.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/rules/mobile-navigation-toolbar.mdc",
+      "dest": ".cursor/rules/mobile-navigation-toolbar.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/rules/mobile-react-architecture.mdc",
+      "dest": ".cursor/rules/mobile-react-architecture.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/rules/mobile-safe-area.mdc",
+      "dest": ".cursor/rules/mobile-safe-area.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/rules/packages-pipeline.mdc",
+      "dest": ".cursor/rules/packages-pipeline.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/rules/references.mdc",
+      "dest": ".cursor/rules/references.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/rules/requirements.mdc",
+      "dest": ".cursor/rules/requirements.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/rules/shell-commands.mdc",
+      "dest": ".cursor/rules/shell-commands.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/rules/skills.mdc",
+      "dest": ".cursor/rules/skills.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_cursor/rules/web-react-architecture.mdc",
+      "dest": ".cursor/rules/web-react-architecture.mdc",
+      "group": "ai:cursor",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_dockerignore",
+      "dest": ".dockerignore",
+      "group": "core",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_github/workflows/__PROJECT_SLUG__-app.yml",
+      "dest": ".github/workflows/__PROJECT_SLUG__-app.yml",
+      "group": "ai:github",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/_gitignore",
+      "dest": ".gitignore",
+      "group": "core",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/CLAUDE.md",
+      "dest": "CLAUDE.md",
+      "group": "core",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/Makefile",
+      "dest": "Makefile",
+      "group": "make",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/_env.example",
+      "dest": "api/.env.example",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/api/_env.production.example",
+      "dest": "api/.env.production.example",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/api/_npmrc",
+      "dest": "api/.npmrc",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/api/Dockerfile",
+      "dest": "api/Dockerfile",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/biome.json",
+      "dest": "api/biome.json",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/package.json",
+      "dest": "api/package.json",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/pnpm-lock.yaml",
+      "dest": "api/pnpm-lock.yaml",
+      "group": "api",
+      "mode": 644,
+      "raw": true,
+      "dotEscaped": false,
+      "invalidatedBy": [
+        "wyscan:registry",
+        "wyscan:standalone"
+      ]
+    },
+    {
+      "src": "tree/api/public/README.md",
+      "dest": "api/public/README.md",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/public/flags/_gitkeep",
+      "dest": "api/public/flags/.gitkeep",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/api/scripts/bump-patch-version.mjs",
+      "dest": "api/scripts/bump-patch-version.mjs",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/scripts/dev-entrypoint.sh",
+      "dest": "api/scripts/dev-entrypoint.sh",
+      "group": "api",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/scripts/ensure-api-node-modules.sh",
+      "dest": "api/scripts/ensure-api-node-modules.sh",
+      "group": "api",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/scripts/ensure-auth-api-dist.sh",
+      "dest": "api/scripts/ensure-auth-api-dist.sh",
+      "group": "api",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/scripts/ensure-local-packages-built.sh",
+      "dest": "api/scripts/ensure-local-packages-built.sh",
+      "group": "api",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/scripts/prepare-deps.sh",
+      "dest": "api/scripts/prepare-deps.sh",
+      "group": "api",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/app.test.ts",
+      "dest": "api/src/app.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/app.ts",
+      "dest": "api/src/app.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/emails/README.md",
+      "dest": "api/src/emails/README.md",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/integrations/README.md",
+      "dest": "api/src/integrations/README.md",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/jobs/workerStub.ts",
+      "dest": "api/src/jobs/workerStub.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/apiError.test.ts",
+      "dest": "api/src/lib/apiError.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/apiError.ts",
+      "dest": "api/src/lib/apiError.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/clientIp.test.ts",
+      "dest": "api/src/lib/clientIp.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/clientIp.ts",
+      "dest": "api/src/lib/clientIp.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/datetime.test.ts",
+      "dest": "api/src/lib/datetime.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/datetime.ts",
+      "dest": "api/src/lib/datetime.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/firebaseAdmin.test.ts",
+      "dest": "api/src/lib/firebaseAdmin.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/firebaseAdmin.ts",
+      "dest": "api/src/lib/firebaseAdmin.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/infraHealth.ts",
+      "dest": "api/src/lib/infraHealth.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/mapWithConcurrency.test.ts",
+      "dest": "api/src/lib/mapWithConcurrency.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/mapWithConcurrency.ts",
+      "dest": "api/src/lib/mapWithConcurrency.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/mongoTransactions.test.ts",
+      "dest": "api/src/lib/mongoTransactions.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/mongoTransactions.ts",
+      "dest": "api/src/lib/mongoTransactions.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/rateLimit.test.ts",
+      "dest": "api/src/lib/rateLimit.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/rateLimit.ts",
+      "dest": "api/src/lib/rateLimit.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/sanitizePublicText.test.ts",
+      "dest": "api/src/lib/sanitizePublicText.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/sanitizePublicText.ts",
+      "dest": "api/src/lib/sanitizePublicText.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/semver.test.ts",
+      "dest": "api/src/lib/semver.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/semver.ts",
+      "dest": "api/src/lib/semver.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/sharedRedis.ts",
+      "dest": "api/src/lib/sharedRedis.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/validateProductionEnv.test.ts",
+      "dest": "api/src/lib/validateProductionEnv.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/validateProductionEnv.ts",
+      "dest": "api/src/lib/validateProductionEnv.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/zod.test.ts",
+      "dest": "api/src/lib/zod.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/lib/zod.ts",
+      "dest": "api/src/lib/zod.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/logAgent/server.ts",
+      "dest": "api/src/logAgent/server.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/middleware/README.md",
+      "dest": "api/src/middleware/README.md",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/notifications/README.md",
+      "dest": "api/src/notifications/README.md",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/platforms/README.md",
+      "dest": "api/src/platforms/README.md",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/realtime/websocketServer.ts",
+      "dest": "api/src/realtime/websocketServer.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/scripts/README.md",
+      "dest": "api/src/scripts/README.md",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/server.ts",
+      "dest": "api/src/server.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/staticRoutes.ts",
+      "dest": "api/src/staticRoutes.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/v1/config/routes.ts",
+      "dest": "api/src/v1/config/routes.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/v1/health/routes.test.ts",
+      "dest": "api/src/v1/health/routes.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/v1/health/routes.ts",
+      "dest": "api/src/v1/health/routes.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/v1/shared/infraStatus.ts",
+      "dest": "api/src/v1/shared/infraStatus.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/src/version.ts",
+      "dest": "api/src/version.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/tsconfig.json",
+      "dest": "api/tsconfig.json",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/api/vitest.config.ts",
+      "dest": "api/vitest.config.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/__PROJECT_SLUG__.code-workspace",
+      "dest": "__PROJECT_SLUG__.code-workspace",
+      "group": "core",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/build.env.example",
+      "dest": "docker/build.env.example",
+      "group": "docker",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/deploy/_env.example",
+      "dest": "docker/deploy/.env.example",
+      "group": "deploy",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/docker/deploy/Makefile",
+      "dest": "docker/deploy/Makefile",
+      "group": "deploy",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/deploy/docker-compose.mongodb-bundled.yml",
+      "dest": "docker/deploy/docker-compose.mongodb-bundled.yml",
+      "group": "deploy",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/deploy/docker-compose.mongodb-external.yml",
+      "dest": "docker/deploy/docker-compose.mongodb-external.yml",
+      "group": "deploy",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/deploy/docker-compose.yml",
+      "dest": "docker/deploy/docker-compose.yml",
+      "group": "deploy",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/deploy/nginx/host-nginx.conf.example",
+      "dest": "docker/deploy/nginx/host-nginx.conf.example",
+      "group": "deploy",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/deploy/scripts/confirm-upgrade.sh",
+      "dest": "docker/deploy/scripts/confirm-upgrade.sh",
+      "group": "deploy",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/deploy/scripts/create-mongodb-user.js",
+      "dest": "docker/deploy/scripts/create-mongodb-user.js",
+      "group": "deploy",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/deploy/scripts/setup-bundled-mongodb.sh",
+      "dest": "docker/deploy/scripts/setup-bundled-mongodb.sh",
+      "group": "deploy",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/deploy/scripts/setup-mongodb-user.sh",
+      "dest": "docker/deploy/scripts/setup-mongodb-user.sh",
+      "group": "deploy",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/deploy/scripts/verify-play-integrity-mount.sh",
+      "dest": "docker/deploy/scripts/verify-play-integrity-mount.sh",
+      "group": "deploy",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/deploy/secrets/_gitignore",
+      "dest": "docker/deploy/secrets/.gitignore",
+      "group": "deploy",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/docker/deploy/setup.sh",
+      "dest": "docker/deploy/setup.sh",
+      "group": "deploy",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/docker-compose.dev-host-api.yml",
+      "dest": "docker/docker-compose.dev-host-api.yml",
+      "group": "docker",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/docker-compose.prod.yml",
+      "dest": "docker/docker-compose.prod.yml",
+      "group": "docker",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/docker-compose.yml",
+      "dest": "docker/docker-compose.yml",
+      "group": "docker",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/mongodb/init-replica.js",
+      "dest": "docker/mongodb/init-replica.js",
+      "group": "docker",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/nginx/nginx.dev.conf",
+      "dest": "docker/nginx/nginx.dev.conf",
+      "group": "docker",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/nginx/nginx.dev.host-api.conf",
+      "dest": "docker/nginx/nginx.dev.host-api.conf",
+      "group": "docker",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docker/nginx/nginx.prod.conf.example",
+      "dest": "docker/nginx/nginx.prod.conf.example",
+      "group": "docker",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/docs/features/README.md",
+      "dest": "docs/features/README.md",
+      "group": "docs",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/_gitignore",
+      "dest": "mobile/.gitignore",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/mobile/README.md",
+      "dest": "mobile/README.md",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/app.config.ts",
+      "dest": "mobile/app.config.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/app/(app)/README.md",
+      "dest": "mobile/app/(app)/README.md",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/app/(auth)/README.md",
+      "dest": "mobile/app/(auth)/README.md",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/app/_layout.tsx",
+      "dest": "mobile/app/_layout.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/app/index.tsx",
+      "dest": "mobile/app/index.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/assets/README.md",
+      "dest": "mobile/assets/README.md",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/babel.config.js",
+      "dest": "mobile/babel.config.js",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/components/home/WelcomeScreen.tsx",
+      "dest": "mobile/components/home/WelcomeScreen.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/components/home/welcomeScreenStyles.test.ts",
+      "dest": "mobile/components/home/welcomeScreenStyles.test.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/components/home/welcomeScreenStyles.ts",
+      "dest": "mobile/components/home/welcomeScreenStyles.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/config/devHostConfig.js",
+      "dest": "mobile/config/devHostConfig.js",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/config/googleOAuthConfig.js",
+      "dest": "mobile/config/googleOAuthConfig.js",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/lib/brand/brandName.ts",
+      "dest": "mobile/lib/brand/brandName.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/lib/i18n.ts",
+      "dest": "mobile/lib/i18n.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/lib/i18n/LocaleContext.tsx",
+      "dest": "mobile/lib/i18n/LocaleContext.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/lib/i18n/bundles.ts",
+      "dest": "mobile/lib/i18n/bundles.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/lib/i18n/engine.ts",
+      "dest": "mobile/lib/i18n/engine.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/lib/i18n/localeOptions.ts",
+      "dest": "mobile/lib/i18n/localeOptions.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/lib/i18n/localePreference.ts",
+      "dest": "mobile/lib/i18n/localePreference.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/lib/i18n/normalizePreferredLanguage.test.ts",
+      "dest": "mobile/lib/i18n/normalizePreferredLanguage.test.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/lib/i18n/normalizePreferredLanguage.ts",
+      "dest": "mobile/lib/i18n/normalizePreferredLanguage.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/lib/theme/colors.ts",
+      "dest": "mobile/lib/theme/colors.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/lib/theme/index.ts",
+      "dest": "mobile/lib/theme/index.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/locales/de.json",
+      "dest": "mobile/locales/de.json",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/locales/en.json",
+      "dest": "mobile/locales/en.json",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/locales/es.json",
+      "dest": "mobile/locales/es.json",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/locales/fr.json",
+      "dest": "mobile/locales/fr.json",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/locales/it.json",
+      "dest": "mobile/locales/it.json",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/locales/nl.json",
+      "dest": "mobile/locales/nl.json",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/locales/pt-BR.json",
+      "dest": "mobile/locales/pt-BR.json",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/locales/pt-PT.json",
+      "dest": "mobile/locales/pt-PT.json",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/metro.config.js",
+      "dest": "mobile/metro.config.js",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/package.json",
+      "dest": "mobile/package.json",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/plugins/withAndroidEdgeToEdgeTheme.js",
+      "dest": "mobile/plugins/withAndroidEdgeToEdgeTheme.js",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/plugins/withAndroidEdgeToEdgeTheme.test.ts",
+      "dest": "mobile/plugins/withAndroidEdgeToEdgeTheme.test.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/plugins/withAndroidFcmManifestFix.js",
+      "dest": "mobile/plugins/withAndroidFcmManifestFix.js",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/plugins/withAndroidLargeScreenOptOut.js",
+      "dest": "mobile/plugins/withAndroidLargeScreenOptOut.js",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/plugins/withAndroidLargeScreenOptOut.test.ts",
+      "dest": "mobile/plugins/withAndroidLargeScreenOptOut.test.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/plugins/withIosMetroHost.js",
+      "dest": "mobile/plugins/withIosMetroHost.js",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/plugins/withIosQuietBuild.js",
+      "dest": "mobile/plugins/withIosQuietBuild.js",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/pnpm-lock.yaml",
+      "dest": "mobile/pnpm-lock.yaml",
+      "group": "mobile",
+      "mode": 644,
+      "raw": true,
+      "dotEscaped": false,
+      "invalidatedBy": [
+        "wyscan:registry",
+        "wyscan:standalone"
+      ]
+    },
+    {
+      "src": "tree/mobile/pnpm-workspace.yaml",
+      "dest": "mobile/pnpm-workspace.yaml",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/scripts/bump-build-number.mjs",
+      "dest": "mobile/scripts/bump-build-number.mjs",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/scripts/check-locales.mjs",
+      "dest": "mobile/scripts/check-locales.mjs",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/scripts/read-release-version.mjs",
+      "dest": "mobile/scripts/read-release-version.mjs",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/scripts/set-build-number.mjs",
+      "dest": "mobile/scripts/set-build-number.mjs",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/scripts/sync-ios-build-number.mjs",
+      "dest": "mobile/scripts/sync-ios-build-number.mjs",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/scripts/verify-build-number-sync.mjs",
+      "dest": "mobile/scripts/verify-build-number-sync.mjs",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/scripts/verify-release-env.mjs",
+      "dest": "mobile/scripts/verify-release-env.mjs",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/scripts/verify-release-env.test.mjs",
+      "dest": "mobile/scripts/verify-release-env.test.mjs",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/test/mocks/expo-constants.ts",
+      "dest": "mobile/test/mocks/expo-constants.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/test/mocks/expo-image.ts",
+      "dest": "mobile/test/mocks/expo-image.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/test/mocks/expo-localization.ts",
+      "dest": "mobile/test/mocks/expo-localization.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/test/mocks/expo-router.ts",
+      "dest": "mobile/test/mocks/expo-router.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/test/mocks/expo-secure-store.ts",
+      "dest": "mobile/test/mocks/expo-secure-store.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/test/mocks/react-native.ts",
+      "dest": "mobile/test/mocks/react-native.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/tsconfig.json",
+      "dest": "mobile/tsconfig.json",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/vitest.config.ts",
+      "dest": "mobile/vitest.config.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/scripts/archive-features.mjs",
+      "dest": "scripts/archive-features.mjs",
+      "group": "scripts",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/scripts/check-doc-links-baseline.txt",
+      "dest": "scripts/check-doc-links-baseline.txt",
+      "group": "scripts",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/scripts/check-doc-links.mjs",
+      "dest": "scripts/check-doc-links.mjs",
+      "group": "scripts",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/scripts/dev-stack.sh",
+      "dest": "scripts/dev-stack.sh",
+      "group": "scripts",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/scripts/ensure-jwt-secret.sh",
+      "dest": "scripts/ensure-jwt-secret.sh",
+      "group": "scripts",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/scripts/features-index.mjs",
+      "dest": "scripts/features-index.mjs",
+      "group": "scripts",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/scripts/init-wyscan-dev.sh",
+      "dest": "scripts/init-wyscan-dev.sh",
+      "group": "scripts",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/scripts/setup-design-system.sh",
+      "dest": "scripts/setup-design-system.sh",
+      "group": "scripts",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/scripts/ship-it.mjs",
+      "dest": "scripts/ship-it.mjs",
+      "group": "scripts",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/scripts/verify-push-local.sh",
+      "dest": "scripts/verify-push-local.sh",
+      "group": "scripts",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/_biomeignore",
+      "dest": "web/__PROJECT_SLUG__-admin/.biomeignore",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/web/_admin/_gitignore",
+      "dest": "web/__PROJECT_SLUG__-admin/.gitignore",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/web/_admin/AGENTS.md",
+      "dest": "web/__PROJECT_SLUG__-admin/AGENTS.md",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/CLAUDE.md",
+      "dest": "web/__PROJECT_SLUG__-admin/CLAUDE.md",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/README.md",
+      "dest": "web/__PROJECT_SLUG__-admin/README.md",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/biome.json",
+      "dest": "web/__PROJECT_SLUG__-admin/biome.json",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/next.config.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/next.config.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/package.json",
+      "dest": "web/__PROJECT_SLUG__-admin/package.json",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/pnpm-lock.yaml",
+      "dest": "web/__PROJECT_SLUG__-admin/pnpm-lock.yaml",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": true,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/pnpm-workspace.yaml",
+      "dest": "web/__PROJECT_SLUG__-admin/pnpm-workspace.yaml",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/postcss.config.mjs",
+      "dest": "web/__PROJECT_SLUG__-admin/postcss.config.mjs",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/public/_gitkeep",
+      "dest": "web/__PROJECT_SLUG__-admin/public/.gitkeep",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/web/_admin/security-headers.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/security-headers.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/src/app/globals.css",
+      "dest": "web/__PROJECT_SLUG__-admin/src/app/globals.css",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/src/app/layout.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/app/layout.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/src/app/page.test.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/app/page.test.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/src/app/page.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/app/page.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/src/app/providers.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/app/providers.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/src/components/README.md",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/README.md",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/src/hooks/README.md",
+      "dest": "web/__PROJECT_SLUG__-admin/src/hooks/README.md",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/src/lib/cache/staleWhileRevalidate.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/cache/staleWhileRevalidate.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/src/lib/i18n/strings.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/i18n/strings.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/src/stores/README.md",
+      "dest": "web/__PROJECT_SLUG__-admin/src/stores/README.md",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/tsconfig.json",
+      "dest": "web/__PROJECT_SLUG__-admin/tsconfig.json",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/vitest.config.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/vitest.config.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_admin/vitest.setup.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/vitest.setup.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/_gitignore",
+      "dest": "web/__PROJECT_SLUG__-app/.gitignore",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/web/_app/AGENTS.md",
+      "dest": "web/__PROJECT_SLUG__-app/AGENTS.md",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/CLAUDE.md",
+      "dest": "web/__PROJECT_SLUG__-app/CLAUDE.md",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/README.md",
+      "dest": "web/__PROJECT_SLUG__-app/README.md",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/biome.json",
+      "dest": "web/__PROJECT_SLUG__-app/biome.json",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/messages/de.json",
+      "dest": "web/__PROJECT_SLUG__-app/messages/de.json",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/messages/en.json",
+      "dest": "web/__PROJECT_SLUG__-app/messages/en.json",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/messages/es.json",
+      "dest": "web/__PROJECT_SLUG__-app/messages/es.json",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/messages/fr.json",
+      "dest": "web/__PROJECT_SLUG__-app/messages/fr.json",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/messages/it.json",
+      "dest": "web/__PROJECT_SLUG__-app/messages/it.json",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/messages/nl.json",
+      "dest": "web/__PROJECT_SLUG__-app/messages/nl.json",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/messages/pt-BR.json",
+      "dest": "web/__PROJECT_SLUG__-app/messages/pt-BR.json",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/messages/pt-PT.json",
+      "dest": "web/__PROJECT_SLUG__-app/messages/pt-PT.json",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/next.config.ts",
+      "dest": "web/__PROJECT_SLUG__-app/next.config.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/package.json",
+      "dest": "web/__PROJECT_SLUG__-app/package.json",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/pnpm-lock.yaml",
+      "dest": "web/__PROJECT_SLUG__-app/pnpm-lock.yaml",
+      "group": "web:app",
+      "mode": 644,
+      "raw": true,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/pnpm-workspace.yaml",
+      "dest": "web/__PROJECT_SLUG__-app/pnpm-workspace.yaml",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/postcss.config.mjs",
+      "dest": "web/__PROJECT_SLUG__-app/postcss.config.mjs",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/public/_gitkeep",
+      "dest": "web/__PROJECT_SLUG__-app/public/.gitkeep",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/web/_app/security-headers.test.ts",
+      "dest": "web/__PROJECT_SLUG__-app/security-headers.test.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/security-headers.ts",
+      "dest": "web/__PROJECT_SLUG__-app/security-headers.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/app/[locale]/layout.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/[locale]/layout.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/app/[locale]/page.test.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/[locale]/page.test.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/app/[locale]/page.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/[locale]/page.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/app/globals.css",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/globals.css",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/app/layout.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/layout.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/app/providers.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/providers.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/components/theme/AppThemeProvider.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/theme/AppThemeProvider.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/components/theme/ThemeToggle.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/theme/ThemeToggle.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/hooks/README.md",
+      "dest": "web/__PROJECT_SLUG__-app/src/hooks/README.md",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/i18n/config.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/i18n/config.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/i18n/index.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/i18n/index.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/i18n/navigation.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/i18n/navigation.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/i18n/request.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/i18n/request.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/i18n/routing.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/i18n/routing.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/instrumentation-client.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/instrumentation-client.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/lib/cache/staleWhileRevalidate.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/cache/staleWhileRevalidate.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/lib/server/validateProductionEnv.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/server/validateProductionEnv.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/lib/theme/theme-preference.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/theme/theme-preference.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/proxy.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/proxy.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/stores/README.md",
+      "dest": "web/__PROJECT_SLUG__-app/src/stores/README.md",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/test/intl-pathname-for-vitest.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/test/intl-pathname-for-vitest.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/src/test/intl-provider.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/test/intl-provider.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/tsconfig.json",
+      "dest": "web/__PROJECT_SLUG__-app/tsconfig.json",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/vercel.json",
+      "dest": "web/__PROJECT_SLUG__-app/vercel.json",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/vitest.config.ts",
+      "dest": "web/__PROJECT_SLUG__-app/vitest.config.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_app/vitest.setup.ts",
+      "dest": "web/__PROJECT_SLUG__-app/vitest.setup.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/_biomeignore",
+      "dest": "web/__PROJECT_SLUG__-site/.biomeignore",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/web/_site/_gitignore",
+      "dest": "web/__PROJECT_SLUG__-site/.gitignore",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/web/_site/AGENTS.md",
+      "dest": "web/__PROJECT_SLUG__-site/AGENTS.md",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/CLAUDE.md",
+      "dest": "web/__PROJECT_SLUG__-site/CLAUDE.md",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/README.md",
+      "dest": "web/__PROJECT_SLUG__-site/README.md",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/biome.json",
+      "dest": "web/__PROJECT_SLUG__-site/biome.json",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/messages/de.json",
+      "dest": "web/__PROJECT_SLUG__-site/messages/de.json",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/messages/en.json",
+      "dest": "web/__PROJECT_SLUG__-site/messages/en.json",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/messages/es.json",
+      "dest": "web/__PROJECT_SLUG__-site/messages/es.json",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/messages/fr.json",
+      "dest": "web/__PROJECT_SLUG__-site/messages/fr.json",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/messages/it.json",
+      "dest": "web/__PROJECT_SLUG__-site/messages/it.json",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/messages/nl.json",
+      "dest": "web/__PROJECT_SLUG__-site/messages/nl.json",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/messages/pt-BR.json",
+      "dest": "web/__PROJECT_SLUG__-site/messages/pt-BR.json",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/messages/pt-PT.json",
+      "dest": "web/__PROJECT_SLUG__-site/messages/pt-PT.json",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/next.config.ts",
+      "dest": "web/__PROJECT_SLUG__-site/next.config.ts",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/package.json",
+      "dest": "web/__PROJECT_SLUG__-site/package.json",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/pnpm-lock.yaml",
+      "dest": "web/__PROJECT_SLUG__-site/pnpm-lock.yaml",
+      "group": "web:site",
+      "mode": 644,
+      "raw": true,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/pnpm-workspace.yaml",
+      "dest": "web/__PROJECT_SLUG__-site/pnpm-workspace.yaml",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/postcss.config.mjs",
+      "dest": "web/__PROJECT_SLUG__-site/postcss.config.mjs",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/public/_gitkeep",
+      "dest": "web/__PROJECT_SLUG__-site/public/.gitkeep",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "tree/web/_site/security-headers.ts",
+      "dest": "web/__PROJECT_SLUG__-site/security-headers.ts",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/app/[locale]/layout.tsx",
+      "dest": "web/__PROJECT_SLUG__-site/src/app/[locale]/layout.tsx",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/app/[locale]/page.test.tsx",
+      "dest": "web/__PROJECT_SLUG__-site/src/app/[locale]/page.test.tsx",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/app/[locale]/page.tsx",
+      "dest": "web/__PROJECT_SLUG__-site/src/app/[locale]/page.tsx",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/app/globals.css",
+      "dest": "web/__PROJECT_SLUG__-site/src/app/globals.css",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/app/layout.tsx",
+      "dest": "web/__PROJECT_SLUG__-site/src/app/layout.tsx",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/app/providers.tsx",
+      "dest": "web/__PROJECT_SLUG__-site/src/app/providers.tsx",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/components/theme/AppThemeProvider.tsx",
+      "dest": "web/__PROJECT_SLUG__-site/src/components/theme/AppThemeProvider.tsx",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/components/theme/ThemeToggle.tsx",
+      "dest": "web/__PROJECT_SLUG__-site/src/components/theme/ThemeToggle.tsx",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/i18n/config.ts",
+      "dest": "web/__PROJECT_SLUG__-site/src/i18n/config.ts",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/i18n/index.ts",
+      "dest": "web/__PROJECT_SLUG__-site/src/i18n/index.ts",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/i18n/navigation.ts",
+      "dest": "web/__PROJECT_SLUG__-site/src/i18n/navigation.ts",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/i18n/request.ts",
+      "dest": "web/__PROJECT_SLUG__-site/src/i18n/request.ts",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/i18n/routing.ts",
+      "dest": "web/__PROJECT_SLUG__-site/src/i18n/routing.ts",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/lib/theme/theme-preference.ts",
+      "dest": "web/__PROJECT_SLUG__-site/src/lib/theme/theme-preference.ts",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/proxy.ts",
+      "dest": "web/__PROJECT_SLUG__-site/src/proxy.ts",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/test/intl-pathname-for-vitest.ts",
+      "dest": "web/__PROJECT_SLUG__-site/src/test/intl-pathname-for-vitest.ts",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/src/test/intl-provider.tsx",
+      "dest": "web/__PROJECT_SLUG__-site/src/test/intl-provider.tsx",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/tsconfig.json",
+      "dest": "web/__PROJECT_SLUG__-site/tsconfig.json",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/vitest.config.ts",
+      "dest": "web/__PROJECT_SLUG__-site/vitest.config.ts",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/web/_site/vitest.setup.ts",
+      "dest": "web/__PROJECT_SLUG__-site/vitest.setup.ts",
+      "group": "web:site",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    }
+  ]
+}

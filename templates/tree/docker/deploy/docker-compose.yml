@@ -1,0 +1,100 @@
+# Standalone production stack — pull API image from GHCR; MongoDB is external (.env).
+# Host nginx (not in Compose) proxies to the API on localhost.
+# Run from this directory (docker/deploy/) on the server:
+#   export VERSION=1.0.0
+#   export IMAGE_REGISTRY=__IMAGE_REGISTRY__
+#   docker compose pull
+#   docker compose up -d
+#
+# First deploy: cp .env.example .env
+# Host nginx: see nginx/host-nginx.conf.example
+# See docs/runbooks/production-api-docker.md
+# Day-to-day server ops: docs/runbooks/production-api-day-to-day.md
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: __PROJECT_SLUG__-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - __PROJECT_SLUG__-network
+
+  api:
+    image: ${IMAGE_REGISTRY:-__IMAGE_REGISTRY__}/__PROJECT_SLUG__-api:${VERSION:?Set VERSION e.g. 1.0.0}
+    container_name: __PROJECT_SLUG__-api
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      REDIS_URL: redis://redis:6379
+      LOG_VIEWER_ENABLED: "true"
+      LOG_AGENT_URL: http://log-agent:3090
+      LOG_AGENT_SECRET: ${LOG_AGENT_SECRET:?Set LOG_AGENT_SECRET}
+      HTTP_ACCESS_LOG: ${HTTP_ACCESS_LOG:-false}
+    depends_on:
+      redis:
+        condition: service_healthy
+    extra_hosts:
+      # Lets MONGODB_URL use host.docker.internal when MongoDB publishes a host port (e.g. 127.0.0.1:27017).
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "${API_BIND:-127.0.0.1}:${API_PORT:-3000}:3000"
+    volumes:
+      # Play Integrity service account (copy from mobile/fastlane/*.json on server — see runbook)
+      - ./secrets/google-play-sa.json:/run/secrets/google-play-sa.json:ro
+    networks:
+      - __PROJECT_SLUG__-network
+
+  realtime:
+    image: ${IMAGE_REGISTRY:-__IMAGE_REGISTRY__}/__PROJECT_SLUG__-api:${VERSION}
+    container_name: __PROJECT_SLUG__-realtime
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      NODE_ENV: production
+      REALTIME_PORT: 3001
+      REDIS_URL: redis://redis:6379
+    command: ["node", "dist/realtime/websocketServer.js"]
+    ports:
+      - "127.0.0.1:3001:3001"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - __PROJECT_SLUG__-network
+
+  log-agent:
+    image: ${IMAGE_REGISTRY:-__IMAGE_REGISTRY__}/__PROJECT_SLUG__-api:${VERSION}
+    container_name: __PROJECT_SLUG__-log-agent
+    restart: unless-stopped
+    # Production image runs as apiuser; Docker socket requires root or docker group.
+    user: "0:0"
+    environment:
+      NODE_ENV: production
+      LOG_AGENT_PORT: 3090
+      LOG_AGENT_SECRET: ${LOG_AGENT_SECRET:?Set LOG_AGENT_SECRET}
+      LOG_CONTAINER_API: __PROJECT_SLUG__-api
+      LOG_CONTAINER_REALTIME: __PROJECT_SLUG__-realtime
+    command: ["node", "dist/logAgent/server.js"]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - __PROJECT_SLUG__-network
+
+volumes:
+  redis_data:
+    name: __PROJECT_SLUG__-redis-data-prod
+
+networks:
+  __PROJECT_SLUG__-network:
+    name: __PROJECT_SLUG__-network-prod

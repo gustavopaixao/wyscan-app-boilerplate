@@ -1,0 +1,96 @@
+---
+alwaysApply: false
+description: React/Next.js architecture, colocation, and testing for __PROJECT_NAME__ web apps (__PROJECT_SLUG__-admin, __PROJECT_SLUG__-site).
+globs: ["web/__PROJECT_SLUG__-admin/**", "web/__PROJECT_SLUG__-site/**"]
+---
+
+# Web React architecture
+
+Rules for `web/__PROJECT_SLUG__-admin` and `web/__PROJECT_SLUG__-site`: structure, components, layering, and **mandatory colocated tests**.
+
+## Clean architecture
+
+- **Presentation (UI):** React components, pages, layouts. No direct business rules; call hooks and pass data down.
+- **Application / use cases:** Orchestration in hooks (e.g. `useSomething`) or small modules that compose API calls and state.
+- **Domain:** Types, validators, and pure helpers that do not import UI or framework-specific I/O. Prefer `types/` and small domain modules under the feature.
+- **Infrastructure:** API clients, env, external SDKs. Keep them at the edges; features depend on abstractions or thin wrappers, not scattered fetches inside leaf UI.
+
+Dependency direction: outer layers depend inward; domain types and pure logic must not depend on React or Next.js router specifics unless unavoidable at the app boundary.
+
+## Components: arrow functions only (team convention)
+
+- **__PROJECT_NAME__ convention:** define components as `const Name = (...) => { ... }` (or `(...) => (...)` for trivial presentational components). Do not use `function Name() { ... }` for React components here. Do not use `React.createElement`-only or class components for new code.
+- **Note:** React and the wider ecosystem often use `function` components; this rule is **project consistency**, not a universal best practice (some teams prefer `function` for hoisting or stack traces).
+
+## Feature-first layout
+
+- Organize by **feature** (e.g. `ads`, `landing`, `auth`) rather than only by technical type at the top level.
+- Within a feature, colocate what belongs to that feature: components, hooks, types, and feature-specific utilities.
+- Route files under `app/` stay thin; heavy UI lives under the feature’s component tree.
+
+## Next.js App Router
+
+- **Server vs Client Components:** Default to **Server Components**. Add `"use client"` only when the module needs React hooks, browser APIs, or event handlers in that file. Prefer a **server shell** with **client leaves** for interactivity instead of marking large trees as client-only.
+- **Data and mutations:** Prefer **fetching on the server** in Server Components (or shared server utilities), or **Route Handlers** for HTTP APIs. Use **client** `fetch` (or the project’s client data library, if any) only for data that must load or refresh in the browser. **Server Actions:** colocate per feature (e.g. `actions/` or next to the form); never rely on `NEXT_PUBLIC_*` for secrets—server-only env vars for sensitive values.
+- **Colocation in `app/`:** Use **private folders** (`_components`, `_lib`) for route-only pieces that must not become routes. Use **route groups** `(segmentName)` to organize layouts without changing the URL.
+- **Segment UX:** Use **`loading.tsx`**, **`error.tsx`**, and **`not-found`** at the route segment where it makes sense—not only spinners inside leaf components.
+- **Dynamic rendering:** Using dynamic APIs (`cookies()`, `headers()`, `searchParams` on pages, etc.) opts that part of the tree into **dynamic** behavior; be intentional so static segments stay static where possible.
+
+## One folder per component (PascalCase folder name)
+
+- Each UI component lives in **its own directory** named in **PascalCase** (same as the component name), e.g. `AdBannerForm/AdBannerForm.tsx` or `AdBannerForm/index.tsx` exporting the component. The folder also includes **`types/`**, **`hooks/`** (when used), and **`__tests__/`** (always for new or refactored components—see **Testing**).
+- **Compound components:** Related pieces (`Card`, `CardHeader`, `CardBody`) may live in **one** `Card/` folder with multiple exports—do not split into three sibling folders unless they are reused independently across features.
+- Co-locate only what is private to that component inside that folder (styles, small helpers used nowhere else).
+
+## Shared components
+
+- If a component (or hook/type) is used by **more than one feature**, move it to a **dedicated shared area** (e.g. `src/components/ui/`, `src/components/shared/`, or project convention) — not inside a single feature folder.
+- Shared pieces should stay generic and free of feature-specific business rules.
+
+## `types/` and `hooks/`: per-component vs feature-level
+
+- **Non-trivial / screen-level components:** keep **`types/`** and **`hooks/`** under that component folder for props and hooks **used only by that component**. Move logic to `hooks/useFeatureName.ts` (or similar) when it grows beyond a few lines instead of a huge inline block at the bottom of the component file.
+- **Feature-shared logic:** hooks and types shared **within one feature** but across several components belong under the **feature** (e.g. `src/components/ads/hooks/`, `src/components/ads/types/`), not duplicated under every leaf.
+- **Atomic / trivial UI** (e.g. tiny presentational building blocks in `components/ui`): a single `types.ts` or co-located types next to the file is acceptable if a full `types/` + `hooks/` split adds noise with no benefit; prefer consistency with the rest of the feature when in doubt.
+- **Cross-feature hooks** live under a **shared** hooks path, not under a single feature’s component folder.
+- **Barrel files (`index.ts`):** shallow barrels at **feature** boundaries are fine. Avoid deep barrels for every tiny component— they can hurt tree-shaking and TypeScript performance in large apps; prefer explicit imports or minimal re-exports.
+
+## Destructive actions (`__PROJECT_SLUG__-admin`)
+
+- Never use `window.confirm`, `window.alert`, or `window.prompt` for destructive UX in the admin app.
+- Use [`AppModal`](web/__PROJECT_SLUG__-admin/src/components/ui/AppModal.tsx) with **`size="xs"`** for delete confirmations.
+- Footer pattern: neutral **Cancel** + destructive primary (**Delete**, red styling, disabled while pending).
+- Reference implementations: `GameDeleteDialog`, `BannerDeleteDialog` (show context in the modal body; inline error with `role="alert"` on failure).
+
+## Styling
+
+- Both web apps use **Tailwind CSS**; prefer utility-first styling aligned with existing components unless a file already uses another pattern (e.g. CSS modules) locally.
+
+## Internationalization
+
+- All user-visible strings and i18n rules live under **`.cursor/rules/requirements.mdc`** (no hard-coded copy in UI). For `__PROJECT_SLUG__-site`, follow existing **next-intl** / `messages/` patterns in that app.
+
+## Testing (required)
+
+- **Colocation:** Every component folder (`src/components/.../PascalCaseName/`) **must** include a **`__tests__/`** directory. Do not leave new or materially refactored components without tests.
+- **Component tests:** Add `__tests__/<SameNameAsMainModule>.test.tsx` (e.g. `__tests__/AdBannerForm.test.tsx` next to `AdBannerForm.tsx`). Use **Testing Library** (`screen`, user-centric queries); assert behavior and accessibility-relevant outcomes, not implementation details.
+- **Hooks:** For **each** custom hook file under that component’s `hooks/` (e.g. `hooks/useAdBannerForm.ts`), add **`__tests__/useAdBannerForm.test.ts`** (or `.tsx` if the hook needs DOM). Use **`renderHook`** from `@testing-library/react` (or the project’s equivalent) and **Vitest** matchers.
+- **Compound components:** One shared `__tests__/` under the compound folder; split files by concern if needed (`Card.test.tsx`, `CardHeader.test.tsx`).
+- **Feature-level hooks** (`src/components/{feature}/hooks/*.ts`): add **`hooks/__tests__/`** beside those hooks with **one test file per hook** (same basename: `useFoo.test.ts` for `useFoo.ts`).
+- **Cross-feature shared hooks** (e.g. under `src/components/shared/hooks/`): same rule—**`__tests__/`** next to those hooks and **one test file per hook**.
+- **Shared UI** under `src/components/ui/` (or equivalent): same rule—**`__tests__/`** per component folder and tests for every hook in that folder’s `hooks/`.
+- **Trivial presentational atoms:** Still include `__tests__/`; at minimum a **smoke render** (and any non-trivial prop branches). Skip exhaustive coverage only when there is truly no branching logic—and prefer a tiny test anyway.
+- **Tooling:** `__PROJECT_SLUG__-admin` runs **`pnpm test`** (**Vitest** + **@testing-library/react**). When adding tests to **`__PROJECT_SLUG__-site`**, align on **Vitest + Testing Library** and a `test` script so both apps behave the same in CI and locally.
+
+## Summary checklist (new or refactored UI)
+
+- [ ] Feature-first path; shared code in shared folders.
+- [ ] Server vs client boundary intentional (`"use client"` only where needed).
+- [ ] Data: server-first where possible; Server Actions / env secrets handled correctly.
+- [ ] Segment-level `loading` / `error` / `not-found` considered where appropriate.
+- [ ] Component in its own PascalCase folder (or one compound folder); arrow-function component per __PROJECT_NAME__ convention.
+- [ ] `types/` / `hooks/` at component level when non-trivial; feature-level or shared when reused.
+- [ ] `__tests__/` present; component test file + one test file per colocated hook; feature-level and shared hooks each have `hooks/__tests__/` (or equivalent) with one file per hook.
+- [ ] `pnpm test` passes in `__PROJECT_SLUG__-admin` when that package changed; same expectation once `__PROJECT_SLUG__-site` has a test script.
+- [ ] Clean boundaries: UI thin; logic in hooks/domain; I/O at infrastructure edge.
+- [ ] Copy and locales per `requirements.mdc`.

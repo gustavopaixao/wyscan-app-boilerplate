@@ -1,0 +1,11 @@
+node_modules
+*.log
+.DS_Store
+
+# Scratch output from local `node bin/create.mjs` runs
+/demo-*/
+/tmp/
+
+# Machine-local assistant config (never commit an allowlist)
+.claude/settings.local.json
+.claude/.cc-writes/

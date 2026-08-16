@@ -1,0 +1,25 @@
+node_modules
+dist
+.next
+.turbo
+*.log
+.DS_Store
+api/.env
+!api/.env.example
+web/*/node_modules
+web/*/.next
+web/*/dist
+mobile/node_modules
+mobile/.expo
+mobile/dist
+mobile/.env
+coverage
+**/.pnpm-debug.log
+.pnpm-store/
+.docker-empty-wyscan/
+docker/nginx/nginx.prod.conf
+docker/deploy/.env
+docker/build.env
+
+# Microsoft Office owner/lock files (created while an .xlsx/.docx is open)
+~$*

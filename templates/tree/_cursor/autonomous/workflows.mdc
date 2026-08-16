@@ -1,0 +1,220 @@
+---
+name: autonomous-workflows
+description: Predefined workflows for autonomous operation
+alwaysApply: true
+---
+
+# Autonomous Workflows
+
+Predefined workflows that enable autonomous operation for common tasks.
+
+## Feature Implementation Workflow
+
+**Trigger:** User asks to "implement", "add", "create" a feature
+
+**Steps:**
+1. Analyze requirements
+2. Create task list with `todo_write`
+3. Search codebase for similar patterns
+4. Implement feature:
+   - Create/update files
+   - Follow project architecture
+   - Add tests if needed
+5. Run UX review agent (if UI changes)
+6. Run code review agent
+7. Run security scan (if security-sensitive)
+8. Verify builds
+9. Report completion
+10. Ask for commit approval
+
+## Bug Fix Workflow
+
+**Trigger:** User reports a bug or asks to "fix"
+
+**Steps:**
+1. Reproduce issue (if possible)
+2. Search codebase for related code
+3. Identify root cause
+4. Create task list
+5. Implement fix
+6. Add/update tests
+7. Run code review agent
+8. Verify builds
+9. Test fix
+10. Report completion
+
+## Refactoring Workflow
+
+**Trigger:** User asks to "refactor", "improve", "optimize"
+
+**Steps:**
+1. Analyze current code
+2. Run architect expert agent (patterns review)
+3. Run UI expert agent (if UI code)
+4. Create refactoring plan
+5. Create task list
+6. Execute refactoring incrementally
+7. Verify builds after each change
+8. Run tests
+9. Run code review agent
+10. Report completion
+
+## Pre-Commit Workflow
+
+**Trigger:** Before committing changes
+
+**Steps:**
+1. Check git status
+2. Detect changed files
+3. Run linter (if API changes)
+4. Run tests (if API changes)
+5. Run builder agent (verify builds)
+6. Run code review agent (if >50 lines changed)
+7. Run security scan (if security-sensitive files)
+8. Run UX review (if UI files changed)
+9. Report status
+10. Proceed with commit if all pass
+
+## Pre-Release Workflow
+
+**Trigger:** Before release or major deployment
+
+**Steps:**
+1. Create comprehensive task list
+2. Run UX review agent (full, all platforms)
+3. Run architect expert agent (full audit)
+4. Run security agent (full scan)
+5. Run code review agent (all platforms)
+6. Run load test agent (API)
+7. Run deployment agent (pre-deployment checks)
+8. Generate summary report
+9. Ask for approval
+
+## Code Review Workflow
+
+**Trigger:** User asks to review code or before PR
+
+**Steps:**
+1. Identify changed files
+2. Run code review agent
+3. Run security scan (if applicable)
+4. Run architect review (if architecture changes)
+5. Check API/DTO contracts
+6. Verify tests exist
+7. Generate review report
+
+## New Feature with UI Workflow
+
+**Trigger:** User asks to add UI feature
+
+**Steps:**
+1. Analyze requirements
+2. Search for similar UI patterns
+3. Create task list
+4. Implement feature:
+   - Create view/viewmodel
+   - Add localization keys
+   - Implement light/dark mode
+   - Add accessibility labels
+5. Run UX review agent (feature review)
+6. Run UI expert agent (component review)
+7. Run code review agent
+8. Verify builds
+9. Test in both light/dark mode
+10. Report completion
+
+## API Endpoint Creation Workflow
+
+**Trigger:** User asks to create API endpoint
+
+**Steps:**
+1. Analyze requirements
+2. Review API architecture guide
+3. Create task list
+4. Implement endpoint:
+   - Create route handler
+   - Add Zod validation
+   - Add authentication/authorization
+   - Add rate limiting
+   - Add error handling
+   - Follow API architecture patterns
+5. Run architect expert agent (API design review)
+6. Run security scan
+7. Run code review agent
+8. Generate tests
+9. Verify builds
+10. Report completion
+
+## Documentation Update Workflow
+
+**Trigger:** User asks to update documentation
+
+**Steps:**
+1. Identify documentation needs
+2. Search for related code
+3. Update/create documentation
+4. Verify links work
+5. Check formatting
+6. Report completion
+
+## Dependency Update Workflow
+
+**Trigger:** User asks to update dependencies
+
+**Steps:**
+1. Identify dependencies to update
+2. Check for breaking changes
+3. Create task list
+4. Update dependencies
+5. Run security scan (check vulnerabilities)
+6. Run builder agent (verify builds)
+7. Run tests
+8. Update code if needed (breaking changes)
+9. Report completion
+
+## Autonomous Decision Tree
+
+```
+User Request
+    │
+    ├─ Simple (< 3 steps) → Execute immediately
+    │
+    ├─ Medium (3-5 steps) → Create task list → Execute autonomously
+    │
+    ├─ Complex (> 5 steps) → Create task list → Execute with milestones → Ask approval
+    │
+    └─ Unclear → Ask clarifying questions → Then proceed
+```
+
+## Quality Check Integration
+
+Each workflow includes automatic quality checks:
+
+- **After code changes:** Builder agent
+- **Before commits:** Linter, tests, code review
+- **UI changes:** UX review agent
+- **Security changes:** Security scan
+- **Architecture changes:** Architect review
+
+## Progress Reporting
+
+During autonomous operation:
+
+- Update task status in real-time
+- Report completion of each major step
+- Show build/test results
+- Highlight any issues found
+- Ask for approval when needed
+
+## Error Handling
+
+If something fails during autonomous operation:
+
+1. Stop current task
+2. Report error clearly
+3. Suggest fixes
+4. Ask if user wants to:
+   - Retry
+   - Skip this step
+   - Get help
+   - Abort workflow

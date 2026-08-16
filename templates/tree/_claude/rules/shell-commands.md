@@ -1,0 +1,77 @@
+# Shell Command Hygiene
+
+How to phrase Bash tool calls in this repo so they run without stopping for approval.
+
+Claude Code decides whether a command needs approval by parsing it. Some shapes can never be
+approved ahead of time no matter what is in `permissions.allow` — writing those shapes is what
+turns a five-second investigation into a five-prompt one. Avoid them.
+
+## Never `cd` before `git`
+
+`cd <dir> && git …` triggers an unconditional guard ("changes directory before running git,
+which can execute untrusted hooks from the target directory"). No allow rule suppresses it.
+
+```bash
+# ❌ always prompts
+cd mobile && git diff --stat locales/en.json
+
+# ✅
+git -C mobile diff --stat locales/en.json
+git diff --stat -- mobile/locales/en.json   # from the repo root
+```
+
+The same applies to the sibling Wyscan clones: `git -C ../__ECOSYSTEM_DIR__/Packages status`.
+
+## No shell expansion in inspection commands
+
+Command substitution and parameter expansion make the final command unknowable before it runs,
+so it is flagged "Contains expansion" and must be approved by hand every time.
+
+```bash
+# ❌
+pnpm exec tsc --noEmit 2>&1 | tail -5 && echo "TSC_EXIT=${PIPESTATUS[0]}"
+echo "$f: $(python3 -c "import json;print(len(json.load(open('$f'))))")"
+
+# ✅ run it alone — the tool already reports the exit code
+pnpm exec tsc --noEmit
+```
+
+If you genuinely need a computed value, put the logic in a committed script (below) rather than
+inlining `$(...)`, backticks or `${PIPESTATUS[@]}`.
+
+## One command per tool call
+
+Loops and `;`/`&&` chains cannot be decomposed into independently-checkable subcommands, so the
+whole chain is treated as unknown.
+
+```bash
+# ❌
+for f in locales/*.json; do dup=$(grep -o '^\s*"[^"]*":' "$f" | sort | uniq -d | wc -l); echo "$f $dup"; done
+
+# ✅
+node scripts/check-locales.mjs
+```
+
+Issue independent calls in parallel instead of chaining them — that is faster anyway.
+
+## Prefer the Read / Grep / Glob tools over their shell equivalents
+
+`Read` beats `cat`/`head`/`sed -n '1,400p'`, `Grep` beats `grep -n`, `Glob` beats `find`.
+They never prompt, they render better, and they do not consume shell quoting rules.
+Reach for Bash when you need a program's behaviour, not when you need to look at a file.
+
+## Repeated multi-file checks belong in a committed script
+
+If you are about to write a one-liner that loops over locale bundles, workspaces or spec files —
+and you have written something like it before — write a script instead and commit it. It becomes
+allowlistable once, reviewable, and runnable in CI.
+
+Existing examples: `mobile/scripts/check-locales.mjs`,
+`mobile/scripts/verify-build-number-sync.mjs`.
+
+## Sandbox
+
+Bash runs inside a sandbox. Read-only work in the repo needs nothing special. Commands that need
+the network or must write outside the workspace — `pnpm install`, `docker`, `expo`, `xcodebuild`,
+`fastlane` — have to leave the sandbox and will ask once. That is expected; do not try to
+restructure them to avoid the prompt.

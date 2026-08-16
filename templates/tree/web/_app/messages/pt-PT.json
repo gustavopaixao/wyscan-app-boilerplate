@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "appTitle": "__PROJECT_NAME__",
+    "appDescription": "Aplicação __PROJECT_NAME__"
+  },
+  "home": {
+    "app_home_title": "Bem-vindo ao __PROJECT_NAME__"
+  },
+  "theme": {
+    "toggle": "Alternar tema"
+  }
+}

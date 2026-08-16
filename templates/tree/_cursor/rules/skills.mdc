@@ -1,0 +1,682 @@
+---
+alwaysApply: true
+autonomous: true
+---
+
+# Development Skills & Expertise
+
+**AUTONOMOUS MODE ENABLED**: Skills automatically apply and agents run when conditions are met. See `.cursor/autonomous/` for configuration.
+
+This file consolidates knowledge from Claude Code skills for automatic application in Cursor. These guidelines are automatically applied when working on relevant tasks.
+
+## 🔨 Builder Skill
+
+**When to apply:** After code changes to verify all targets compile correctly.
+
+### Project Targets
+
+1. **API** (Hono + TypeScript)
+   - Path: `api/`
+   - Build command: `cd api && pnpm build`
+   - Lint command: `cd api && pnpm lint`
+
+2. **Mobile** (Expo / React Native)
+   - Path: `mobile/`
+   - Typecheck: `cd mobile && pnpm exec tsc --noEmit`
+   - Native debug build (requires Xcode): `cd mobile && pnpm exec expo run:ios`
+   - Native debug build (requires Android SDK): `cd mobile && pnpm exec expo run:android`
+
+### Build Process
+
+1. **Pre-build**: Check for uncommitted changes in target directories
+2. **Build**: Execute build commands
+3. **Report**: Summarize results with errors if any
+
+### Error Handling
+
+When a build fails:
+1. Parse the error output to identify the issue
+2. Suggest specific fixes based on error type:
+   - **TypeScript errors**: Show file, line, and suggested fix
+   - **Swift / Kotlin native errors**: When adding custom native modules
+   - **Missing dependencies**: Suggest install commands
+   - **Configuration issues**: Point to relevant config files
+
+### Best Practices
+
+- Always build after modifying shared code (models, DTOs, configs)
+- Run API lint before build to catch issues early
+- For native debug builds, use Expo; run API lint before merging shared contracts
+- If one target fails, continue building others to get full report
+
+## 🔧 Git Skill
+
+**When to apply:** When handling git operations, commits, branches, merges, or pull requests.
+
+### Safety Rules
+
+**NEVER do these without explicit user request:**
+- `git push --force` (destructive)
+- `git reset --hard` (loses uncommitted work)
+- `git rebase` on shared branches
+- Amend commits already pushed to remote
+- Delete remote branches
+
+**ALWAYS do these:**
+- Check `git status` before committing
+- Verify branch before push
+- Create descriptive commit messages
+- Use conventional commits format
+
+### Commit Message Format
+
+```
+<type>(<scope>): <subject>
+
+<body>
+```
+
+**Types:** feat, fix, docs, style, refactor, test, chore
+
+**NO trailers:** Do NOT add Co-Authored-By, Signed-off-by, or any other `--trailer` options. No AI attribution in commits.
+
+### Smart Commit Process - MANDATORY
+
+**⚠️ CRITICAL: YOU MUST FOLLOW ALL STEPS. SKIPPING LINT/TEST = BREAKING CI/CD**
+
+#### Step 1: Check Status
+```bash
+git status
+```
+
+#### Step 2: Detect API Changes (MANDATORY CHECK)
+```bash
+git diff --name-only | grep "^api/"
+```
+If this returns any files, you MUST run steps 3 and 4.
+
+#### Step 3: Run Biome Lint (MANDATORY if api/ changed)
+```bash
+cd api && pnpm lint
+```
+- ❌ **IF LINT FAILS**: Fix ALL linting errors, run `pnpm lint` again, DO NOT proceed until lint passes
+- ✅ **ONLY PROCEED when lint output shows "No errors found"**
+- Return to root: `cd ..`
+
+#### Step 4: Run Tests (MANDATORY if api/ changed)
+```bash
+cd api && pnpm test
+```
+- ❌ **IF TESTS FAIL**: Fix ALL failing tests, run `pnpm test` again, DO NOT proceed until all tests pass
+- ✅ **ONLY PROCEED when test output shows "Tests: X passed, X total"**
+- Return to root: `cd ..`
+
+#### Step 5: Detect Web __PROJECT_SLUG__-site Changes (MANDATORY CHECK)
+```bash
+git diff --name-only | grep "^web/__PROJECT_SLUG__-site/"
+```
+If this returns any files, you MUST run steps 6 and 6b.
+
+#### Step 6: Run Lint (MANDATORY if web/__PROJECT_SLUG__-site/ changed)
+```bash
+cd web/__PROJECT_SLUG__-site && pnpm lint
+```
+- ❌ **IF LINT FAILS**: Fix ALL linting errors, run `pnpm lint` again, DO NOT proceed until lint passes
+- ✅ **ONLY PROCEED when lint passes**
+- Return to root: `cd ../..`
+
+#### Step 6b: Run Type Check (MANDATORY if web/__PROJECT_SLUG__-site/ changed)
+```bash
+cd web/__PROJECT_SLUG__-site && pnpm type-check
+```
+- ❌ **IF TYPE CHECK FAILS**: Fix ALL type errors, run `pnpm type-check` again, DO NOT proceed until it passes
+- ✅ **ONLY PROCEED when type-check passes**
+- Return to root: `cd ../..`
+
+#### Step 7: Detect Web __PROJECT_SLUG__-admin Changes (MANDATORY CHECK)
+```bash
+git diff --name-only | grep "^web/__PROJECT_SLUG__-admin/"
+```
+If this returns any files, you MUST run steps 8, 8b, and 8c.
+
+#### Step 8: Run Lint (MANDATORY if web/__PROJECT_SLUG__-admin/ changed)
+```bash
+cd web/__PROJECT_SLUG__-admin && pnpm lint
+```
+- ❌ **IF LINT FAILS**: Fix ALL linting errors, run `pnpm lint` again, DO NOT proceed until lint passes
+- ✅ **ONLY PROCEED when lint passes**
+- Return to root: `cd ../..`
+
+#### Step 8b: Run Type Check (MANDATORY if web/__PROJECT_SLUG__-admin/ changed)
+```bash
+cd web/__PROJECT_SLUG__-admin && pnpm type-check
+```
+- ❌ **IF TYPE CHECK FAILS**: Fix ALL type errors, run `pnpm type-check` again, DO NOT proceed until it passes
+- ✅ **ONLY PROCEED when type-check passes**
+- Return to root: `cd ../..`
+
+#### Step 8c: Run Tests (MANDATORY if web/__PROJECT_SLUG__-admin/ changed)
+```bash
+cd web/__PROJECT_SLUG__-admin && pnpm test
+```
+- ❌ **IF TESTS FAIL**: Fix ALL failing tests, run `pnpm test` again, DO NOT proceed until all tests pass
+- ✅ **ONLY PROCEED when test output shows all tests passing**
+- Return to root: `cd ../..`
+
+#### Step 8d: Detect mobile/ Changes (Expo)
+```bash
+git diff --name-only | grep "^mobile/"
+```
+If this returns any files, run:
+```bash
+cd mobile && pnpm exec tsc --noEmit
+```
+- Fix all type errors before commit.
+
+#### Step 9-12: Review Diff → Stage → Commit → Push
+
+**🚨 ABSOLUTE RULES (NEVER VIOLATE):**
+- ⛔ **NEVER commit if api/ files changed WITHOUT running lint**
+- ⛔ **NEVER commit if web/__PROJECT_SLUG__-site/ files changed WITHOUT running lint and type-check**
+- ⛔ **NEVER commit if web/__PROJECT_SLUG__-admin/ files changed WITHOUT running lint, type-check, and tests**
+- ⛔ **NEVER commit if mobile/ files changed WITHOUT running `pnpm exec tsc --noEmit` in mobile/**
+- ⛔ **NEVER commit if type-check has ANY errors**
+- ⛔ **NEVER commit if tests have ANY failures**
+- ⛔ **NEVER push without running lint, type-check, and tests first**
+
+### Branch Naming
+
+- `feature/<name>` - New features
+- `fix/<name>` - Bug fixes
+- `refactor/<name>` - Code refactoring
+- `docs/<name>` - Documentation
+- `chore/<name>` - Maintenance tasks
+
+## 🏗️ Architect Skill
+
+**When to apply:** When reviewing architecture, design patterns, SOLID principles, API design, database schema, or identifying technical debt.
+
+### Critical Reference
+
+**IMPORTANT:** When reviewing API code, ALWAYS read the architecture guide first:
+- `.cursor/rules/api-architecture.mdc` — Cursor rule for `api/`
+- `docs/backend/API_ARCHITECTURE.md` — add when the API grows; keep it authoritative once it exists
+
+### Expertise Areas
+
+- Architecture patterns (MVVM, Clean Architecture, Repository)
+- SOLID principles
+- DRY, KISS, YAGNI principles
+- Dependency management and coupling analysis
+- API design best practices
+- Database schema design
+- Performance architecture
+- Security architecture
+
+### API Architecture Checklist
+
+When reviewing API code, verify:
+
+- [ ] Route follows standard structure (rate limit → auth → validate → logic → response)
+- [ ] Zod schema defined for request validation
+- [ ] Uses `authenticateWithRole()` or `requireMinimumRole()` for auth
+- [ ] Uses `checkRateLimit()` with appropriate config
+- [ ] Uses `Errors.*` helpers for error responses
+- [ ] HTML tags stripped from user text inputs
+- [ ] UUIDs validated with `isValidUUID()`
+- [ ] Database connection via `connectDB()` singleton
+- [ ] Uses `.lean()` for read-only queries
+- [ ] Proper error logging with `logger.error()`
+- [ ] Response follows standard format (id, timestamps as ISO strings)
+
+## 🎨 UX Senior Skill
+
+**When to apply:** When checking accessibility, theming (light/dark mode), platform compliance (Apple HIG, Material Design), or reviewing user experience.
+
+### Expertise Areas
+
+- Apple Human Interface Guidelines (HIG)
+- Material Design 3 guidelines
+- WCAG AA accessibility standards
+- Cross-platform consistency
+- Light/dark mode theming
+
+### Review Process
+
+When reviewing UX, analyze:
+
+1. **Platform Compliance**
+   - iOS: Follows Apple HIG conventions
+   - Android: Follows Material Design 3 patterns
+
+2. **Accessibility**
+   - VoiceOver/TalkBack support
+   - Sufficient color contrast (4.5:1 minimum)
+   - Touch targets (44pt iOS, 48dp Android minimum)
+   - Dynamic type support
+
+3. **Theming**
+   - Light mode appearance
+   - Dark mode appearance
+   - Consistent semantic colors
+
+4. **User Experience**
+   - Intuitive navigation
+   - Clear visual hierarchy
+   - Appropriate feedback for actions
+   - Loading and error states
+
+### __PROJECT_NAME__ mobile (Expo) — toolbar & overscroll
+
+When reviewing or implementing **`mobile/`** UI:
+
+- **Stack / modal screens:** Follow **`.cursor/rules/mobile-navigation-toolbar.mdc` (section A)** — **`ToolbarBackButton`** from `wyscan-react-native`, **centered title** in the same toolbar row, localized strings, safe area on the toolbar container (see `LeagueDetailToolbar`, `league-preview/[id].tsx`).
+- **Tab screens with transparent `AppMainToolbar`:** Use **`useHeaderHeight()`** for content offset; do not stack an extra `insets.top` on tab body unless deliberately justified.
+- **Pull-to-refresh:** Under a transparent header, **`RefreshControl` must use `progressViewOffset`** equal to the content’s top inset below the toolbar, and prefer a **leading height spacer** instead of padding-only top layout so the **system spinner appears below the main toolbar**, not under the logo or status bar (see **section B** in the same rule and `mobile/app/(app)/(tabs)/leagues/index.tsx`).
+
+## 🔒 Security Skill
+
+**When to apply:** When checking for vulnerabilities, scanning for secrets, auditing authentication, or reviewing security posture across API, iOS, Android, or Packages.
+
+**Reference:** `.cursor/rules/api-architecture.mdc`, and `docs/backend/API_ARCHITECTURE.md` / `docs/security/` when present
+
+### Scan Types
+
+- **Full Audit**: Complete security assessment across all layers
+- **Secrets Detection**: Hardcoded API keys, credentials, tokens
+- **Code Analysis**: SQL/NoSQL injection, XSS, CSRF, insecure deserialization
+- **Configuration Review**: Insecure defaults, debug mode, security headers, CORS
+- **Layers**: Run per-layer analysis (API, iOS, Android, Packages)
+
+### OWASP Top 10 Checklist
+
+1. Broken Access Control
+2. Cryptographic Failures
+3. Injection
+4. Insecure Design
+5. Security Misconfiguration
+6. Vulnerable Components
+7. Authentication Failures
+8. Data Integrity Failures
+9. Logging Failures
+10. SSRF
+
+### Per-Layer Security Checklists
+
+#### API (`api/`, Hono + TypeScript)
+
+- [ ] Input validation (e.g. Zod) at HTTP boundary
+- [ ] Auth / rate limits when routes are protected (Wyscan patterns when integrated)
+- [ ] `CORS_ORIGIN` set in production for real-time if added later
+- [ ] Sensitive data never logged
+
+#### Mobile (`mobile/`, Expo / React Native)
+
+- [ ] No secrets in source; use env / `EXPO_PUBLIC_*` only for non-sensitive config
+- [ ] Tokens: use secure storage patterns (e.g. `expo-secure-store`) when adding auth
+- [ ] TLS for API; no cleartext production endpoints
+- [ ] Depend on maintained native modules; audit supply chain
+
+#### Packages (`../__ECOSYSTEM_DIR__/Packages/packages/wyscan-*/`)
+
+- [ ] Same API checklist for each package's `api/nextjs/` routes
+- [ ] WebSocket: `corsOrigin` passed explicitly, not `*`
+- [ ] Auth/validation from wyscan-core/wyscan-auth used consistently
+
+### Security Best Practices
+
+- Validate all user input with Zod schemas
+- Use parameterized queries (never string concatenation)
+- Implement rate limiting
+- Use secure authentication (bcrypt for passwords)
+- Verify OAuth tokens server-side
+- Never expose sensitive data in logs
+- Use HTTPS everywhere
+- Implement proper CORS policies (no `*` in production)
+- Sanitize user input (strip HTML tags)
+
+## 🧪 Testing Skill
+
+**When to apply:** When executing test suites, creating tests for uncovered code, or diagnosing test failures.
+
+### Test Quality Criteria
+
+- **Isolated**: Tests don't depend on each other
+- **Repeatable**: Same result every run
+- **Fast**: Quick execution time
+- **Clear**: Easy to understand failures
+- **Comprehensive**: Cover happy path and edge cases
+
+### Test Types
+
+- **Unit tests**: Functions/methods
+- **Integration tests**: API endpoints
+- **UI tests**: Components
+- **Edge case coverage**: Boundary conditions
+
+### When Writing Tests
+
+- Test both success and failure paths
+- Test edge cases and boundary conditions
+- Mock external dependencies
+- Use descriptive test names
+- Keep tests focused and simple
+
+## 🚀 Deployment Skill
+
+**When to apply:** When preparing releases, running build validation, checking migrations, or deploying to staging/production.
+
+### Pre-Deployment Checklist
+
+**Code Quality**
+- [ ] Linter passes
+- [ ] Tests pass
+- [ ] No TypeScript errors
+- [ ] No security vulnerabilities
+
+**Build**
+- [ ] Production build succeeds
+- [ ] Docker image builds
+- [ ] Environment variables set
+
+**Database**
+- [ ] Migrations reviewed
+- [ ] Backup created
+- [ ] Rollback tested
+
+### Environments
+
+- **development**: Local Docker environment
+- **staging**: Pre-production testing
+- **production**: Live environment
+
+## 🔄 CI/CD Skill
+
+**When to apply:** When setting up Jenkins pipelines, adjusting workflows, managing deployments, or when code changes may require pipeline updates.
+
+### CRITICAL RULES
+
+1. **ALWAYS suggest before making changes** - Never modify Jenkinsfiles without explaining proposed changes first
+2. **Detect pipeline-affecting changes** - When reviewing code changes, identify if they require pipeline updates
+3. **Prioritize security** - Never expose secrets, always use Jenkins Credentials Manager
+4. **Maintain documentation** - Keep deployment docs updated with any pipeline changes
+
+### Pipeline-Affecting Changes
+
+Detect if code changes require pipeline updates:
+- New dependencies added
+- Node.js/Swift version changes
+- New test files or test configuration changes
+- Docker configuration changes
+- Environment variable additions
+- New deployment targets
+
+### Best Practices
+
+- Use caching for dependencies
+- Parallelize builds when possible
+- Store artifacts properly
+- Use proper secret management
+- Implement proper error handling
+- Add notifications for build status
+
+## 📝 Code Review Skill
+
+**When to apply:** When reviewing code quality, checking PRs, or ensuring code standards.
+
+### Review Checklist
+
+- [ ] Code follows project conventions
+- [ ] No hardcoded values
+- [ ] Error handling implemented
+- [ ] Tests included for new features
+- [ ] Documentation updated if needed
+- [ ] No security vulnerabilities
+- [ ] Performance considerations addressed
+- [ ] Accessibility requirements met
+- [ ] Refactoring opportunities identified (extractable components)
+- [ ] File size appropriate (split if > 300 lines)
+- [ ] One component per file (no multiple views/structs in same file)
+- [ ] No duplicate components (reuse existing before creating new)
+
+## 🌐 Translator Skill
+
+**When to apply:** When managing translations, checking for missing keys, or adding new translatable strings.
+
+### Supported Languages
+
+English (en), Portuguese Brazil (pt-BR), Portuguese Portugal (pt-PT), Spanish (es), French (fr), German (de), Italian (it), Dutch (nl)
+
+### Translation Key Naming
+
+- Use snake_case: `album_list_title`, `button_create_album`
+- Group by feature: `album_*`, `sticker_*`, `duplicate_*`, `settings_*`
+- Include context: `button_*`, `label_*`, `title_*`, `message_*`, `error_*`
+
+### Requirements
+
+- **NO hard-coded strings in UI code**
+- All user-facing text MUST come from localization files
+- Provide comments for translators
+- Test with all supported languages
+
+## 🎯 UI Expert Skill
+
+**When to apply:** When analyzing components, design systems, or reviewing UI architecture.
+
+### Component Principles
+
+- **DRY**: Extract common patterns into reusable components
+- **Single Responsibility**: Each component should do one thing well
+- **Composition**: Build complex UIs from simple, reusable parts
+- **Parameterization**: Make components flexible through parameters
+
+### When to Create Reusable Components
+
+- ✅ Same UI pattern appears 2+ times
+- ✅ Component has clear, single purpose
+- ✅ Component can be parameterized for different use cases
+- ✅ Component encapsulates styling or behavior logic
+
+### Design System Checklist
+
+- [ ] **Icons (web):** `react-icons` with Material / Ionicons / Heroicons families per `requirements.mdc` §1 React; **Expo:** `@expo/vector-icons` where not supplied by Wyscan
+- [ ] Consistent spacing and sizing
+- [ ] Standardized color palette
+- [ ] Typography system defined
+- [ ] Component library documented
+- [ ] Usage examples provided
+
+## Frontend Expert Skill
+
+**When to apply:** Creating or modifying UI in `web/__PROJECT_SLUG__-admin/**`, `web/__PROJECT_SLUG__-site/**`, or `mobile/**`; user mentions React, React Native, Expo, Next.js, screen, component, or hook; building or extending frontend features.
+
+**Purpose:** Implement React (Next.js) and React Native (Expo) UI with feature-first layout, component reuse, and architecture compliance. **Implements** UI — does not replace `/ui-review` or `/ux-review`.
+
+### Architecture references (read before coding)
+
+| Target | Rule |
+|--------|------|
+| Web admin / site | `.cursor/rules/web-react-architecture.mdc` |
+| Mobile (Expo) | `.cursor/rules/mobile-react-architecture.mdc`, `.cursor/rules/mobile-navigation-toolbar.mdc` |
+| Cross-cutting | `.cursor/rules/requirements.mdc` |
+
+### Principles
+
+- **Feature-first:** colocate by feature; shared folders only when 2+ features need the same piece
+- **Reuse before create:** search `components/` and feature folders before adding files
+- **Layer boundaries (web):** presentation → hooks → domain types → infrastructure/API edge
+- **Web:** arrow-function components; Server Components default; `"use client"` only where needed; PascalCase component folders + colocated `__tests__/` (admin)
+- **Mobile:** thin Expo Router routes; UI in `mobile/components/{feature}/`; `wyscan-react-native` for chrome; toolbar/refresh per mobile-navigation-toolbar
+- **i18n, theming, icons:** per `requirements.mdc` — no hard-coded user-facing strings
+
+### Conflict gate (mandatory)
+
+When two or more valid approaches conflict with each other or existing patterns, **stop and ask the user**:
+
+```markdown
+## Implementation conflict — need your choice
+
+**Context:** [feature / file area]
+
+**Option A:** [approach + tradeoffs + files affected]
+**Option B:** [approach + tradeoffs + files affected]
+**Recommendation:** [which fits existing architecture better and why]
+
+Which option should I implement?
+```
+
+Do not pick silently (e.g. route vs component folder, server vs client boundary, shared vs feature hook).
+
+### Validation after changes
+
+| Package | Commands |
+|---------|----------|
+| `web/__PROJECT_SLUG__-admin` | `pnpm lint`, `pnpm type-check`, `pnpm test` |
+| `web/__PROJECT_SLUG__-site` | `pnpm lint`, `pnpm type-check` |
+| `mobile` | `pnpm exec tsc --noEmit` |
+
+### Agent invocation
+
+For dedicated frontend implementation: `/frontend-dev {web-admin|web-site|mobile} [context]` — see `.cursor/agents/frontend-expert.mdc`.
+
+## 📱 Android Docs Skill
+
+**When to apply:** When creating cross-platform documentation for Android implementation.
+
+### Documentation Requirements
+
+- Document iOS implementation details
+- Document UI patterns and components
+- Document business logic and architecture decisions
+- Create Android implementation guides
+- Maintain feature parity documentation
+
+## Feature Parity Skill
+
+**When to apply:** New feature requests, cross-platform work, before release, when asked for parity check or "implement on the other platform".
+
+### OpenAPI (Per Package)
+
+- Every package that serves mobile must have OpenAPI in `contracts/` (e.g. `contracts/openapi.yaml`)
+- Mobile clients must align DTOs and endpoints with that spec
+
+### UI/UX
+
+- Both platforms must exhibit the same behavior for the same feature
+- Validate with UX Senior (`/ux-review`) and UI Expert (`/ui-review`) when adding or changing features
+
+### New Feature on One Platform Only
+
+- Produce an implementation plan for the missing platform: steps, files, API/OpenAPI alignment, UI screens/components, tests
+
+### Checklist
+
+- [ ] OpenAPI present per package that serves mobile
+- [ ] iOS/Android SDK parity per package (where applicable)
+- [ ] App-level feature matrix (mobile Expo vs web admin/site when both exist)
+- [ ] Behavior match for same feature on both platforms
+- [ ] Implementation plan for any gaps
+
+## 📋 Release Manager Tech Writer Skill
+
+**When to apply:** When a new iOS or Android build is generated, after bumping build version, or when the user asks for release notes, TestFlight notes, or Play Store what's new.
+
+### Workflow
+
+1. **Determine build versions** – iOS: `CURRENT_PROJECT_VERSION` in `project.pbxproj`; Android: `versionCode` in `build.gradle.kts`
+2. **Find build version commits** – `git log --grep="Update iOS build version to"` or equivalent for Android
+3. **Get commits between builds** – `git log prev_build..curr_build --oneline`
+4. **Categorize** – Features (feat), Improvements (refactor/style), Bug fixes (fix)
+5. **Write release notes** – Output to `docs/ReleaseNotes/build-{N}.md` (iOS) or `docs/ReleaseNotes/android-build-{N}.md` (Android)
+
+### Output Format
+
+- **What's New** – User-facing features in plain language
+- **Improvements** – UX/UI polish
+- **Bug Fixes** – User-visible fixes
+- **Style** – No PR numbers or internal jargon; TestFlight limit 4000 chars; active voice, present tense
+
+### Reference
+
+- See `docs/ReleaseNotes/build-46.md` for example
+- Full workflow: `.claude/skills/release-manager-tech-writer/SKILL.md`
+
+## 🔍 Load Test Skill
+
+**When to apply:** When performance testing, benchmarking, or analyzing API performance.
+
+### Performance Testing
+
+- Load testing with realistic scenarios
+- Stress testing to find breaking points
+- Performance benchmarking
+- Identify bottlenecks
+- Optimize slow endpoints
+
+### Key Metrics
+
+- Response time (p50, p95, p99)
+- Throughput (requests per second)
+- Error rate
+- Resource utilization (CPU, memory)
+
+## 🧭 Business Explorer Skill
+
+**When to apply:** Open-ended product/business exploration for __PROJECT_NAME__ — turning a rough idea, problem, or metric into options; weighing edge cases; evaluating business & marketing impact; shaping positioning ("how to sell it"). Divergent then convergent thinking, not a build plan.
+
+**When NOT to apply:** Turning a decided idea into a buildable artifact (use `/feature-spec`) or implementing it (`/implement-feature`, `/frontend-dev`). This stops at "here's the bet and the cheapest way to test it." Full process/template lives in `.cursor/agents/explorer.mdc`.
+
+### The exploration lens
+
+Ground everything in __PROJECT_NAME__'s reality: football prediction *palpites* inside *bolões*/pools, social, mobile-first (Expo) plus site/admin, Brazil-first across pt-BR/pt-PT/es/fr/de/it/nl.
+
+1. **Frame** — one sharp line: what it is, who it's for, what job it does.
+2. **Diverge** — 3–5 distinct options/variants (≥1 thin/cheap, ≥1 ambitious). Never a single take.
+3. **Edge cases & failure modes** — cold-start, empty states, abuse/fairness, locale, offline, moderation, store policy.
+4. **Business impact** — primary metric moved (activation, retention, pool creation, invites, conversion, ARPU), monetization angle (or honestly none), cost/risk, cannibalization.
+5. **Marketing & positioning** — user hook, value prop (before → after), channels/moments, virality loop, localization, objections & answers.
+6. **Score** — ICE or RICE across every option.
+7. **Recommend** — one direction, the riskiest assumption, and the cheapest test to de-risk it before any `/feature-spec`.
+
+Never write specs/code or commit — hand off to `/feature-spec` when a bet is worth making.
+
+## Automatic Application
+
+These skills are automatically applied based on context:
+
+- **After code changes**: Builder skill (verify builds)
+- **Git operations**: Git skill (smart commits with lint/test)
+- **Architecture reviews**: Architect skill (SOLID, patterns, API compliance)
+- **UI/UX work**: UX Senior + UI Expert skills (accessibility, theming, components)
+- **Frontend UI implementation (web/mobile)**: Frontend Expert skill
+- **Security concerns**: Security skill (OWASP Top 10, vulnerabilities)
+- **Testing tasks**: Testing skill (test generation, coverage, fixes)
+- **Deployment prep**: Deployment skill (pre-deployment checks)
+- **CI/CD changes**: CI/CD skill (pipeline updates, best practices)
+- **Translation work**: Translator skill (i18n, missing keys)
+- **Performance**: Load Test skill (benchmarking, optimization)
+- **New or cross-platform features / parity requests**: Feature Parity skill
+- **New build generated / release notes requested**: Release Manager Tech Writer skill (create TestFlight/Play Store notes in `docs/ReleaseNotes/`)
+
+## Cursor Native Agents
+
+For deeper, specialized analysis, use Cursor-native agents (see `.cursor/agents/`):
+
+- **UX Senior**: `/ux-review ios full` - Comprehensive UX reviews
+- **Architect Expert**: `/architect-review api patterns` - Architecture analysis
+- **Security**: `/security-scan api full` - Security audits
+- **Code Review**: `/code-review ios` - Code quality reviews
+- **UI Expert**: `/ui-review ios patterns` - Component architecture
+- **Frontend Expert**: `/frontend-dev {web-admin|web-site|mobile} [context]` - React/Next.js and Expo UI implementation (feature-first, reuse, architecture)
+- **Testing**: `/test-agent api generate` - Test generation
+- **Load Test**: `/loadtest analyze` - Performance analysis
+- **Deployment**: `/deploy-check production check` - Pre-deployment checks
+- **Translator**: `/translator check` - Translation management
+- **Android Docs**: `/android-docs generate` - Cross-platform docs
+- **Feature Parity**: `/feature-parity` or `feature parity check` - Parity report, OpenAPI validation, implementation plan for missing platform
+- **Feature Spec**: `/feature-spec {CONTEXT}` - Create `docs/features/NNNN-<slug>/spec.md`; researches existing features, asks questions, covers edge cases; then add implementation plan and `/implement-feature`
+- **Implement Feature**: `/implement-feature <ID> [context]` - Implement from plan (spec + implementation plan in `docs/features/<ID>-<slug>/`); architecture-aware; stops on questions; runs tests; no commit/push
+- **Business Explorer**: `/explorer {IDEA_OR_CONTEXT}` - Explore an idea into options/variants, edge cases, business & marketing impact, and positioning; scores options and recommends one bet + cheapest test; writes `docs/explorations/NNNN-<slug>/exploration.md`; no spec/code/commit — hands off to `/feature-spec`
+
+See `.cursor/agents/README.md` for complete agent documentation.

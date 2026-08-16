@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "siteTitle": "__PROJECT_NAME__",
+    "siteDescription": "__PROJECT_NAME__ — official site"
+  },
+  "landing": {
+    "site_landing_title": "Welcome to __PROJECT_NAME__"
+  },
+  "theme": {
+    "toggle": "Toggle theme"
+  }
+}

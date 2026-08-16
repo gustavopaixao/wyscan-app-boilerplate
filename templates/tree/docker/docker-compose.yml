@@ -1,0 +1,191 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: __PROJECT_SLUG__-redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - __PROJECT_SLUG__-network
+
+  mongodb:
+    image: mongo:8
+    container_name: __PROJECT_SLUG__-mongodb
+    command: ["--bind_ip_all"]
+    ports:
+      - "${MONGODB_PORT:-27017}:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mongosh --quiet --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 1)'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    networks:
+      - __PROJECT_SLUG__-network
+
+  api:
+    build:
+      context: ..
+      dockerfile: api/Dockerfile
+      target: development
+      additional_contexts:
+        wyscan-packages: ../../__ECOSYSTEM_DIR__/Packages
+    container_name: __PROJECT_SLUG__-api
+    working_dir: /workspace/api
+    env_file:
+      - path: ../api/.env
+        required: false
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      # Dev-only fallback: an obviously-insecure default so a fresh clone boots
+      # without an api/.env. Overridden by api/.env or a shell JWT_SECRET. The
+      # API hard-fails on this value in production (see lib/validateProductionEnv.ts).
+      JWT_SECRET: ${JWT_SECRET:-dev-insecure-jwt-secret-do-not-use-in-production-change-me-please}
+      MONGODB_URL: "mongodb://mongodb:27017/__PROJECT_SLUG__"
+      REDIS_URL: "redis://redis:6379"
+      __PROJECT_CONST___WYSCAN_PACKAGES: /__ECOSYSTEM_DIR__/Packages
+      LOG_VIEWER_ENABLED: "true"
+      LOG_AGENT_URL: http://log-agent:3090
+      LOG_AGENT_SECRET: ${LOG_AGENT_SECRET:-dev-log-agent-secret-min-16}
+    ports:
+      - "${API_PORT:-3000}:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ..:/workspace
+      - ../../__ECOSYSTEM_DIR__:/__ECOSYSTEM_DIR__
+      - api_node_modules:/workspace/api/node_modules
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        cd /workspace/api
+        sh scripts/ensure-api-node-modules.sh
+        (sh -c 'test -f scripts/ensure-local-packages-built.sh && sh scripts/ensure-local-packages-built.sh') || true
+        exec pnpm dev
+    networks:
+      - __PROJECT_SLUG__-network
+
+  realtime:
+    build:
+      context: ..
+      dockerfile: api/Dockerfile
+      target: development
+      additional_contexts:
+        wyscan-packages: ../../__ECOSYSTEM_DIR__/Packages
+    container_name: __PROJECT_SLUG__-realtime
+    working_dir: /workspace/api
+    env_file:
+      - path: ../api/.env
+        required: false
+    environment:
+      NODE_ENV: development
+      REALTIME_PORT: 3001
+      # Dev-only fallback (mirrors the api service); prod hard-fails on this value.
+      JWT_SECRET: ${JWT_SECRET:-dev-insecure-jwt-secret-do-not-use-in-production-change-me-please}
+      MONGODB_URL: "mongodb://mongodb:27017/__PROJECT_SLUG__"
+      REDIS_URL: "redis://redis:6379"
+      __PROJECT_CONST___WYSCAN_PACKAGES: /__ECOSYSTEM_DIR__/Packages
+    ports:
+      - "${REALTIME_PORT:-3001}:3001"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3001/health').then(r=>r.json()).then(j=>process.exit(j.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    volumes:
+      - ..:/workspace
+      - ../../__ECOSYSTEM_DIR__:/__ECOSYSTEM_DIR__
+      - api_node_modules:/workspace/api/node_modules
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        cd /workspace/api
+        sh scripts/ensure-api-node-modules.sh
+        exec pnpm job:realtime
+    networks:
+      - __PROJECT_SLUG__-network
+
+  log-agent:
+    build:
+      context: ..
+      dockerfile: api/Dockerfile
+      target: development
+      additional_contexts:
+        wyscan-packages: ../../__ECOSYSTEM_DIR__/Packages
+    container_name: __PROJECT_SLUG__-log-agent
+    working_dir: /workspace/api
+    environment:
+      LOG_AGENT_PORT: 3090
+      LOG_AGENT_SECRET: ${LOG_AGENT_SECRET:-dev-log-agent-secret-min-16}
+      LOG_CONTAINER_API: __PROJECT_SLUG__-api
+      LOG_CONTAINER_REALTIME: __PROJECT_SLUG__-realtime
+    volumes:
+      - ..:/workspace
+      - ../../__ECOSYSTEM_DIR__:/__ECOSYSTEM_DIR__
+      - api_node_modules:/workspace/api/node_modules
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    entrypoint: ["sh", "-c"]
+    depends_on:
+      - api
+    command:
+      - |
+        cd /workspace/api
+        sh scripts/ensure-api-node-modules.sh
+        exec pnpm job:log-agent
+    networks:
+      - __PROJECT_SLUG__-network
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: __PROJECT_SLUG__-nginx
+    ports:
+      - "${NGINX_PORT:-8080}:80"
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      api:
+        condition: service_started
+      realtime:
+        condition: service_healthy
+    networks:
+      - __PROJECT_SLUG__-network
+
+volumes:
+  mongodb_data:
+    name: __PROJECT_SLUG__-mongodb-data
+  redis_data:
+    name: __PROJECT_SLUG__-redis-data
+  api_node_modules:
+    name: __PROJECT_SLUG__-api-node-modules
+
+networks:
+  __PROJECT_SLUG__-network:
+    name: __PROJECT_SLUG__-network

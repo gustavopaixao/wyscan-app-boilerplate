@@ -1,0 +1,20 @@
+# Attach __PROJECT_NAME__ API to an existing MongoDB container's Docker network.
+#
+# 1. Find your MongoDB container name and network (on the server):
+#      docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Ports}}"
+#      docker inspect YOUR_MONGO_CONTAINER --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}'
+# 2. Set in .env:
+#      MONGODB_DOCKER_NETWORK=<network from inspect>
+#      MONGODB_URL=mongodb://USER:PASS@YOUR_MONGO_CONTAINER:27017/__PROJECT_SLUG__?authSource=admin
+# 3. Start:
+#      docker compose -f docker-compose.yml -f docker-compose.mongodb-external.yml up -d
+
+services:
+  api:
+    networks:
+      - mongodb-external
+
+networks:
+  mongodb-external:
+    external: true
+    name: ${MONGODB_DOCKER_NETWORK:?Set MONGODB_DOCKER_NETWORK in .env to your MongoDB container Docker network}

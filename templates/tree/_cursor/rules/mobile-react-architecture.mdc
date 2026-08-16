@@ -1,0 +1,107 @@
+---
+alwaysApply: false
+description: React Native (Expo) architecture, feature-first layout, and Wyscan patterns for __PROJECT_NAME__ mobile.
+globs: ["mobile/**/*.tsx", "mobile/**/*.ts"]
+---
+
+# Mobile React architecture (Expo)
+
+Rules for `mobile/`: structure, components, layering, navigation chrome, and alignment with **WyscanDesignSystem** via **`wyscan-react-native`**.
+
+## Clean architecture
+
+- **Presentation (UI):** React Native components and Expo Router screens. No direct API business rules; call hooks and pass data down.
+- **Application / use cases:** Orchestration in hooks under `mobile/lib/{feature}/` or feature-specific hooks colocated with components.
+- **Domain:** Pure helpers and types in `mobile/lib/` (e.g. `home/homeDashboardHelpers.ts`) — no UI imports.
+- **Infrastructure:** API clients in `mobile/lib/api/`; auth in `mobile/lib/auth/`; i18n in `mobile/lib/i18n/`.
+
+Dependency direction: screens and components depend on hooks and lib modules; domain helpers must not import React Native UI.
+
+## Feature-first layout
+
+- Organize UI by **feature** under `mobile/components/{feature}/` (e.g. `leagues/`, `pools/`, `home/`, `championship/`).
+- Within a feature, colocate related components; compose screen-level views from smaller feature components.
+- **Route files** under `mobile/app/` stay **thin** — wire params, providers, and layout; heavy UI lives in `components/{feature}/`.
+
+## Expo Router
+
+- Use file-based routing under `mobile/app/`; route groups `(app)`, `(tabs)` for layout without URL changes.
+- Stack screens: navigation + toolbar above scrollable content (see **Navigation** below).
+- Tab screens: transparent `AppMainToolbar` header; body offset via `useHeaderHeight()` — see `.cursor/rules/mobile-navigation-toolbar.mdc`.
+- Prefer **one screen component per route file** that delegates to a feature view (e.g. route imports `HomeDashboardView`).
+
+## Components
+
+- Define components as **`const Name = (...) => { ... }`** or **`export function Name()`** — match the prevailing style in the target feature folder.
+- **One file per component** in the feature folder (e.g. `HomeLeagueCard.tsx`, `PoolLeaderboardRow.tsx`) unless compound pieces are always used together.
+- **Shared cross-feature UI** lives under dedicated folders:
+  - `mobile/components/navigation/` — app chrome (`AppMainToolbar`, `NavigationChrome`)
+  - `mobile/components/media/` — avatars, image editors
+  - `mobile/components/auth/` — auth-specific branding
+- Promote to shared only when **2+ features** need the same component; keep feature-specific logic out of shared folders.
+
+## Design system (Wyscan)
+
+- Prefer **`wyscan-react-native`** for colors, typography, toolbar controls, and shared patterns (`colors`, `typography`, `ToolbarBackButton`, `TOOLBAR_ICON_BUTTON_MIN_SIZE`).
+- Use **`useColorScheme()`** + `colors(scheme)` for light/dark semantic colors — no hard-coded hex for theme-aware UI.
+- **`@expo/vector-icons`** only when Wyscan exposes no suitable control (secondary actions, feature-specific glyphs).
+- Do not duplicate Wyscan chrome with one-off styled `Pressable` back links on stack screens.
+
+## Theming / canvas
+
+_Standardized in feature 0130; completes feature 0119's deferred dark-canvas follow-up. Mirror any change into `mobile/CLAUDE.md`._
+
+**Every new screen MUST follow this color schema in both light and dark mode:**
+
+- **Page canvas** (the outermost scene / screen background) MUST use `colors(scheme).background` — `#f6f6f7` light / `#0b0f14` dark — matching the Home dashboard. New routes inherit it automatically via `screenChromeOptions(scheme)` spread into the stack in `mobile/app/(app)/_layout.tsx` (applied to `contentStyle` + `sceneStyle`); do not hard-code a hex or set a different background on the scene container.
+- **Elevated surfaces** (cards, sheets, inputs, list rows) MUST use `colors(scheme).surface` — `#ffffff` light / `#151b24` dark — with `colors(scheme).border` (`#e5e7eb` / `#273244`) hairlines and `borderRadius: 12` for cards (see `HomePoolInsightCard`, `DueGamePoolScoreSection`).
+- Never hard-code theme-aware hex; always read tokens via `colors(scheme)`. `#0b0f14` is the accepted dark canvas value (0119 follow-up closed).
+
+## Navigation and chrome
+
+Stack toolbars, tab scroll insets, and pull-to-refresh are **mandatory** per `.cursor/rules/mobile-navigation-toolbar.mdc`:
+
+- Stack: `ToolbarBackButton`, centered title, `useSafeAreaInsets().top` on toolbar row.
+- Tabs: `useHeaderHeight()` for content offset; `RefreshControl` with `progressViewOffset` + leading spacer.
+
+**Reference implementations:**
+
+- `mobile/components/leagues/LeagueDetailToolbar.tsx` — stack toolbar (back, centered title, optional actions)
+- `mobile/app/(app)/(tabs)/leagues/index.tsx` — tab list + pull-to-refresh under transparent header
+- `mobile/components/home/HomeDashboardView.tsx` — feature-composed screen with sections, refresh, loading states
+
+## Logic and hooks
+
+- Screen orchestration: hooks in `mobile/lib/{feature}/` (e.g. `useHomeDashboardEnrichment`) or colocated `use*.ts` next to the feature when single-screen.
+- Cross-screen hooks: `mobile/lib/` or a feature's shared hook folder — not duplicated in every component file.
+- Keep components thin: data fetching and side effects in hooks; presentational subcomponents for repeated UI blocks.
+
+## Internationalization
+
+- All user-visible strings via **`useStrings()`** / `t("key")` — no hard-coded copy.
+- Add keys to mobile locale files for all supported languages per `.cursor/rules/requirements.mdc`.
+- Accessibility labels on interactive controls (`accessibilityLabel`, `accessibilityRole`).
+
+## Styling
+
+- Use Wyscan tokens (`colors`, `typography`) and project helpers (e.g. `mobile/lib/theme/appTypography.ts`) before ad-hoc styles.
+- `StyleSheet` or inline styles are both acceptable — match the surrounding feature files.
+
+## Testing
+
+- **Vitest** + **Testing Library** where tests exist under `mobile/`.
+- Add tests for new non-trivial components (behavior, loading/error branches, accessibility props).
+- Run `cd mobile && pnpm exec tsc --noEmit` after UI changes.
+
+## Summary checklist (new or refactored UI)
+
+- [ ] Feature-first path under `mobile/components/{feature}/`; route file stays thin.
+- [ ] Reused existing feature or Wyscan components where possible.
+- [ ] Stack toolbar or tab scroll/refresh rules followed when applicable.
+- [ ] Logic in hooks; no hard-coded strings; light/dark via semantic colors.
+- [ ] Icons: Wyscan first, `@expo/vector-icons` when needed.
+- [ ] `pnpm exec tsc --noEmit` passes.
+
+## Conflict resolution
+
+When multiple valid placements or patterns exist (route vs component folder, shared vs feature hook, Wyscan vs custom), **stop and ask the user** before implementing — do not guess.

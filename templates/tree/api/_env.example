@@ -1,0 +1,46 @@
+# Copy from .env.example; used by Docker Compose for api service.
+#
+# WyscanPackages location (local dev only; not read by Docker unless you pass it in):
+# If the clone is NOT at ../__ECOSYSTEM_DIR__/Packages (relative to this repo), you must:
+#   1) Update every file:../../__ECOSYSTEM_DIR__/Packages/... path in api/package.json (and pnpm.overrides) to your layout
+#   2) Run: cd api && pnpm install
+#   3) Export the SAME root for ensure scripts: __PROJECT_CONST___WYSCAN_PACKAGES=/absolute/path/to/WyscanPackages
+#      (used by api/scripts/ensure-auth-api-dist.sh and make api-auth-dist / make api-watch)
+# Or keep the default layout via: make wyscan-dev-setup (clone beside __PROJECT_SLUG__).
+NODE_ENV=development
+PORT=3000
+MONGODB_URL=mongodb://localhost:27017/__PROJECT_SLUG__
+REDIS_URL=redis://localhost:6379
+
+# Realtime WebSocket service - separate process; default port 3001.
+# REALTIME_PORT=3001
+# REALTIME_EMIT_CHANNEL=__PROJECT_SLUG__:realtime:emit
+
+# When the API is only reachable via nginx/load balancer, set TRUST_PROXY=true so rate
+# limits use X-Real-IP (nginx must set X-Forwarded-For to $remote_addr, not append).
+# TRUST_PROXY=true
+
+# Required in production (NODE_ENV=production) - comma-separated browser origins.
+# Include member app (Vercel), admin, and public site, e.g.:
+# CORS_ORIGIN=https://__WEB_DOMAIN__,https://__ADMIN_DOMAIN__,https://__WWW_DOMAIN__
+CORS_ORIGIN=
+
+# Auth (__NPM_SCOPE__/auth-api) - required in production.
+# Generate: openssl rand -base64 48
+JWT_SECRET=
+
+# OAuth (optional; required for provider routes)
+GOOGLE_CLIENT_ID=
+APPLE_CLIENT_ID=
+FACEBOOK_APP_ID=
+FACEBOOK_APP_SECRET=
+
+# Push notifications - Firebase service account JSON (single line). Optional in dev.
+# FIREBASE_SERVICE_ACCOUNT_JSON={"type":"service_account","project_id":"...",...}
+
+# Admin log viewer - requires log-agent sidecar with Docker socket on the API host.
+# LOG_VIEWER_ENABLED=true
+# LOG_AGENT_URL=http://log-agent:3090
+# LOG_AGENT_SECRET=
+# LOG_CONTAINER_API=__PROJECT_SLUG__-api
+# LOG_CONTAINER_REALTIME=__PROJECT_SLUG__-realtime

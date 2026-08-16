@@ -1,0 +1,19 @@
+{
+  "name": "wyscan-app-boilerplate",
+  "version": "0.1.0",
+  "description": "Scaffold a full-stack monorepo (Hono API, Next.js web apps, Expo mobile) with Claude/Cursor tooling preconfigured.",
+  "type": "module",
+  "bin": {
+    "wyscan-app-boilerplate": "bin/create.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\"",
+    "sync": "node scripts/sync-from-reference.mjs --from ../botonistas",
+    "sync:check": "node scripts/sync-from-reference.mjs --from ../botonistas --check"
+  },
+  "license": "UNLICENSED",
+  "private": false
+}

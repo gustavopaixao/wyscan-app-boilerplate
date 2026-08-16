@@ -1,0 +1,113 @@
+# Production API environment — copy to .env in this directory (never commit secrets).
+# See docs/runbooks/production-api-docker.md, docs/runbooks/production-api-day-to-day.md, and docs/security/PRODUCTION_READINESS.md
+
+NODE_ENV=production
+
+# Inside the API container (Compose sets this to 3000). Do not confuse with API_PORT below.
+PORT=3000
+
+# Host port published for nginx (optional — only when starting compose from the shell).
+# API_BIND=127.0.0.1
+# API_PORT=3000
+
+# MongoDB — replace placeholders; never leave mongodb-host (that is documentation only).
+#
+# Option A — existing MongoDB container on the same Docker network (recommended):
+#   docker inspect YOUR_MONGO_CONTAINER --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}'
+#   MONGODB_DOCKER_NETWORK=that-network-name
+#   MONGODB_URL=mongodb://user:pass@YOUR_MONGO_CONTAINER:27017/__PROJECT_SLUG__?authSource=admin
+#   Start: docker compose -f docker-compose.yml -f docker-compose.mongodb-external.yml up -d
+#
+# Option B — MongoDB published on the host (e.g. 127.0.0.1:27018 on wyscan-server):
+#   ./scripts/setup-mongodb-user.sh   # creates __PROJECT_SLUG___user (set __PROJECT_CONST___MONGO_PASSWORD first)
+#   MONGODB_URL=mongodb://__PROJECT_SLUG___user:PASSWORD@host.docker.internal:27018/__PROJECT_SLUG__?authSource=__PROJECT_SLUG__
+#
+# Option C — dedicated __PROJECT_NAME__ MongoDB (recommended on wyscan-server, port 127.0.0.1:27019):
+#   ./scripts/setup-bundled-mongodb.sh
+#   MONGODB_URL=mongodb://__PROJECT_SLUG___user:PASSWORD@mongodb:27017/__PROJECT_SLUG__?authSource=__PROJECT_SLUG__
+#   Start: docker compose -f docker-compose.yml -f docker-compose.mongodb-bundled.yml up -d
+#
+MONGODB_URL=mongodb://__PROJECT_SLUG___user:CHANGE_ME@mongodb:27017/__PROJECT_SLUG__?authSource=__PROJECT_SLUG__
+# MONGODB_HOST_PORT=27019
+# MONGODB_BIND=127.0.0.1
+
+# Required for multi-instance API, async scoring, and realtime WebSocket pub/sub
+REDIS_URL=redis://redis:6379
+
+# Realtime service (0068) — same image as API; compose runs dist/realtime/websocketServer.js on :3001
+# REALTIME_PORT=3001
+# REALTIME_EMIT_CHANNEL=__PROJECT_SLUG__:realtime:emit
+
+# Behind nginx / load balancer (required in production)
+TRUST_PROXY=true
+
+# Comma-separated browser origins (admin + public site)
+CORS_ORIGIN=https://admin.example.com,https://www.example.com
+
+# Required — generate: openssl rand -base64 48
+JWT_SECRET=
+INTERNAL_API_CLIENT_ID=admin-bff
+INTERNAL_API_SECRET=
+
+# Mobile attestation — enable only after Play Integrity verification is implemented in API
+# (verifyAttestation currently returns unavailable in production; enabling this breaks mobile login)
+MOBILE_ATTESTATION_REQUIRED=false
+
+# OAuth (set all providers you enable in the app)
+# Comma-separated Google OAuth client IDs (mobile web, iOS, Android, member web app NEXT_PUBLIC_GOOGLE_CLIENT_ID).
+# GOOGLE_CLIENT_ID=<web_client_id>,<ios_client_id>,<android_client_id>,<web_app_client_id>
+GOOGLE_CLIENT_ID=
+APPLE_CLIENT_ID=
+FACEBOOK_APP_ID=
+FACEBOOK_APP_SECRET=
+
+# Apple App Attest (0055)
+APPLE_APP_ATTEST_BUNDLE_ID=__BUNDLE_ID__
+APPLE_TEAM_ID=
+APPLE_APP_ATTEST_ENVIRONMENT=production
+
+# Google Play Integrity (0055) — mount JSON via docker-compose (see secrets/.gitignore)
+# 1. On server: copy Play Console service account JSON (same as Fastlane upload key):
+#      scp mobile/fastlane/__PROJECT_SLUG__-*.json user@server:__SERVER_DEPLOY_DIR__/secrets/google-play-sa.json
+#      chmod 600 secrets/google-play-sa.json
+# 2. Enable Play Integrity API: https://console.cloud.google.com/apis/library/playintegrity.googleapis.com?project=__PROJECT_SLUG__
+GOOGLE_PLAY_INTEGRITY_PROJECT_NUMBER=382814787973
+GOOGLE_PLAY_INTEGRITY_PACKAGE_NAME=__BUNDLE_ID__
+GOOGLE_PLAY_INTEGRITY_SERVICE_ACCOUNT_JSON=/run/secrets/google-play-sa.json
+
+# Mailgun
+MAILGUN_API_KEY=
+MAILGUN_DOMAIN=
+MAILGUN_FROM=__PROJECT_NAME__ <noreply@mg.example.com>
+# MAILGUN_REGION=eu
+
+# Public URLs
+PUBLIC_INVITE_BASE_URL=https://www.example.com
+API_PUBLIC_BASE_URL=https://api.example.com
+
+# Cloudinary (optional — team / avatar uploads)
+# CLOUDINARY_CLOUD_NAME=
+# CLOUDINARY_API_KEY=
+# CLOUDINARY_API_SECRET=
+
+# Async scoring worker (default: BullMQ; do not set SCORING_SYNC in production)
+# SCORING_WORKER_CONCURRENCY=5
+
+# Admin log viewer (0069) — log-agent sidecar reads Docker logs for api/scoring/realtime
+# Generate: openssl rand -base64 48
+LOG_AGENT_SECRET=
+
+# Temporary diagnostics — log http_request { method, path, status, ms } per API request (disable after profiling)
+# HTTP_ACCESS_LOG=true
+
+FIREBASE_SERVICE_ACCOUNT_JSON=
+
+# Credits IAP webhook (0254/0259) — shared secret RevenueCat sends as the Authorization header.
+# Must match RevenueCat → Integrations → Webhooks exactly. Reaches the container via
+# `env_file: ./.env` (it is NOT in docker-compose.yml's explicit `environment:` list).
+# FAILS CLOSED: unset or whitespace-only makes every delivery 401 and nothing is ever credited —
+# a purchase then takes the user's money and grants no credits, so verify it landed in the
+# container before going live.
+# Note: CREDITS_ENABLED is NOT an env var — it is a DB platform setting (admin → Settings →
+# Platform → "Store" tab), default OFF. See docs/runbooks/stores/credits-iap-revenuecat.md
+REVENUECAT_WEBHOOK_AUTH_TOKEN=

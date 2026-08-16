@@ -1,0 +1,8 @@
+**/node_modules
+**/.git
+web
+mobile
+**/.next
+**/dist
+**/*.log
+.DS_Store

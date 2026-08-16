@@ -1,0 +1,51 @@
+name: __PROJECT_SLUG__-app
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/__PROJECT_SLUG__-app/**"
+      - ".github/workflows/__PROJECT_SLUG__-app.yml"
+  pull_request:
+    paths:
+      - "web/__PROJECT_SLUG__-app/**"
+      - ".github/workflows/__PROJECT_SLUG__-app.yml"
+
+defaults:
+  run:
+    working-directory: web/__PROJECT_SLUG__-app
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: web/__PROJECT_SLUG__-app/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_API_URL: https://__API_DOMAIN__
+          NEXT_PUBLIC_SITE_URL: https://__WEB_DOMAIN__
+          INTERNAL_API_SECRET: ci-build-internal-api-secret
