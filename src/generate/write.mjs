@@ -15,9 +15,19 @@ import { dirname, join } from "node:path";
 import { render, residualSentinels } from "../tokens/apply.mjs";
 import { transform } from "./transforms.mjs";
 
-export function writeProject(ops, { templatesDir, targetDir, values, dryRun = false }) {
+export function writeProject(ops, { templatesDir, targetDir, values, dryRun = false, extras = [] }) {
   const written = [];
   const leftovers = [];
+
+  // Generated files that have no template counterpart.
+  for (const { dest, content } of extras) {
+    const outPath = join(targetDir, dest);
+    if (!dryRun) {
+      mkdirSync(dirname(outPath), { recursive: true });
+      writeFileSync(outPath, content);
+    }
+    written.push({ dest, bytes: Buffer.byteLength(content), mode: 644 });
+  }
 
   for (const op of ops) {
     const srcPath = join(templatesDir, op.src);

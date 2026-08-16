@@ -1,0 +1,10 @@
+{
+  "name": "__NPM_SCOPE__/notify-api",
+  "version": "0.0.0-stub",
+  "private": true,
+  "type": "module",
+  "description": "STUB replacement for the shared notify-api package. Replace when adopting the shared packages.",
+  "exports": {
+    "./utils/push": { "types": "./utils/push.d.ts", "default": "./utils/push.js" }
+  }
+}

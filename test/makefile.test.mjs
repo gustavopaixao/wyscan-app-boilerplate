@@ -29,7 +29,9 @@ function make(dir, args) {
 
 describe("generated Makefile", () => {
   test("every mapped target resolves", () => {
-    const dir = generate(["--slug", "mk-full", "--owner", "octocat"]);
+    // local mode keeps the shared-package bootstrap targets, so this is the
+    // configuration in which the full target set should exist.
+    const dir = generate(["--slug", "mk-full", "--owner", "octocat", "--wyscan", "local"]);
     const unresolved = TARGETS.filter((t) => make(dir, ["-n", t]).includes("No rule to make target"));
     assert.deepEqual(unresolved, []);
     rmSync(dir, { recursive: true, force: true });

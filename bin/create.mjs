@@ -7,6 +7,7 @@ import { parseArgs } from "node:util";
 import { derive, validate, DEFAULT_PORTS, ALL_WORKSPACES } from "../src/config/derive.mjs";
 import { planFiles, ALL_MAKE_GROUPS } from "../src/generate/plan.mjs";
 import { ALL_SERVICES } from "../src/generate/compose.mjs";
+import { apiClaudeMd, mobileClaudeMd, sharedPackagesDoc } from "../src/generate/extradocs.mjs";
 import { writeProject } from "../src/generate/write.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -114,7 +115,7 @@ function main() {
   }
 
   const manifest = JSON.parse(readFileSync(join(TEMPLATES, "manifest.json"), "utf8"));
-  const { ops, skipped } = planFiles(manifest, cfg);
+  const { ops, skipped } = planFiles(manifest, cfg, TEMPLATES);
 
   if (values["dry-run"]) {
     console.log(`\n${cfg.displayName} -> ${targetDir}`);
@@ -128,10 +129,23 @@ function main() {
   }
 
   mkdirSync(targetDir, { recursive: true });
+
+  // Files the reference promises but never shipped.
+  const extras = [{ dest: "docs/shared-packages.md", content: sharedPackagesDoc(cfg) }];
+  if (cfg.aiTools.includes("claude")) {
+    if (cfg.workspaces.includes("api")) {
+      extras.push({ dest: "api/CLAUDE.md", content: apiClaudeMd(cfg) });
+    }
+    if (cfg.workspaces.includes("mobile")) {
+      extras.push({ dest: "mobile/CLAUDE.md", content: mobileClaudeMd(cfg) });
+    }
+  }
+
   const { written, leftovers } = writeProject(ops, {
     templatesDir: TEMPLATES,
     targetDir,
     values: cfg,
+    extras,
   });
 
   if (leftovers.length) {

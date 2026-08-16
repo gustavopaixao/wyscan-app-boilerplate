@@ -72,9 +72,15 @@ describe("generated project", () => {
   });
 
   test("restores the executable bit on every script that had one", () => {
-    const expected = MANIFEST.files.filter((f) => f.mode === 755).length;
-    const actual = files.filter((f) => statSync(f).mode & 0o100).length;
-    assert.equal(actual, expected, `expected ${expected} executable files, found ${actual}`);
+    // Standalone mode legitimately drops some 0755 bootstrap scripts, so assert
+    // over the files that were actually generated rather than a raw count.
+    const notExecutable = MANIFEST.files
+      .filter((f) => f.mode === 755)
+      .map((f) => join(dir, f.dest.replace("__PROJECT_SLUG__", "demo-shop")))
+      .filter((p) => existsSync(p))
+      .filter((p) => !(statSync(p).mode & 0o100));
+
+    assert.deepEqual(notExecutable, [], "these shipped without their exec bit");
     // The Claude hooks are the ones that fail silently if this regresses.
     assert.ok(statSync(join(dir, ".claude/hooks/pre-commit-gate.sh")).mode & 0o100);
   });

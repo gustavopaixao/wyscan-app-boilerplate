@@ -1,0 +1,18 @@
+{
+  "name": "__NPM_SCOPE__/core-api",
+  "version": "0.0.0-stub",
+  "private": true,
+  "type": "module",
+  "description": "STUB replacement for the shared core-api package. Replace when adopting the shared packages.",
+  "exports": {
+    "./utils/logger": { "types": "./utils/logger.d.ts", "default": "./utils/logger.js" },
+    "./utils/errors": { "types": "./utils/errors.d.ts", "default": "./utils/errors.js" },
+    "./utils/rate-limit": { "types": "./utils/rate-limit.d.ts", "default": "./utils/rate-limit.js" },
+    "./utils/validation": { "types": "./utils/validation.d.ts", "default": "./utils/validation.js" },
+    "./services/websocket": { "types": "./services/websocket.d.ts", "default": "./services/websocket.js" }
+  },
+  "peerDependencies": {
+    "socket.io": "*",
+    "next": "*"
+  }
+}

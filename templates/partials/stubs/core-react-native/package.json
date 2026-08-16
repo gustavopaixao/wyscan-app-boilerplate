@@ -1,0 +1,11 @@
+{
+  "name": "__NPM_SCOPE__/core-react-native",
+  "version": "0.0.0-stub",
+  "private": true,
+  "main": "index.js",
+  "types": "index.d.ts",
+  "description": "STUB replacement for the shared core-react-native package. Replace when adopting the shared packages.",
+  "exports": {
+    ".": { "types": "./index.d.ts", "default": "./index.js" }
+  }
+}

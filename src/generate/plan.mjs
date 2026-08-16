@@ -4,6 +4,7 @@
  */
 
 import { renderPath } from "../tokens/apply.mjs";
+import { stubFileOps, ECOSYSTEM_ONLY_FILES } from "./wyscan.mjs";
 
 /** Groups that are always emitted regardless of selection. */
 const ALWAYS = new Set(["core", "make", "scripts", "docs"]);
@@ -87,9 +88,20 @@ function isInvalidated(file, cfg) {
 /**
  * @returns {{ops: Array, skipped: Array}} ops = {src, dest, mode, raw}
  */
-export function planFiles(manifest, cfg) {
+export function planFiles(manifest, cfg, templatesDir) {
   const ops = [];
   const skipped = [];
+
+  // Standalone mode vendors local stand-ins for the shared packages.
+  if (cfg.wyscanMode === "standalone" && templatesDir) {
+    const needsStubs =
+      cfg.workspaces.includes("api") || cfg.workspaces.includes("mobile");
+    if (needsStubs) {
+      for (const op of stubFileOps(templatesDir)) {
+        ops.push({ ...op, dest: renderPath(op.dest, cfg) });
+      }
+    }
+  }
 
   for (const file of manifest.files) {
     if (!isGroupSelected(file.group, cfg)) {
@@ -98,6 +110,10 @@ export function planFiles(manifest, cfg) {
     }
     if (isInvalidated(file, cfg)) {
       skipped.push({ ...file, reason: `lockfile invalid under wyscan=${cfg.wyscanMode}` });
+      continue;
+    }
+    if (cfg.wyscanMode === "standalone" && ECOSYSTEM_ONLY_FILES.has(file.dest)) {
+      skipped.push({ ...file, reason: "shared-package bootstrap, not used in standalone" });
       continue;
     }
     ops.push({
