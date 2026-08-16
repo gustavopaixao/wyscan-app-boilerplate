@@ -5,29 +5,55 @@ a Docker dev stack, a Make-based orchestrator, and Claude/Cursor tooling —
 without checking this repo out.
 
 ```bash
-npx github:<owner>/wyscan-app-boilerplate my-app
+npx github:gustavopaixao/wyscan-app-boilerplate my-app
 ```
 
-## Status
+That asks a handful of questions, writes the project into `./my-app`, and leaves
+it as a git repo with one commit. Nothing to clone, nothing to install first.
 
-| Phase | State |
-|---|---|
-| 1. Template extraction from the reference project | done |
-| 2. Makefile / compose decomposition | done |
-| 3. CLI, including interactive prompts | done |
-| 4. Shared-package modes, generated `CLAUDE.md`, defect fixes | done |
-| 5. git init + post-scaffold | done |
-| 6. Ship (own CI, push to a remote) | not started |
+## Requirements
 
-Deferred: generating `.cursor/` from `.claude/`. The vendored copies work; only
-maintenance drift between the two trees is unaddressed.
+- **Node 22+** — that's all the installer needs.
+- To then *run* the generated project: **pnpm 10**, **Docker** (for the API stack),
+  and Xcode / Android SDK if you selected the mobile workspace.
 
-## Usage
+## What you get
 
-Run it with no arguments for an interactive setup, or drive it entirely by flag:
+A monorepo of independent pnpm projects — no root `package.json`, no workspace —
+orchestrated by a root `Makefile`:
+
+```
+my-app/
+├── api/                    Hono + TypeScript, MongoDB, Redis, BullMQ, Socket.IO
+├── web/my-app-site/        Next.js marketing site        :3500
+├── web/my-app-app/         Next.js member app            :4500
+├── web/my-app-admin/       Next.js admin                 :4000
+├── mobile/                 Expo / React Native, expo-router, 8 locales
+├── docker/                 compose dev stack + production deploy bundle
+├── make/                   Make fragments, one per command group
+├── .claude/                16 skills, 19 agents, 17 commands, rules, hooks
+└── CLAUDE.md               generated for the stack you actually chose
+```
+
+Every workspace is optional — pick any subset.
+
+## First run after scaffolding
 
 ```bash
-node bin/create.mjs --slug my-app --owner my-org ./my-app
+cd my-app
+cd api && pnpm install && cd -     # each workspace installs separately
+make jwt-secret                    # seed api/.env
+make start                         # docker stack up
+make health                        # http://localhost:8080
+make help                          # everything else
+```
+
+## Options
+
+Run with no options for the interactive flow, or drive it entirely by flag:
+
+```bash
+npx github:gustavopaixao/wyscan-app-boilerplate --slug my-app --owner my-org ./my-app
 
   --slug <name>        lowercase, hyphens, 3-44 chars
   --name <display>     default: title-cased slug
@@ -52,6 +78,21 @@ node bin/create.mjs --slug my-app --owner my-org ./my-app
 Prompts are numbered rather than arrow-driven, so they work over pipes and in
 terminals that mishandle raw mode. A non-TTY run falls back to defaults and
 errors on a required field instead of hanging.
+
+## Examples
+
+```bash
+# API only, no assistant tooling
+npx github:gustavopaixao/wyscan-app-boilerplate \
+  --slug billing-api --workspaces api --ai github --yes ./billing-api
+
+# Mobile + API, keep the shared-package links to a sibling checkout
+npx github:gustavopaixao/wyscan-app-boilerplate \
+  --slug field-app --workspaces api,mobile --wyscan local ./field-app
+
+# See what would be written, without writing it
+npx github:gustavopaixao/wyscan-app-boilerplate --slug demo --dry-run
+```
 
 ## Shared-package modes
 
@@ -100,6 +141,19 @@ Two guards run on every sync and fail the build:
   new occurrence aborts the sync.
 - **completeness** — if any reference identity survives tokenization, the
   catalog is incomplete and the sync aborts rather than shipping it.
+
+## Status
+
+Phases 1–5 are done: template extraction, Makefile/compose decomposition, the
+CLI and its prompts, the shared-package modes, and post-scaffold git.
+
+Not done yet:
+
+- **CI for this repo** — `npm test` is not wired to GitHub Actions.
+- **`.cursor/` generation from `.claude/`** — the vendored copies work; only
+  maintenance drift between the two trees is unaddressed.
+- **No automated pty test** for the interactive prompts. The non-TTY fallback
+  and cancel paths are covered; the prompt sequence itself is verified by hand.
 
 ## Tests
 
