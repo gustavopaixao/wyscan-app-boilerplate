@@ -64,7 +64,7 @@
       "form-data": ">=2.5.6",
       "brace-expansion": ">=2.1.4",
       "nanoid": ">=3.3.18",
-      "postcss": ">=8.5.18",
+      "postcss": ">=8.5.23",
       "sharp": ">=0.35.0",
       "__NPM_SCOPE__/core-api": "file:../../__ECOSYSTEM_DIR__/Packages/packages/wyscan-core/api/nextjs",
       "__NPM_SCOPE__/auth-shared": "file:../../__ECOSYSTEM_DIR__/Packages/packages/wyscan-auth-shared/api/nextjs",
