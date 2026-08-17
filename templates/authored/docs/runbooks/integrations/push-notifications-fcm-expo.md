@@ -70,6 +70,22 @@ significant build time otherwise. Put it back:
 ios: { useFrameworks: "static", buildReactNativeFromSource: true },
 ```
 
+Leave `useFrameworks: "static"` alone, and leave
+`./plugins/withIosFirebaseCocoaPods.js` in the plugin list. From v22 on,
+`@react-native-firebase/*` pulls firebase-ios-sdk in as a Swift Package, and
+those products link statically into every pod that uses them — with static
+frameworks the copies collide, so the pod aborts the install:
+
+```
+[react-native-firebase] SPM + static linkage is not supported (target(s): Pods-<App>).
+```
+
+That plugin sets `$RNFirebaseDisableSPM = true` in the Podfile, which pins
+Firebase back to CocoaPods. `expo run:ios` does not stop when `pod install`
+fails, so removing it surfaces as `error: The sandbox is not in sync with the
+Podfile.lock` and `xcodebuild exited with error code 65` — scroll up in the log
+for the real cause.
+
 ### 4. Regenerate the native projects
 
 `ios/` and `android/` are build output — config changes only land through a prebuild:

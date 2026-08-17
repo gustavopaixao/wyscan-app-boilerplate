@@ -196,6 +196,30 @@ describe("firebase opt-in", () => {
     rmSync(kept, { recursive: true, force: true });
   });
 
+  /**
+   * Pruning the dependencies is not enough: pnpm auto-installs peer
+   * dependencies, so a shared package that peer-depends on
+   * `@react-native-firebase/*` puts the pods back into node_modules, where
+   * CocoaPods autolinks them regardless of `--firebase`. RNFB >= 22 then
+   * refuses to install under `useFrameworks: "static"` and takes `pod install`
+   * — and, three steps later, `expo run:ios` — down with it.
+   */
+  test("pins Firebase to CocoaPods whether or not Firebase is on", () => {
+    for (const args of [[], ["--firebase"]]) {
+      const dir = generate(["--slug", "fb-spm", "--workspaces", "mobile", ...args]);
+      const plugin = join(dir, "mobile/plugins/withIosFirebaseCocoaPods.js");
+      assert.ok(existsSync(plugin), `plugin ships with ${args.join(" ") || "defaults"}`);
+      assert.match(readFileSync(plugin, "utf8"), /\$RNFirebaseDisableSPM = true/);
+
+      const appConfig = readFileSync(join(dir, "mobile/app.config.ts"), "utf8");
+      assert.ok(
+        appConfig.includes('"./plugins/withIosFirebaseCocoaPods.js"'),
+        "app.config.ts registers the plugin",
+      );
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   test("--firebase adds nothing to a project without the mobile workspace", () => {
     const dir = generate(["--slug", "fb-api", "--workspaces", "api", "--firebase"]);
     assert.ok(!existsSync(join(dir, "mobile")));

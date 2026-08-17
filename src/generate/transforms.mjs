@@ -6,7 +6,11 @@
 
 import { pruneCompose, serializeInstalls, ALL_SERVICES } from "./compose.mjs";
 import { rewritePackageJson, rewriteMetroConfig, rewriteNpmrc } from "./wyscan.mjs";
-import { pruneFirebaseDeps, dropReactNativeFromSource } from "./firebase.mjs";
+import {
+  pruneFirebaseDeps,
+  dropReactNativeFromSource,
+  registerFirebasePodsPlugin,
+} from "./firebase.mjs";
 import { buildClaudeMd } from "./claudemd.mjs";
 import { rewritePreCommitGate, rewriteValidateEdit } from "./hooks.mjs";
 
@@ -165,7 +169,9 @@ export function transform(dest, text, cfg) {
   if (dest === "mobile/package.json") {
     out = pruneFirebaseDeps(rewritePackageJson(out, cfg, "mobile"), cfg);
   }
-  if (dest === "mobile/app.config.ts") out = dropReactNativeFromSource(out, cfg);
+  if (dest === "mobile/app.config.ts") {
+    out = registerFirebasePodsPlugin(dropReactNativeFromSource(out, cfg));
+  }
   if (dest === "mobile/metro.config.js") out = rewriteMetroConfig(out, cfg);
   if (dest === "api/.npmrc") out = rewriteNpmrc(out, cfg);
   if (dest === "api/Dockerfile") out = rewriteDockerfile(out, cfg);

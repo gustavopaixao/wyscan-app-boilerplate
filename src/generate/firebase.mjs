@@ -88,3 +88,31 @@ export function dropReactNativeFromSource(text, cfg) {
     .replaceAll(RN_FROM_SOURCE, "")
     .replace(FIREBASE_FRAMEWORKS_COMMENT, PLAIN_FRAMEWORKS_COMMENT);
 }
+
+/** Where the reference's `plugins: [` array opens, tabs and all. */
+const PLUGINS_ANCHOR = "\tplugins: [\n";
+export const SPM_PLUGIN_PATH = "./plugins/withIosFirebaseCocoaPods.js";
+const SPM_PLUGIN_ENTRY =
+  "\t\t// react-native-firebase >= 22 resolves firebase-ios-sdk through SPM, which\n" +
+  '\t\t// `useFrameworks: "static"` below cannot link — the pod refuses to install and\n' +
+  "\t\t// `pod install` fails mid-prebuild. Pin it back to CocoaPods.\n" +
+  `\t\t"${SPM_PLUGIN_PATH}",\n`;
+
+/**
+ * Register `withIosFirebaseCocoaPods` (an authored template, not a reference
+ * file) in the reference's `app.config.ts` plugin list.
+ *
+ * Unconditional, unlike everything else in this module: the RNFB pods are
+ * autolinked from `node_modules`, so they break `pod install` even with
+ * `--firebase` off, whenever a dependency drags them in as peers — which
+ * `wyscanMode: "local"`/`"registry"` does through the shared analytics package.
+ * The plugin is inert when no RNFB pod is installed.
+ *
+ * @returns {string} app.config.ts source
+ */
+export function registerFirebasePodsPlugin(text) {
+  if (text.includes(SPM_PLUGIN_PATH)) return text;
+  if (!text.includes(PLUGINS_ANCHOR)) return text;
+
+  return text.replace(PLUGINS_ANCHOR, PLUGINS_ANCHOR + SPM_PLUGIN_ENTRY);
+}
