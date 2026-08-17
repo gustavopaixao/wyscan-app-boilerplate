@@ -50,6 +50,11 @@ export function nextSteps(cfg, targetDir, { warnings = [], committed, sha }) {
 
   L.push("");
   L.push(`  make help                  ${c.dim("# everything else")}`);
+  if (cfg.makeGroups?.includes("completion")) {
+    // The fragments arrive via `include $(wildcard make/*.mk)`, which the shells'
+    // own make completion cannot follow — so `make <TAB>` needs this once.
+    L.push(`  make completion >> ~/.zshrc  ${c.dim("# tab-complete every target")}`);
+  }
 
   if (cfg.wyscanMode === "standalone" && (has("api") || has("mobile"))) {
     L.push("");

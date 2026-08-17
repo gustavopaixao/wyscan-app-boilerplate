@@ -42,6 +42,9 @@ export const ALL_MAKE_GROUPS = [
   "ship",
   "verify",
   "docs",
+  // Shell completion for whatever targets ended up selected. Workspace
+  // independent: it reads make/*.mk at completion time, so any subset works.
+  "completion",
 ];
 
 /**

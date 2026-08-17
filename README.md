@@ -37,7 +37,7 @@ my-app/
 
 Every workspace is optional — pick any subset. Make targets follow from that
 choice: workspace-specific groups ship with their workspace, and the rest
-(`setup`, `verify`, `ship`, `docs`) always ship. So an api-only project gets
+(`setup`, `verify`, `ship`, `docs`, `completion`) always ship. So an api-only project gets
 `make api-watch` and `make start` but no `make mobile-dev`.
 
 ## First run after scaffolding
@@ -49,7 +49,17 @@ make jwt-secret                    # seed api/.env
 make start                         # docker stack up
 make health                        # http://localhost:8080
 make help                          # everything else
+
+make completion >> ~/.zshrc        # tab-complete every target (zsh or bash)
+exec zsh
 ```
+
+`make completion` prints one `source` line for `scripts/completion/make.{zsh,bash}`.
+It is worth running: the root Makefile collects its targets with
+`include $(wildcard make/*.mk)`, and zsh's builtin completion expands only plain
+`$(VAR)` references after an `include` — so untouched, `make <TAB>` offers just
+`help`. The shipped function reads the fragments instead, shows each target's
+`##` description, and hands any other repo back to the shell's own completion.
 
 ## Shipping the mobile app
 

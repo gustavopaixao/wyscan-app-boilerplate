@@ -82,6 +82,30 @@
       "dotEscaped": false
     },
     {
+      "src": "authored/make/completion.mk",
+      "dest": "make/completion.mk",
+      "group": "make:completion",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/scripts/completion/make.zsh",
+      "dest": "scripts/completion/make.zsh",
+      "group": "make:completion",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/scripts/completion/make.bash",
+      "dest": "scripts/completion/make.bash",
+      "group": "make:completion",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
       "src": "authored/docs/runbooks/release-deploy-checklist.md",
       "dest": "docs/runbooks/release-deploy-checklist.md",
       "group": "mobile",

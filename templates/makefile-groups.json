@@ -87,5 +87,7 @@
 
   "features-archive":           { "group": "docs", "help": "Archive docs/features up to UP_TO=NNNN" },
   "features-index":             { "group": "docs", "help": "Regenerate the docs/features index" },
-  "docs-links-check":           { "group": "docs", "help": "Verify relative links across docs and AI configs" }
+  "docs-links-check":           { "group": "docs", "help": "Verify relative links across docs and AI configs" },
+
+  "completion":                 { "group": "completion", "help": "Print the shell snippet enabling `make <TAB>` (>> ~/.zshrc)" }
 }
