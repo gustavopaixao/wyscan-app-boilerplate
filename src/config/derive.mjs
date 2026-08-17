@@ -3,6 +3,14 @@
  * Kept side-effect free so it can be unit-tested directly.
  */
 
+import { ALL_SERVICES } from "../generate/compose.mjs";
+import { ALL_MAKE_GROUPS } from "../generate/plan.mjs";
+
+export const ALL_AI_TOOLS = ["claude", "cursor", "github"];
+export const WYSCAN_MODES = ["local", "registry", "standalone"];
+const ALL_SERVICE_NAMES = ALL_SERVICES;
+const ALL_MAKE_GROUP_NAMES = ALL_MAKE_GROUPS;
+
 const RESERVED = new Set(["node_modules", "test", "src", "api", "web", "mobile", "docker"]);
 
 export function titleCase(slug) {
@@ -35,6 +43,8 @@ export function derive(answers) {
     dbName: slug,
     // Reverse-DNS segments may NOT contain hyphens, so this one is stripped.
     bundleId: answers.bundleId ?? `com.${flat}.app`,
+    // Expo strips non-alphanumerics from `name` when it generates ios/.
+    iosProjectName: (answers.displayName ?? displayName).replace(/[^A-Za-z0-9]/g, ""),
     apiDomain: `api.${domain}`,
     webDomain: `app.${domain}`,
     adminDomain: `admin.${domain}`,
@@ -90,6 +100,28 @@ export function validate(cfg) {
   }
 
   if (!cfg.workspaces?.length) errors.push("at least one workspace must be selected");
+
+  // Unknown enum values previously generated silently: `--workspaces bogus`
+  // produced a near-empty project and `--wyscan bogus` quietly stripped the
+  // shared-package linkage. Fail loudly instead.
+  const oneOf = (field, values, allowed) => {
+    for (const v of values ?? []) {
+      if (!allowed.includes(v)) {
+        errors.push(`${field} "${v}" is not recognised — choose from: ${allowed.join(", ")}`);
+      }
+    }
+  };
+
+  oneOf("workspace", cfg.workspaces, ALL_WORKSPACES);
+  oneOf("ai tool", cfg.aiTools, ALL_AI_TOOLS);
+  oneOf("service", cfg.services, ALL_SERVICE_NAMES);
+  oneOf("make group", cfg.makeGroups, ALL_MAKE_GROUP_NAMES);
+
+  if (cfg.wyscanMode && !WYSCAN_MODES.includes(cfg.wyscanMode)) {
+    errors.push(
+      `shared-package mode "${cfg.wyscanMode}" is not recognised — choose from: ${WYSCAN_MODES.join(", ")}`,
+    );
+  }
 
   return errors;
 }

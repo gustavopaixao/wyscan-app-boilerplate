@@ -23,7 +23,7 @@ if (!/^\d+$/.test(build) || Number(build) < 1) {
 
 const pbxprojPath = path.join(
   mobileRoot,
-  "ios/__PROJECT_NAME__.xcodeproj/project.pbxproj",
+  "ios/__IOS_PROJECT_NAME__.xcodeproj/project.pbxproj",
 );
 if (!fs.existsSync(pbxprojPath)) {
   console.error(`iOS project not found: ${pbxprojPath}`);

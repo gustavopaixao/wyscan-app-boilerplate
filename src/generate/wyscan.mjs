@@ -71,9 +71,11 @@ export function rewritePackageJson(text, cfg, workspace) {
   if (pkg.pnpm && Object.keys(overrides).length === 0) delete pkg.pnpm.overrides;
   if (pkg.pnpm && Object.keys(pkg.pnpm).length === 0) delete pkg.pnpm;
 
-  // The dev scripts prebuild the shared packages before starting. Without the
-  // sibling checkout that step cannot succeed, so drop it.
-  if (cfg.wyscanMode === "standalone" && pkg.scripts) {
+  // The dev scripts prebuild the shared packages from the sibling checkout
+  // before starting. That checkout exists only in `local` mode, and the script
+  // hard-exits when it is absent — so `pnpm dev` was broken out of the box in
+  // registry mode too, not just standalone.
+  if (cfg.wyscanMode !== "local" && pkg.scripts) {
     for (const [name, cmd] of Object.entries(pkg.scripts)) {
       pkg.scripts[name] = String(cmd)
         .replace(/sh scripts\/ensure-auth-api-dist\.sh\s*&&\s*/g, "")
@@ -96,31 +98,27 @@ export const ECOSYSTEM_ONLY_FILES = new Set([
   "api/scripts/prepare-deps.sh",
 ]);
 
-/** Strip the shared-package roots from Metro's resolver config. */
+/**
+ * Metro only needs the shared-package roots in `local` mode.
+ *
+ * Emit a clean config rather than stripping lines: the roots are declared as
+ * multi-line `path.resolve(...)` calls whose *consumers* (`watchFolders`,
+ * `extraNodeModules`) don't mention the ecosystem directory at all. Line-based
+ * removal left `wyscanRNRoot` undefined but still referenced — a ReferenceError
+ * that stopped Metro booting — and silently collapsed the other two roots to
+ * the mobile directory itself.
+ */
 export function rewriteMetroConfig(text, cfg) {
   if (cfg.wyscanMode === "local") return text;
 
-  const lines = text.split("\n");
-  const out = [];
-  let skipDepth = 0;
+  return `const { getDefaultConfig } = require("expo/metro-config");
 
-  for (const line of lines) {
-    if (skipDepth > 0) {
-      skipDepth += (line.match(/[[{(]/g) ?? []).length;
-      skipDepth -= (line.match(/[\]})]/g) ?? []).length;
-      continue;
-    }
-    if (line.includes(cfg.ecosystemDir)) {
-      // Drop this statement; track bracket depth so multi-line ones go too.
-      const open = (line.match(/[[{(]/g) ?? []).length;
-      const close = (line.match(/[\]})]/g) ?? []).length;
-      skipDepth = Math.max(0, open - close);
-      continue;
-    }
-    out.push(line);
-  }
+const projectRoot = __dirname;
 
-  return out.join("\n");
+const config = getDefaultConfig(projectRoot);
+
+module.exports = config;
+`;
 }
 
 /** Remove the scoped-registry line from .npmrc when nothing needs it. */

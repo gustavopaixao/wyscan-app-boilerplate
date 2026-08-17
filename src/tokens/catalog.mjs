@@ -43,6 +43,20 @@ export const TOKENS = [
 ];
 
 /**
+ * Sentinels that are introduced by a patch rather than by extraction, so they
+ * have no reference literal to match. They are substituted at install time but
+ * never produced by tokenize().
+ *
+ * `__IOS_PROJECT_NAME__` exists because Expo names the Xcode project after the
+ * app `name` with non-alphanumerics stripped ("Demo Shop" -> "DemoShop"), which
+ * `__PROJECT_NAME__` cannot express — and the two share a literal in the
+ * reference ("Botonistas"), so ordered substitution cannot tell them apart.
+ */
+export const RENDER_ONLY_TOKENS = [
+  { sentinel: "__IOS_PROJECT_NAME__", field: "iosProjectName" },
+];
+
+/**
  * Substrings that look like tokens but must never be rewritten. Asserted by the
  * extractor's completeness guard so a future catalog change cannot eat them.
  */
@@ -76,5 +90,5 @@ export function extractionOrder() {
 
 /** Every sentinel string, for residue assertions. */
 export function allSentinels() {
-  return TOKENS.map((t) => t.sentinel);
+  return [...TOKENS, ...RENDER_ONLY_TOKENS].map((t) => t.sentinel);
 }

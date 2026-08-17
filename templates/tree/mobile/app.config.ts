@@ -30,7 +30,7 @@ const googleIntentFilters =
 				category: ["BROWSABLE", "DEFAULT"],
 			}))
 		: [];
-const __PROJECT_SLUG__SchemeFilter = {
+const appSchemeFilter = {
 	action: "VIEW" as const,
 	data: [{ scheme: appScheme, pathPrefix: "/" }],
 	category: ["BROWSABLE", "DEFAULT"],
@@ -112,7 +112,7 @@ const config: ExpoConfig = {
 			: {}),
 		versionCode: androidVersionCode,
 		...({ usesCleartextTraffic: false } as Record<string, unknown>),
-		intentFilters: [__PROJECT_SLUG__SchemeFilter, ...googleIntentFilters],
+		intentFilters: [appSchemeFilter, ...googleIntentFilters],
 	},
 	web: {},
 	plugins: [

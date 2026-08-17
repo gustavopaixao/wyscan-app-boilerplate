@@ -146,7 +146,10 @@ async function main() {
   }
 
   const targetDir = resolve(answers.targetDir ?? `./${cfg.slug}`);
-  if (existsSync(targetDir) && readdirSync(targetDir).length && !values.force) {
+  // Whether the directory already held anything decides how far we may roll
+  // back on failure: we must never delete files this run did not create.
+  const preExisting = existsSync(targetDir) && readdirSync(targetDir).length > 0;
+  if (preExisting && !values.force) {
     fail(`${targetDir} is not empty (use --force to override)`, 2);
   }
 
@@ -174,6 +177,21 @@ async function main() {
 
   mkdirSync(targetDir, { recursive: true });
 
+  /**
+   * Roll back only what this run created.
+   *
+   * Deleting targetDir wholesale is data loss the moment --force is used on a
+   * populated directory: any generation error would take the user's existing
+   * files with it. Remove the written files instead, then prune the directories
+   * that became empty as a result.
+   */
+  const rollback = (writtenFiles) => {
+    for (const { dest } of writtenFiles ?? []) {
+      rmSync(join(targetDir, dest), { force: true });
+    }
+    if (!preExisting) rmSync(targetDir, { recursive: true, force: true });
+  };
+
   let written;
   try {
     const result = writeProject(ops, { templatesDir: TEMPLATES, targetDir, values: cfg, extras });
@@ -183,12 +201,17 @@ async function main() {
       for (const l of result.leftovers.slice(0, 10)) {
         console.error(`  ${l.dest}: ${l.sentinels.join(", ")}`);
       }
+      // Same rule as a thrown failure: never leave a half-written tree.
+      rollback(written);
       process.exit(3);
     }
   } catch (e) {
-    // A half-written tree is worse than none.
-    rmSync(targetDir, { recursive: true, force: true });
-    fail(`generation failed, target directory removed: ${e.message}`);
+    rollback(e.written);
+    fail(
+      preExisting
+        ? `generation failed, files written by this run were removed: ${e.message}`
+        : `generation failed, target directory removed: ${e.message}`,
+    );
   }
 
   const warnings = [];

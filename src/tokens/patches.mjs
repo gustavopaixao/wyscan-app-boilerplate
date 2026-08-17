@@ -30,10 +30,40 @@ export const MODEL_REWRITES = [
   ["model: claude-opus-4-8", "model: inherit"],
 ];
 
+/**
+ * Expo names the generated Xcode project after the app `name` with
+ * non-alphanumerics stripped, so a multi-word display name such as
+ * "Demo Shop" yields `ios/DemoShop.xcodeproj`. The reference hardcodes the
+ * display name directly, which only worked because "Botonistas" is one word.
+ */
+/**
+ * The reference names a JS identifier after itself
+ * (`const botonistasSchemeFilter`). Tokenizing it yields
+ * `const __PROJECT_SLUG__SchemeFilter`, which renders as `const my-appSchemeFilter`
+ * for any hyphenated slug — a syntax error that breaks typecheck, Metro,
+ * `expo prebuild` and `make mobile-dev`. It only worked upstream because
+ * "botonistas" happens to be a valid identifier.
+ *
+ * The identifier does not need to carry the project name at all.
+ */
+export const IDENTIFIER_REWRITES = [
+  ["__PROJECT_SLUG__SchemeFilter", "appSchemeFilter"],
+];
+
+export const IOS_PATH_REWRITES = [
+  ["ios/__PROJECT_NAME__.xcodeproj", "ios/__IOS_PROJECT_NAME__.xcodeproj"],
+  ["ios/__PROJECT_NAME__/", "ios/__IOS_PROJECT_NAME__/"],
+];
+
 /** All rewrites, applied in order, to every non-raw file. */
 export function applyPatches(text) {
   let out = text;
-  for (const [from, to] of [...PROSE_REWRITES, ...MODEL_REWRITES]) {
+  for (const [from, to] of [
+    ...PROSE_REWRITES,
+    ...MODEL_REWRITES,
+    ...IDENTIFIER_REWRITES,
+    ...IOS_PATH_REWRITES,
+  ]) {
     out = out.replaceAll(from, to);
   }
   return out;

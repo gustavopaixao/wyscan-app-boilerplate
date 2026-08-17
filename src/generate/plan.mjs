@@ -92,6 +92,26 @@ function isGroupSelected(group, cfg) {
   }
 }
 
+/**
+ * Some AI-tooling files target one specific workspace. The reference ships a
+ * single CI workflow for the member web app, gated only on `.github` being
+ * wanted — so an api-only project received a workflow whose working-directory
+ * is a `web/<slug>-app` that was never generated, and CI failed on first push.
+ *
+ * Keyed by a substring of the rendered dest, since the dest carries the slug.
+ */
+const DEST_REQUIRES_WORKSPACE = [
+  { match: /^\.github\/workflows\/.*-app\.yml$/, workspace: "web:app" },
+  { match: /^\.github\/workflows\/.*-site\.yml$/, workspace: "web:site" },
+  { match: /^\.github\/workflows\/.*-admin\.yml$/, workspace: "web:admin" },
+];
+
+/** True when a file targets a workspace that was not selected. */
+function targetsMissingWorkspace(dest, cfg) {
+  const rule = DEST_REQUIRES_WORKSPACE.find((r) => r.match.test(dest));
+  return Boolean(rule) && !cfg.workspaces.includes(rule.workspace);
+}
+
 /** Files invalidated by a non-local shared-package mode (stale lockfiles). */
 function isInvalidated(file, cfg) {
   if (!file.invalidatedBy) return false;
@@ -125,16 +145,18 @@ export function planFiles(manifest, cfg, templatesDir) {
       skipped.push({ ...file, reason: `lockfile invalid under wyscan=${cfg.wyscanMode}` });
       continue;
     }
-    if (cfg.wyscanMode === "standalone" && ECOSYSTEM_ONLY_FILES.has(file.dest)) {
-      skipped.push({ ...file, reason: "shared-package bootstrap, not used in standalone" });
+    // These clone or prebuild the sibling checkout, which only `local` has.
+    if (cfg.wyscanMode !== "local" && ECOSYSTEM_ONLY_FILES.has(file.dest)) {
+      skipped.push({ ...file, reason: `shared-package bootstrap, unused in ${cfg.wyscanMode}` });
       continue;
     }
-    ops.push({
-      src: file.src,
-      dest: renderPath(file.dest, cfg),
-      mode: file.mode,
-      raw: file.raw,
-    });
+    const dest = renderPath(file.dest, cfg);
+    if (targetsMissingWorkspace(dest, cfg)) {
+      skipped.push({ ...file, reason: "targets a workspace that was not selected" });
+      continue;
+    }
+
+    ops.push({ src: file.src, dest, mode: file.mode, raw: file.raw });
   }
 
   return { ops, skipped };

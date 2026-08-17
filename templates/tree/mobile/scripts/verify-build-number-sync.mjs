@@ -34,7 +34,7 @@ if (!/^\d+$/.test(expectedBuild) || Number(expectedBuild) < 1) {
 }
 
 function readIosBuildNumber() {
-  const infoPlistPath = path.join(mobileRoot, "ios/__PROJECT_NAME__/Info.plist");
+  const infoPlistPath = path.join(mobileRoot, "ios/__IOS_PROJECT_NAME__/Info.plist");
   if (!fs.existsSync(infoPlistPath)) {
     return null;
   }
@@ -47,7 +47,7 @@ function readIosBuildNumber() {
     return { error: `Could not parse CFBundleVersion in ${infoPlistPath}` };
   }
 
-  const pbxprojPath = path.join(mobileRoot, "ios/__PROJECT_NAME__.xcodeproj/project.pbxproj");
+  const pbxprojPath = path.join(mobileRoot, "ios/__IOS_PROJECT_NAME__.xcodeproj/project.pbxproj");
   let projectVersion = null;
   if (fs.existsSync(pbxprojPath)) {
     const pbxproj = fs.readFileSync(pbxprojPath, "utf8");

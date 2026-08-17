@@ -1,4 +1,4 @@
-import { TOKENS, allSentinels } from "./catalog.mjs";
+import { TOKENS, RENDER_ONLY_TOKENS, allSentinels } from "./catalog.mjs";
 
 /** Escape a literal for use inside a RegExp. */
 function esc(s) {
@@ -24,7 +24,7 @@ export function tokenize(text) {
  */
 export function render(text, values) {
   let out = text;
-  for (const { sentinel, field } of TOKENS) {
+  for (const { sentinel, field } of [...RENDER_ONLY_TOKENS, ...TOKENS]) {
     const value = values[field];
     if (value === undefined || value === null) continue;
     out = out.replaceAll(sentinel, String(value));

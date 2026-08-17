@@ -34,6 +34,7 @@ export function writeProject(ops, { templatesDir, targetDir, values, dryRun = fa
     const outPath = join(targetDir, op.dest);
 
     let data;
+    try {
     if (op.raw) {
       data = readFileSync(srcPath);
     } else {
@@ -47,6 +48,12 @@ export function writeProject(ops, { templatesDir, targetDir, values, dryRun = fa
       mkdirSync(dirname(outPath), { recursive: true });
       writeFileSync(outPath, data);
       chmodSync(outPath, op.mode === 755 ? 0o755 : 0o644);
+    }
+    } catch (e) {
+      // Carry what we managed to write so the caller can roll back precisely
+      // rather than deleting the whole target directory.
+      e.written = written;
+      throw e;
     }
 
     written.push({ dest: op.dest, bytes: data.length, mode: op.mode });

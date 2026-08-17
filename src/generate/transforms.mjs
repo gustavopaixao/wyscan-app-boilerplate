@@ -24,6 +24,55 @@ function parseJsonc(text) {
   return JSON.parse(text.replace(/,(\s*[}\]])/g, "$1"));
 }
 
+/** Reference dev ports, by web app, as written in the template package.json. */
+const REFERENCE_WEB_PORTS = { site: 3500, app: 4500, admin: 4000 };
+
+/** Point a web app's dev/start scripts at the configured port. */
+function rewriteWebPorts(text, cfg, which) {
+  const wanted = cfg.ports?.[which];
+  const current = REFERENCE_WEB_PORTS[which];
+  if (!wanted || wanted === current) return text;
+  return text.replaceAll(`-p ${current}`, `-p ${wanted}`);
+}
+
+/** Compose ports are `${API_PORT:-3000}` — rewrite the default, not the shape. */
+const COMPOSE_PORT_VARS = {
+  API_PORT: "api",
+  REALTIME_PORT: "realtime",
+  NGINX_PORT: "nginx",
+  MONGODB_PORT: "mongodb",
+  REDIS_PORT: "redis",
+};
+
+function rewriteComposePorts(text, cfg) {
+  let out = text;
+  for (const [variable, key] of Object.entries(COMPOSE_PORT_VARS)) {
+    const wanted = cfg.ports?.[key];
+    if (!wanted) continue;
+    out = out.replace(
+      new RegExp(`\\$\\{${variable}:-\\d+\\}`, "g"),
+      `\${${variable}:-${wanted}}`,
+    );
+  }
+  return out;
+}
+
+/**
+ * Standalone mode drops `api/scripts/prepare-deps.sh`, but the Dockerfile
+ * COPYs and runs it unconditionally — and neither line mentions the ecosystem
+ * directory, so the generic line strip leaves them. The image then fails to
+ * build at the COPY, taking `make start` with it.
+ */
+function rewriteDockerfile(text, cfg) {
+  let out = stripEcosystemLines(text, cfg);
+  if (cfg.wyscanMode !== "standalone") return out;
+
+  return out
+    .split("\n")
+    .filter((l) => !/prepare-deps\.sh/.test(l) || /\|\| true/.test(l))
+    .join("\n");
+}
+
 /** Remove named rules (and their recipes and .PHONY entries) from a .mk fragment. */
 function stripMakeRules(text, names) {
   const lines = text.split("\n");
@@ -90,21 +139,32 @@ export function transform(dest, text, cfg) {
     // Serialise before pruning, so the dependency is only added for services
     // that actually survive.
     if (dest === "docker/docker-compose.yml") out = serializeInstalls(out);
+    // Compare as a set, not by length: a six-element list containing a typo
+    // has the same length as the full set and used to skip pruning entirely,
+    // silently keeping every service.
     const services = cfg.services ?? ALL_SERVICES;
-    if (services.length !== ALL_SERVICES.length) out = pruneCompose(out, services);
+    const selected = new Set(services);
+    if (!ALL_SERVICES.every((s) => selected.has(s))) out = pruneCompose(out, services);
     out = stripEcosystemLines(out, cfg);
   }
 
   // These targets exist only to clone or prebuild the sibling checkout.
-  if (dest === "make/setup.mk" && cfg.wyscanMode === "standalone") {
+  if (dest === "make/setup.mk" && cfg.wyscanMode !== "local") {
     out = stripMakeRules(out, new Set(["wyscan-dev-setup", "design-system-setup", "api-auth-dist"]));
   }
+
+  // Web dev ports are hardcoded in each package.json (`next dev -p 3500`), and
+  // compose carries its own ${VAR:-default}. Without rewriting both, a chosen
+  // port would only ever appear in the docs.
+  const web = dest.match(/^web\/.*-(site|app|admin)\/package\.json$/);
+  if (web) out = rewriteWebPorts(out, cfg, web[1]);
+  if (COMPOSE_FILES.has(dest)) out = rewriteComposePorts(out, cfg);
 
   if (dest === "api/package.json") out = rewritePackageJson(out, cfg, "api");
   if (dest === "mobile/package.json") out = rewritePackageJson(out, cfg, "mobile");
   if (dest === "mobile/metro.config.js") out = rewriteMetroConfig(out, cfg);
   if (dest === "api/.npmrc") out = rewriteNpmrc(out, cfg);
-  if (dest === "api/Dockerfile") out = stripEcosystemLines(out, cfg);
+  if (dest === "api/Dockerfile") out = rewriteDockerfile(out, cfg);
 
   // The reference CLAUDE.md is stale and imports nothing; generate a real one.
   if (dest === "CLAUDE.md") out = buildClaudeMd(cfg);
