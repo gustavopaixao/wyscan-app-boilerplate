@@ -38,6 +38,7 @@ Options
   --domain <host>        root domain          (default: <slug>.com)
   --bundle-id <id>       mobile bundle id     (default: com.<slug>.app)
   --dev-host <host>      mobile LAN dev host
+  --firebase             add Firebase (push, Crashlytics); off by default
   --workspaces <list>    ${ALL_WORKSPACES.join(",")}
   --make-groups <list>   narrow the Make targets (default: follows --workspaces)
   --services <list>      compose services     (default: ${ALL_SERVICES.join(",")})
@@ -69,6 +70,7 @@ async function main() {
       domain: { type: "string" },
       "bundle-id": { type: "string" },
       "dev-host": { type: "string" },
+      firebase: { type: "boolean" },
       workspaces: { type: "string" },
       "make-groups": { type: "string" },
       services: { type: "string" },
@@ -104,6 +106,7 @@ async function main() {
     domain: values.domain ?? fromFile.domain,
     bundleId: values["bundle-id"] ?? fromFile.bundleId,
     devHost: values["dev-host"] ?? fromFile.devHost,
+    firebase: values.firebase ?? fromFile.firebase,
     workspaces: list(values.workspaces) ?? fromFile.workspaces,
     makeGroups: list(values["make-groups"]) ?? fromFile.makeGroups,
     services: list(values.services) ?? fromFile.services,
@@ -130,6 +133,9 @@ async function main() {
       wyscanMode: known.wyscanMode ?? "standalone",
       ports: { ...DEFAULT_PORTS, ...(fromFile.ports ?? {}) },
       gitInit: known.gitInit ?? true,
+      // This branch bypasses runFlow, so anything the prompts would default has
+      // to be defaulted here too or it arrives undefined.
+      firebase: known.firebase ?? false,
     };
     if (!answers.slug) fail("a project slug is required (--slug, --config, or a positional path)");
   } else {

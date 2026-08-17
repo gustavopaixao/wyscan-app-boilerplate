@@ -64,6 +64,12 @@ make mobile-beta               # bump build, ship iOS + Android betas
 make mobile-ios-release        # App Store Connect (not submitted for review)
 ```
 
+Firebase is **opt-in** (`--firebase`). Left out, the app builds and runs with no
+accounts configured; push over FCM and Crashlytics are simply unavailable until you
+follow `docs/runbooks/integrations/push-notifications-fcm-expo.md`. It cannot ship
+installed-but-idle: `@react-native-firebase/crashlytics` autolinks an iOS build phase
+that fails until `GoogleService-Info.plist` exists.
+
 Credentials go in `mobile/fastlane/.env` (gitignored — copy the shipped
 `.env.example`); no secret is ever part of a template. `mobile/package.json`'s
 `version` + `buildNumber` are the single source of truth, and a build refuses to
@@ -83,6 +89,7 @@ npx github:gustavopaixao/wyscan-app-boilerplate --slug my-app --owner my-org ./m
   --owner <handle>     GitHub owner/org
   --domain <host>      default: <slug>.com
   --bundle-id <id>     default: com.<slug-without-hyphens>.app
+  --firebase           add Firebase (push, Crashlytics); off by default
   --workspaces <list>  api,web:site,web:app,web:admin,mobile
   --make-groups <list> narrow the Make targets (default: follows --workspaces)
   --services <list>    compose services to include

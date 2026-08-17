@@ -7,6 +7,7 @@ import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { allSentinels } from "../src/tokens/catalog.mjs";
+import { FIREBASE_DEPS } from "../src/generate/firebase.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const CLI = join(ROOT, "bin", "create.mjs");
@@ -139,6 +140,66 @@ describe("workspace pruning", () => {
     assert.ok(!existsSync(join(dir, ".claude")));
     assert.ok(!existsSync(join(dir, ".cursor")));
     assert.ok(existsSync(join(dir, ".github")));
+    rmSync(dir, { recursive: true, force: true });
+  });
+});
+
+/**
+ * Firebase is opt-in because `@react-native-firebase/crashlytics` autolinks an iOS
+ * build phase that fails until GoogleService-Info.plist exists — which no fresh
+ * project has. A default project must therefore carry none of those packages.
+ */
+describe("firebase opt-in", () => {
+  test("a default mobile project ships no Firebase", () => {
+    const dir = generate(["--slug", "fb-off", "--workspaces", "api,mobile"]);
+    const pkg = readFileSync(join(dir, "mobile/package.json"), "utf8");
+    assert.ok(!pkg.includes("@react-native-firebase"), "no Firebase dependencies");
+
+    const appConfig = readFileSync(join(dir, "mobile/app.config.ts"), "utf8");
+    assert.ok(
+      !appConfig.includes("buildReactNativeFromSource"),
+      "building RN from source is a Firebase-only cost",
+    );
+    // Other Google pods rely on static frameworks, so that one stays.
+    assert.match(appConfig, /useFrameworks: "static"/);
+
+    assert.ok(existsSync(join(dir, "docs/runbooks/integrations/push-notifications-fcm-expo.md")));
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  test("--firebase restores the packages and the iOS build setting", () => {
+    const dir = generate(["--slug", "fb-on", "--workspaces", "api,mobile", "--firebase"]);
+    const pkg = JSON.parse(readFileSync(join(dir, "mobile/package.json"), "utf8"));
+    for (const name of FIREBASE_DEPS) {
+      assert.ok(pkg.dependencies[name], `${name} should be kept`);
+    }
+
+    const appConfig = readFileSync(join(dir, "mobile/app.config.ts"), "utf8");
+    assert.match(appConfig, /buildReactNativeFromSource: true/);
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  test("drops the mobile lockfile it would invalidate", () => {
+    // `local` is the only mode that ships mobile/pnpm-lock.yaml at all; pruning
+    // dependencies would leave it describing packages that are no longer declared.
+    const pruned = generate(["--slug", "fb-lock", "--workspaces", "mobile", "--wyscan", "local"]);
+    assert.ok(!existsSync(join(pruned, "mobile/pnpm-lock.yaml")));
+    rmSync(pruned, { recursive: true, force: true });
+
+    const kept = generate([
+      "--slug", "fb-lock-on",
+      "--workspaces", "mobile",
+      "--wyscan", "local",
+      "--firebase",
+    ]);
+    assert.ok(existsSync(join(kept, "mobile/pnpm-lock.yaml")));
+    rmSync(kept, { recursive: true, force: true });
+  });
+
+  test("--firebase adds nothing to a project without the mobile workspace", () => {
+    const dir = generate(["--slug", "fb-api", "--workspaces", "api", "--firebase"]);
+    assert.ok(!existsSync(join(dir, "mobile")));
+    assert.ok(!existsSync(join(dir, "docs/runbooks/integrations")));
     rmSync(dir, { recursive: true, force: true });
   });
 });

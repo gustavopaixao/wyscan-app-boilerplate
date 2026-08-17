@@ -85,6 +85,13 @@ export async function runFlow(known) {
       message: "Hostname your phone can reach this machine at",
       default: hostname().replace(/\.local$/, ""),
     });
+    // Off by default: the Firebase packages autolink a Crashlytics build phase
+    // that fails the iOS build until GoogleService-Info.plist exists, and a fresh
+    // project has no Firebase account behind it yet.
+    a.firebase ??= await confirm({
+      message: "Add Firebase (push notifications, Crashlytics)? Needs a Firebase project",
+      default: false,
+    });
   }
 
   if (a.workspaces.includes("api") || a.workspaces.includes("mobile")) {

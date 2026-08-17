@@ -6,6 +6,7 @@
 
 import { pruneCompose, serializeInstalls, ALL_SERVICES } from "./compose.mjs";
 import { rewritePackageJson, rewriteMetroConfig, rewriteNpmrc } from "./wyscan.mjs";
+import { pruneFirebaseDeps, dropReactNativeFromSource } from "./firebase.mjs";
 import { buildClaudeMd } from "./claudemd.mjs";
 import { rewritePreCommitGate, rewriteValidateEdit } from "./hooks.mjs";
 
@@ -161,7 +162,10 @@ export function transform(dest, text, cfg) {
   if (COMPOSE_FILES.has(dest)) out = rewriteComposePorts(out, cfg);
 
   if (dest === "api/package.json") out = rewritePackageJson(out, cfg, "api");
-  if (dest === "mobile/package.json") out = rewritePackageJson(out, cfg, "mobile");
+  if (dest === "mobile/package.json") {
+    out = pruneFirebaseDeps(rewritePackageJson(out, cfg, "mobile"), cfg);
+  }
+  if (dest === "mobile/app.config.ts") out = dropReactNativeFromSource(out, cfg);
   if (dest === "mobile/metro.config.js") out = rewriteMetroConfig(out, cfg);
   if (dest === "api/.npmrc") out = rewriteNpmrc(out, cfg);
   if (dest === "api/Dockerfile") out = rewriteDockerfile(out, cfg);

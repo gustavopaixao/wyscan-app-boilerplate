@@ -82,6 +82,26 @@ make mobile-android-release    # Play production, as a draft
 - Never add a dev-only \`EXPO_PUBLIC_*\` flag to \`fastlane/.env\`: Metro inlines every
   one of them into the store bundle. \`verify-release-env.mjs\` fails the build if you do.
 
+## Firebase & push
+
+${
+	cfg.firebase
+		? `Firebase is installed (\`@react-native-firebase/{app,messaging,crashlytics}\`).
+It stays inert until **both** \`mobile/GoogleService-Info.plist\` and
+\`mobile/google-services.json\` exist — \`app.config.ts\` registers the config plugins
+only when it sees both. Without them the iOS build fails in
+\`[RNFB] Crashlytics Configuration\`, which is autolinked and cannot be disabled.
+Setup: \`docs/runbooks/integrations/push-notifications-fcm-expo.md\`.`
+		: `Firebase is **not** installed, so push over FCM, Crashlytics, Analytics, Remote
+Config and Realtime Database are unavailable. \`expo-notifications\` is present, so
+permissions and local notifications still work.
+
+It is opt-in because \`@react-native-firebase/crashlytics\` autolinks an iOS build
+phase that fails the build until \`GoogleService-Info.plist\` exists — it cannot sit
+installed and dormant. To add it:
+\`docs/runbooks/integrations/push-notifications-fcm-expo.md\`.`
+}
+
 ## Safe area (Android edge-to-edge)
 
 The app runs edge-to-edge, so the system bars overlap the content area.

@@ -80,6 +80,14 @@
       "mode": 644,
       "raw": false,
       "dotEscaped": false
+    },
+    {
+      "src": "authored/docs/runbooks/integrations/push-notifications-fcm-expo.md",
+      "dest": "docs/runbooks/integrations/push-notifications-fcm-expo.md",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
     }
   ]
 }

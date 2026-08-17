@@ -121,6 +121,19 @@ function isInvalidated(file, cfg) {
 }
 
 /**
+ * Pruning the Firebase dependencies rewrites mobile/package.json, which leaves the
+ * checked-in lockfile describing packages that are no longer declared — enough to
+ * fail `pnpm install --frozen-lockfile`. The lockfile only survives `local` mode
+ * anyway (see `invalidatedBy` in the manifest); this covers the remaining case.
+ *
+ * The rule lives here rather than in manifest.json because the manifest is
+ * regenerated wholesale by scripts/sync-from-reference.mjs.
+ */
+function isStaleWithoutFirebase(file, cfg) {
+  return file.dest === "mobile/pnpm-lock.yaml" && !cfg.firebase;
+}
+
+/**
  * @returns {{ops: Array, skipped: Array}} ops = {src, dest, mode, raw}
  */
 export function planFiles(manifest, cfg, templatesDir) {
@@ -145,6 +158,10 @@ export function planFiles(manifest, cfg, templatesDir) {
     }
     if (isInvalidated(file, cfg)) {
       skipped.push({ ...file, reason: `lockfile invalid under wyscan=${cfg.wyscanMode}` });
+      continue;
+    }
+    if (isStaleWithoutFirebase(file, cfg)) {
+      skipped.push({ ...file, reason: "lockfile stale once Firebase deps are pruned" });
       continue;
     }
     // These clone or prebuild the sibling checkout, which only `local` has.
