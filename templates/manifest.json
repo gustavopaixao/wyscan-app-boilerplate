@@ -1,7 +1,7 @@
 {
   "generatedFrom": {
     "repo": "/Users/gustavopaixao/websites/vhosts/botonistas",
-    "commit": "c2b9edc"
+    "commit": "a3ad369"
   },
   "files": [
     {
@@ -1879,6 +1879,14 @@
     {
       "src": "tree/mobile/pnpm-workspace.yaml",
       "dest": "mobile/pnpm-workspace.yaml",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "tree/mobile/react-native.config.js",
+      "dest": "mobile/react-native.config.js",
       "group": "mobile",
       "mode": 644,
       "raw": false,
