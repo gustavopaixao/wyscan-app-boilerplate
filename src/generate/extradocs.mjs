@@ -82,6 +82,38 @@ The app runs edge-to-edge, so the system bars overlap the content area.
 `;
 }
 
+/**
+ * The member web app's `next.config.ts` asserts `INTERNAL_API_SECRET` whenever
+ * NODE_ENV=production — and Next sets that while loading the config for a
+ * build, so a freshly scaffolded project could not run `pnpm build` at all.
+ * The reference never noticed because its CI injects the value and no web
+ * `.env` was ever committed.
+ *
+ * Ship a documented example plus a gitignored local file so the first build
+ * works without weakening the production guard.
+ */
+export function webAppEnvExample(cfg) {
+  return `# Copy to .env.local and fill in. Required by next.config.ts whenever
+# NODE_ENV=production, which includes \`pnpm build\`.
+
+# Shared secret between this app's BFF routes and the API.
+INTERNAL_API_SECRET=
+
+NEXT_PUBLIC_API_URL=https://${cfg.apiDomain}
+NEXT_PUBLIC_SITE_URL=https://${cfg.webDomain}
+`;
+}
+
+export function webAppEnvLocal(cfg) {
+  return `# Local development only — gitignored, never deployed.
+# Replace INTERNAL_API_SECRET with a real value before shipping.
+INTERNAL_API_SECRET=dev-insecure-internal-api-secret-change-me
+
+NEXT_PUBLIC_API_URL=http://localhost:${cfg.ports?.nginx ?? 8080}
+NEXT_PUBLIC_SITE_URL=http://localhost:${cfg.ports?.app ?? 4500}
+`;
+}
+
 export function sharedPackagesDoc(cfg) {
   if (cfg.wyscanMode === "standalone") {
     return `# Shared packages

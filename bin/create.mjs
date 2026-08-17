@@ -8,7 +8,13 @@ import { runFlow, summarize } from "../src/cli/flow.mjs";
 import { closePrompts, interactive, colors as c } from "../src/cli/prompt.mjs";
 import { derive, validate, DEFAULT_PORTS, ALL_WORKSPACES } from "../src/config/derive.mjs";
 import { ALL_SERVICES } from "../src/generate/compose.mjs";
-import { apiClaudeMd, mobileClaudeMd, sharedPackagesDoc } from "../src/generate/extradocs.mjs";
+import {
+  apiClaudeMd,
+  mobileClaudeMd,
+  sharedPackagesDoc,
+  webAppEnvExample,
+  webAppEnvLocal,
+} from "../src/generate/extradocs.mjs";
 import { planFiles, makeGroupsFor } from "../src/generate/plan.mjs";
 import { writeProject } from "../src/generate/write.mjs";
 import { initRepo, createGithubRepo, installWorkspaces } from "../src/post/git.mjs";
@@ -168,6 +174,11 @@ async function main() {
 
   // Files the reference promises but never shipped.
   const extras = [{ dest: "docs/shared-packages.md", content: sharedPackagesDoc(cfg) }];
+  if (cfg.workspaces.includes("web:app")) {
+    const appDir = `web/${cfg.slug}-app`;
+    extras.push({ dest: `${appDir}/.env.example`, content: webAppEnvExample(cfg) });
+    extras.push({ dest: `${appDir}/.env.local`, content: webAppEnvLocal(cfg) });
+  }
   if (cfg.aiTools.includes("claude")) {
     if (cfg.workspaces.includes("api")) extras.push({ dest: "api/CLAUDE.md", content: apiClaudeMd(cfg) });
     if (cfg.workspaces.includes("mobile")) {
