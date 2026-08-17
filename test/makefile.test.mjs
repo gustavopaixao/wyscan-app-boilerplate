@@ -127,4 +127,50 @@ describe("generated compose", () => {
     }
     rmSync(dir, { recursive: true, force: true });
   });
+
+  test("serialises the install across services sharing api node_modules", () => {
+    // api, realtime and log-agent all run ensure-api-node-modules.sh against
+    // one shared volume. Starting them together races two pnpm installs and
+    // leaves the tree half-written (observed: ERR_PNPM_ENOENT, missing tsx).
+    const dir = generate(["--slug", "rc-demo", "--workspaces", "api"]);
+    const yml = readFileSync(join(dir, "docker/docker-compose.yml"), "utf8");
+
+    const section = (name) => {
+      const start = yml.indexOf(`\n  ${name}:`);
+      const after = yml.slice(start + 1);
+      const next = after.search(/\n {2}[a-z-]+:\n/);
+      return next === -1 ? after : after.slice(0, next);
+    };
+
+    // api must be health-gated, or the dependents have nothing to wait on.
+    assert.match(section("api"), /healthcheck:/, "api needs a healthcheck");
+
+    for (const svc of ["realtime", "log-agent"]) {
+      assert.match(
+        section(svc),
+        /api:\s*\n\s*condition: service_healthy/,
+        `${svc} must wait for api to be healthy`,
+      );
+    }
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  test("stays valid YAML in every shared-package mode", () => {
+    // Stripping the ecosystem lines must not leave a childless mapping key
+    // (compose rejects `additional_contexts:` with nothing under it).
+    for (const mode of ["standalone", "local", "registry"]) {
+      const dir = generate(["--slug", `ym-${mode}`, "--workspaces", "api", "--wyscan", mode]);
+      const yml = readFileSync(join(dir, "docker/docker-compose.yml"), "utf8");
+      const bareKeys = yml
+        .split("\n")
+        .filter((l, i, all) => {
+          if (!/^\s*[A-Za-z_][\w-]*:\s*$/.test(l)) return false;
+          const indent = (s) => s.length - s.trimStart().length;
+          const next = all.slice(i + 1).find((x) => x.trim() !== "");
+          return !next || indent(next) <= indent(l);
+        });
+      assert.deepEqual(bareKeys, [], `${mode}: keys left with no children`);
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
 });

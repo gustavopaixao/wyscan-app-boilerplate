@@ -4,7 +4,7 @@
  * lives here.
  */
 
-import { pruneCompose, ALL_SERVICES } from "./compose.mjs";
+import { pruneCompose, serializeInstalls, ALL_SERVICES } from "./compose.mjs";
 import { rewritePackageJson, rewriteMetroConfig, rewriteNpmrc } from "./wyscan.mjs";
 import { buildClaudeMd } from "./claudemd.mjs";
 import { rewritePreCommitGate, rewriteValidateEdit } from "./hooks.mjs";
@@ -55,12 +55,26 @@ function stripMakeRules(text, names) {
   return out.join("\n");
 }
 
-/** Drop lines that reference the shared-package tree (compose mounts, contexts). */
+/**
+ * Drop lines that reference the shared-package tree (compose mounts, build
+ * contexts).
+ *
+ * Removing a mapping's only child leaves a childless key, which compose
+ * rejects (`additional_contexts must be a mapping`), so prune those too.
+ */
 function stripEcosystemLines(text, cfg) {
   if (cfg.wyscanMode === "local") return text;
-  return text
-    .split("\n")
-    .filter((l) => !l.includes(cfg.ecosystemDir))
+
+  const kept = text.split("\n").filter((l) => !l.includes(cfg.ecosystemDir));
+  const indent = (l) => l.length - l.trimStart().length;
+
+  return kept
+    .filter((line, i) => {
+      if (!/^\s*[A-Za-z_][\w-]*:\s*$/.test(line)) return true;
+      // A bare key survives only if something is nested beneath it.
+      const next = kept.slice(i + 1).find((l) => l.trim() !== "");
+      return next !== undefined && indent(next) > indent(line);
+    })
     .join("\n");
 }
 
@@ -73,6 +87,9 @@ export function transform(dest, text, cfg) {
   let out = text;
 
   if (COMPOSE_FILES.has(dest)) {
+    // Serialise before pruning, so the dependency is only added for services
+    // that actually survive.
+    if (dest === "docker/docker-compose.yml") out = serializeInstalls(out);
     const services = cfg.services ?? ALL_SERVICES;
     if (services.length !== ALL_SERVICES.length) out = pruneCompose(out, services);
     out = stripEcosystemLines(out, cfg);
