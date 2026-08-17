@@ -1,0 +1,85 @@
+{
+  "_comment": "Hand-maintained template entries — see templates/authored/README.md. NOT produced by scripts/sync-from-reference.mjs: that script only writes templates/tree/ and templates/manifest.json, so everything here survives `npm run sync` and keeps `npm run sync:check` green. Same entry schema as manifest.json; `src` is relative to templates/.",
+  "files": [
+    {
+      "src": "authored/mobile/fastlane/Fastfile",
+      "dest": "mobile/fastlane/Fastfile",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/fastlane/Appfile",
+      "dest": "mobile/fastlane/Appfile",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/fastlane/_env.example",
+      "dest": "mobile/fastlane/.env.example",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "authored/mobile/Gemfile",
+      "dest": "mobile/Gemfile",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/_ruby-version",
+      "dest": "mobile/.ruby-version",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "authored/mobile/scripts/prebuild-release.sh",
+      "dest": "mobile/scripts/prebuild-release.sh",
+      "group": "mobile",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/scripts/android-play-preflight.sh",
+      "dest": "mobile/scripts/android-play-preflight.sh",
+      "group": "mobile",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/scripts/android-google-oauth-sha1.sh",
+      "dest": "mobile/scripts/android-google-oauth-sha1.sh",
+      "group": "mobile",
+      "mode": 755,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/make/mobile-release.mk",
+      "dest": "make/mobile-release.mk",
+      "group": "make:mobile-release",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/docs/runbooks/release-deploy-checklist.md",
+      "dest": "docs/runbooks/release-deploy-checklist.md",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    }
+  ]
+}

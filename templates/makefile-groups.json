@@ -69,6 +69,20 @@
   "mobile-test":                { "group": "mobile", "help": "Run mobile unit tests (vitest)" },
   "mobile-check":               { "group": "mobile", "help": "Mobile type-check + tests" },
 
+  "mobile-release-check":       { "group": "mobile-release", "help": "Check Fastlane credentials and env without building" },
+  "mobile-prebuild":            { "group": "mobile-release", "help": "Regenerate mobile/ios + mobile/android from app.config.ts" },
+  "mobile-set-build":           { "group": "mobile-release", "help": "Set mobile buildNumber (BUILD=42)" },
+  "mobile-verify-build-sync":   { "group": "mobile-release", "help": "Check native build numbers match mobile/package.json" },
+  "mobile-beta":                { "group": "mobile-release", "help": "Ship a beta to TestFlight and Play internal (bumps build)" },
+  "mobile-beta-select":         { "group": "mobile-release", "help": "Ship a beta to PLATFORMS=\"ios android\"" },
+  "mobile-ios-beta":            { "group": "mobile-release", "help": "Build and upload iOS to TestFlight" },
+  "mobile-ios-upload-beta":     { "group": "mobile-release", "help": "Upload the existing IPA to TestFlight (no build)" },
+  "mobile-ios-release":         { "group": "mobile-release", "help": "Build and upload iOS to App Store Connect (no review submit)" },
+  "mobile-android-preflight":   { "group": "mobile-release", "help": "Check the Android toolchain, keystore and Play key" },
+  "mobile-android-beta":        { "group": "mobile-release", "help": "Build an AAB and upload to the Play internal track" },
+  "mobile-android-upload-beta": { "group": "mobile-release", "help": "Upload the existing AAB to Play internal (no build)" },
+  "mobile-android-release":     { "group": "mobile-release", "help": "Build an AAB and upload to Play production as a draft" },
+
   "ship-it":                    { "group": "ship", "help": "Detect changes, pre-flight, confirm, ship a release" },
 
   "features-archive":           { "group": "docs", "help": "Archive docs/features up to UP_TO=NNNN" },

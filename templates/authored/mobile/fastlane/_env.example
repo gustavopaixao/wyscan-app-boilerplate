@@ -1,0 +1,60 @@
+# Copy to fastlane/.env and fill in. fastlane/.env is gitignored — never commit it.
+# Setup walkthrough: docs/runbooks/release-deploy-checklist.md
+#
+# Everything in fastlane/.env is loaded into the environment by the Fastfile, and
+# every EXPO_PUBLIC_* var in the environment is inlined into the JS bundle by
+# Metro. So this file's contents ship inside your app. scripts/verify-release-env.mjs
+# runs on every store build and refuses to build if a dev-only affordance is set.
+
+# --- Apple ------------------------------------------------------------------
+# Team ID: https://developer.apple.com/account -> Membership (10 chars)
+APPLE_TEAM_ID=
+
+# App Store Connect API key (preferred over Apple ID + 2FA):
+#   App Store Connect -> Users and Access -> Integrations -> App Store Connect API
+# Download the .p8 ONCE and save it under mobile/fastlane/ (gitignored).
+APP_STORE_CONNECT_API_KEY_ID=
+APP_STORE_CONNECT_ISSUER_ID=
+APP_STORE_CONNECT_API_KEY_PATH=./fastlane/AuthKey_XXXXXXXXXX.p8
+
+# Raise if TestFlight uploads hit repeated transient Apple 500s (default 4).
+# TESTFLIGHT_UPLOAD_RETRIES=4
+
+# --- Google Play ------------------------------------------------------------
+# Service account JSON: Play Console -> Setup -> API access -> service account.
+SUPPLY_JSON_KEY_PATH=./fastlane/play-store-key.json
+
+# Upload keystore. Create once and BACK IT UP — losing it means you can no longer
+# update the app (unless Play App Signing key rotation is available):
+#   keytool -genkey -v -keystore mobile/fastlane/__PROJECT_SLUG__-upload.keystore \
+#     -alias __PROJECT_SLUG__ -keyalg RSA -keysize 2048 -validity 10000
+ANDROID_KEYSTORE_PATH=./fastlane/__PROJECT_SLUG__-upload.keystore
+ANDROID_KEYSTORE_PASSWORD=
+ANDROID_KEY_ALIAS=__PROJECT_SLUG__
+ANDROID_KEY_PASSWORD=
+
+# --- App runtime config (inlined into the store bundle) ---------------------
+# Must be HTTPS: the Fastfile and prebuild-release.sh both refuse to build otherwise.
+EXPO_PUBLIC_API_URL=https://__API_DOMAIN__
+EXPO_PUBLIC_SITE_URL=https://__WWW_DOMAIN__
+
+# Google Sign-In OAuth client ids (not secrets). Android also needs the keystore
+# SHA-1 registered — see `make mobile-android-preflight`.
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=
+EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=
+EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID=
+
+# AdMob app ids. Left empty, app.config.ts falls back to Google's public test ids.
+EXPO_PUBLIC_ADMOB_IOS_APP_ID=
+EXPO_PUBLIC_ADMOB_ANDROID_APP_ID=
+
+# RevenueCat SDK keys. verify-release-env.mjs treats a non-empty value here as a
+# hard failure unless you opt in, so shipping live purchases is a deliberate act.
+# EXPO_PUBLIC_REVENUECAT_IOS_KEY=
+# EXPO_PUBLIC_REVENUECAT_ANDROID_KEY=
+# ALLOW_REVENUECAT_KEYS=1
+
+# --- Overrides (normally leave unset) ---------------------------------------
+# VERSION and BUILD come from mobile/package.json ("version" / "buildNumber").
+# Set ALLOW_BUILD_OVERRIDE=1 only to force a BUILD that disagrees with it.
+# ALLOW_BUILD_OVERRIDE=1

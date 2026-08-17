@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+
+ruby ">= 3.3.0"
+
+# Fastlane only. CocoaPods is deliberately NOT in here — scripts/prebuild-release.sh
+# runs `pod install` outside bundler so it can pin the Ruby that builds the pods.
+gem "fastlane", "~> 2.227"

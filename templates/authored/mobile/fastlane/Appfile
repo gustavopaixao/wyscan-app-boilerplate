@@ -1,0 +1,5 @@
+app_identifier("__BUNDLE_ID__")
+package_name("__BUNDLE_ID__")
+team_id(ENV["APPLE_TEAM_ID"])
+# apple_id(ENV["APPLE_ID"]) — not needed while authenticating with an App Store
+# Connect API key, which is what the lanes use.

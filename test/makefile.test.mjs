@@ -79,6 +79,47 @@ describe("generated Makefile", () => {
     rmSync(dir, { recursive: true, force: true });
   });
 
+  test("mobile release targets follow the mobile workspace", () => {
+    const withMobile = generate(["--slug", "mk-rel", "--workspaces", "api,mobile"]);
+    assert.ok(existsSync(join(withMobile, "make", "mobile-release.mk")));
+    for (const t of ["mobile-beta", "mobile-beta-select", "mobile-ios-beta", "mobile-android-beta"]) {
+      assert.ok(!make(withMobile, ["-n", t]).includes("No rule to make target"), `${t} should resolve`);
+    }
+    // ship-it drives mobile-beta-select; without it the shipped release path is dead.
+    assert.ok(!make(withMobile, ["-n", "ship-it"]).includes("No rule to make target"));
+    rmSync(withMobile, { recursive: true, force: true });
+
+    const apiOnly = generate(["--slug", "mk-norel", "--workspaces", "api"]);
+    assert.ok(!existsSync(join(apiOnly, "make", "mobile-release.mk")));
+    assert.ok(make(apiOnly, ["-n", "mobile-ios-beta"]).includes("No rule to make target"));
+    rmSync(apiOnly, { recursive: true, force: true });
+  });
+
+  test("a dry-run beta neither bumps the build nor commits", () => {
+    // GNU make executes any recipe line containing $(MAKE) even under -n, so the
+    // bump and its git commit have to sit on a line that has none. Regression
+    // guard: `make -n mobile-beta` must not touch the repo.
+    const dir = generate(["--slug", "mk-dry", "--workspaces", "api,mobile"]);
+    const pkg = join(dir, "mobile", "package.json");
+    const buildBefore = JSON.parse(readFileSync(pkg, "utf8")).buildNumber;
+    const commitsBefore = execFileSync("git", ["rev-list", "--count", "HEAD"], { cwd: dir, encoding: "utf8" }).trim();
+
+    make(dir, ["-n", "mobile-beta"]);
+
+    assert.equal(JSON.parse(readFileSync(pkg, "utf8")).buildNumber, buildBefore, "buildNumber must not change");
+    assert.equal(
+      execFileSync("git", ["rev-list", "--count", "HEAD"], { cwd: dir, encoding: "utf8" }).trim(),
+      commitsBefore,
+      "a dry run must not commit",
+    );
+    assert.equal(
+      execFileSync("git", ["status", "--porcelain"], { cwd: dir, encoding: "utf8" }).trim(),
+      "",
+      "a dry run must leave the tree clean",
+    );
+    rmSync(dir, { recursive: true, force: true });
+  });
+
   test("aliases are declared phony alongside their primary target", () => {
     const dir = generate(["--slug", "mk-alias", "--workspaces", "api", "--make-groups", "docker-dev"]);
     const mk = readFileSync(join(dir, "make", "docker-dev.mk"), "utf8");

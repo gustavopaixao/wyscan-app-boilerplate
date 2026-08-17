@@ -61,6 +61,27 @@ pnpm check:locales  # assert locale bundles are in parity
 
 Run a single test: \`pnpm exec vitest run lib/i18n/normalizePreferredLanguage.test.ts\`
 
+## Releases
+
+Fastlane ships the app; run these from the repo root, not from \`mobile/\`.
+
+\`\`\`bash
+make mobile-release-check      # credentials + env, no build
+make mobile-beta               # bump build, ship iOS + Android betas
+make mobile-beta-select PLATFORMS="ios"
+make mobile-ios-release        # App Store Connect (not submitted for review)
+make mobile-android-release    # Play production, as a draft
+\`\`\`
+
+- Credentials live in \`mobile/fastlane/.env\` (gitignored) — copy
+  \`mobile/fastlane/.env.example\`. Setup: \`docs/runbooks/release-deploy-checklist.md\`.
+- \`mobile/package.json\` \`version\` + \`buildNumber\` are the single source of truth;
+  everything native is derived and cross-checked by \`verify-build-number-sync.mjs\`.
+- Betas are sequential across platforms by design — both prebuild into the same
+  \`mobile/ios\`/\`mobile/android\` dirs, so a parallel run corrupts them.
+- Never add a dev-only \`EXPO_PUBLIC_*\` flag to \`fastlane/.env\`: Metro inlines every
+  one of them into the store bundle. \`verify-release-env.mjs\` fails the build if you do.
+
 ## Safe area (Android edge-to-edge)
 
 The app runs edge-to-edge, so the system bars overlap the content area.

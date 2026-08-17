@@ -1,0 +1,380 @@
+# Fastlane lanes for __PROJECT_NAME__ mobile (Expo prebuild + native store upload).
+#
+# Credentials: copy fastlane/.env.example -> fastlane/.env (gitignored), then see
+# docs/runbooks/release-deploy-checklist.md for the fresh-machine setup.
+#
+# Shape of this file: `ios/` and `android/` are NOT committed — every store lane
+# regenerates them with `expo prebuild` via scripts/prebuild-release.sh. Treat the
+# native projects as disposable build output, never as something to hand-edit.
+#
+# Lanes upload binaries only. Store listing text, screenshots, and submitting for
+# review stay manual in App Store Connect / Play Console on purpose.
+
+require "json"
+require "shellwords"
+
+default_platform(:ios)
+
+MOBILE_ROOT = File.expand_path("..", __dir__)
+
+# Expo names the generated Xcode project/scheme after the app's display name with
+# every non-alphanumeric character stripped ("Demo Shop!" -> "DemoShop"). The
+# generator derives this the same way, so it always matches what prebuild emits.
+# Never hardcode a hand-typed variant here: a near-miss (`Demoshop` vs `DemoShop`)
+# fails deep inside xcodebuild with an unhelpful error.
+IOS_PROJECT_NAME = "__IOS_PROJECT_NAME__".freeze
+
+# iOS bundle identifier / Android application id. Also set in the Appfile; kept
+# here because `upload_to_play_store` wants it explicitly.
+PACKAGE_NAME = "__BUNDLE_ID__".freeze
+
+# EXPO_PUBLIC_* vars that must reach the JS bundle for store builds.
+#
+# Metro inlines `process.env.EXPO_PUBLIC_*` at bundle time (the Xcode "Bundle
+# React Native code" phase / gradle bundleRelease), so a var has to be in the
+# environment gym/gradle *inherit*, not merely in the fastlane process. Anything
+# listed here is re-exported before prebuild.
+#
+# Empty is the right default. Add a key only when the app genuinely cannot boot a
+# store build without it — and remember scripts/verify-release-env.mjs is what
+# stops a dev affordance from riding along into a release bundle.
+RELEASE_BUNDLE_ENV = [].freeze
+
+def mobile_path(relative)
+  File.join(MOBILE_ROOT, relative)
+end
+
+# Minimal .env reader. `ENV[key] ||= value` matters: a value already exported by
+# the caller (the Makefile passes VERSION/BUILD this way) must win over the file.
+# scripts/verify-release-env.mjs mirrors this parser and this precedence exactly —
+# change one side and you must change the other, or the guard checks a value the
+# bundle will never see.
+def load_dotenv
+  env_file = File.expand_path(".env", __dir__)
+  return unless File.exist?(env_file)
+
+  File.foreach(env_file) do |line|
+    line = line.strip
+    next if line.empty? || line.start_with?("#")
+
+    key, value = line.split("=", 2)
+    next if key.nil? || value.nil?
+
+    ENV[key] ||= value.delete_prefix('"').delete_suffix('"')
+  end
+end
+
+def require_api_url!
+  url = ENV["EXPO_PUBLIC_API_URL"].to_s
+  UI.user_error!("EXPO_PUBLIC_API_URL is required (set it in fastlane/.env)") if url.empty?
+  return if url.start_with?("https://")
+
+  UI.user_error!("EXPO_PUBLIC_API_URL must be HTTPS for store builds: #{url}")
+end
+
+def release_version_from_package
+  pkg = JSON.parse(File.read(mobile_path("package.json")))
+  version = pkg["version"].to_s
+  build = (pkg["buildNumber"] || 1).to_s
+  unless version.match?(/^\d+\.\d+\.\d+$/)
+    UI.user_error!("Invalid mobile/package.json version: #{version} (expected x.y.z)")
+  end
+  [version, build]
+end
+
+# mobile/package.json is the single source of truth for version + buildNumber.
+# Only fill what the caller did not already set, so `make mobile-ios-beta BUILD=42`
+# still wins.
+def resolve_release_version!
+  pkg_version, pkg_build = release_version_from_package
+  ENV["VERSION"] = pkg_version if ENV["VERSION"].to_s.empty?
+  ENV["BUILD"] = pkg_build if ENV["BUILD"].to_s.empty?
+end
+
+def export_release_bundle_env!
+  RELEASE_BUNDLE_ENV.each do |key|
+    value = ENV[key].to_s
+    ENV[key] = value unless value.empty?
+  end
+end
+
+def run_prebuild!(platform)
+  resolve_release_version!
+  export_release_bundle_env!
+  script = mobile_path("scripts/prebuild-release.sh")
+  sh(
+    "VERSION=#{ENV.fetch('VERSION')} BUILD=#{ENV.fetch('BUILD')} " \
+    "EXPO_PUBLIC_API_URL=#{ENV['EXPO_PUBLIC_API_URL'].to_s.shellescape} " \
+    "sh #{script.shellescape} #{platform}",
+  )
+end
+
+def verify_build_number_sync!(platform)
+  resolve_release_version!
+  script = mobile_path("scripts/verify-build-number-sync.mjs")
+  sh("BUILD=#{ENV.fetch('BUILD')} node #{script.shellescape} --platform=#{platform}")
+end
+
+# --- iOS -------------------------------------------------------------------
+
+def ios_project_paths
+  workspace = mobile_path("ios/#{IOS_PROJECT_NAME}.xcworkspace")
+  unless File.exist?(workspace)
+    found = Dir[mobile_path("ios/*.xcworkspace")].map { |p| File.basename(p) }
+    hint =
+      if found.empty?
+        "no .xcworkspace exists yet — prebuild may have failed, or pod install did not run"
+      else
+        "found instead: #{found.join(', ')}. Expo derives this name from the app's " \
+          "display name in app.config.ts; make the two agree."
+      end
+    UI.user_error!("Expected #{workspace} (#{hint})")
+  end
+
+  {
+    workspace: workspace,
+    scheme: IOS_PROJECT_NAME,
+    xcodeproj: mobile_path("ios/#{IOS_PROJECT_NAME}.xcodeproj"),
+    plist: mobile_path("ios/#{IOS_PROJECT_NAME}/Info.plist"),
+  }
+end
+
+def ios_ipa_path
+  mobile_path("build/ios/#{IOS_PROJECT_NAME}.ipa")
+end
+
+def require_apple_team_id!
+  UI.user_error!("APPLE_TEAM_ID is required (set it in fastlane/.env)") if ENV["APPLE_TEAM_ID"].to_s.empty?
+end
+
+def connect_api_key
+  key_path = ENV["APP_STORE_CONNECT_API_KEY_PATH"]
+  UI.user_error!("APP_STORE_CONNECT_API_KEY_PATH is required (set it in fastlane/.env)") if key_path.to_s.empty?
+
+  resolved = File.expand_path(key_path, MOBILE_ROOT)
+  UI.user_error!("App Store Connect API key not found at #{resolved}") unless File.exist?(resolved)
+
+  app_store_connect_api_key(
+    key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+    issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+    key_filepath: resolved,
+    duration: 1200,
+    in_house: false,
+  )
+end
+
+# Xcode manages provisioning itself (no `match`, no committed profiles), so the
+# team id is the only signing input.
+def configure_ios_signing!(paths)
+  require_apple_team_id!
+  update_code_signing_settings(
+    path: paths[:xcodeproj],
+    use_automatic_signing: true,
+    team_id: ENV["APPLE_TEAM_ID"],
+    targets: [IOS_PROJECT_NAME],
+  )
+end
+
+def ios_build_app!(paths)
+  build_app(
+    workspace: paths[:workspace],
+    scheme: paths[:scheme],
+    export_method: "app-store",
+    clean: true,
+    output_directory: mobile_path("build/ios"),
+    export_team_id: ENV["APPLE_TEAM_ID"],
+    xcargs: "-allowProvisioningUpdates DEVELOPMENT_TEAM=#{ENV['APPLE_TEAM_ID']}",
+  )
+end
+
+# Full build for a store lane: prebuild, stamp the build number, sign, archive.
+def ios_prepare_and_build!
+  run_prebuild!("ios")
+  paths = ios_project_paths
+
+  increment_build_number(build_number: ENV.fetch("BUILD"), xcodeproj: paths[:xcodeproj])
+  verify_build_number_sync!("ios")
+
+  configure_ios_signing!(paths)
+  api_key = connect_api_key
+  ios_build_app!(paths)
+  api_key
+end
+
+def testflight_upload_already_delivered?(error)
+  msg = error.message.to_s.downcase
+  msg.include?("already been used") ||
+    msg.include?("bundle version must be higher") ||
+    msg.include?("entity_error.attribute.invalid.duplicate")
+end
+
+def testflight_upload_retryable?(error)
+  return false if testflight_upload_already_delivered?(error)
+
+  msg = error.message.to_s.downcase
+  msg.include?("500") ||
+    msg.include?("internal server error") ||
+    msg.include?("could not download/upload from app store connect")
+end
+
+# Apple's Content Delivery service regularly returns HTTP 500 while *polling
+# upload state* — after the IPA already transferred successfully. Without this
+# wrapper a green upload reports as a failed lane, and a re-run then trips the
+# duplicate-build error. So: retry the transient 500s, and treat "duplicate
+# CFBundleVersion" as the success it actually is.
+def upload_ios_testflight!(api_key:)
+  ipa = ios_ipa_path
+  UI.user_error!("IPA not found at #{ipa} — run `ios beta` first") unless File.exist?(ipa)
+
+  max_attempts = (ENV["TESTFLIGHT_UPLOAD_RETRIES"] || "4").to_i
+  retry_delays_sec = [30, 60, 120, 180]
+  last_error = nil
+
+  max_attempts.times do |attempt|
+    begin
+      upload_to_testflight(api_key: api_key, ipa: ipa, skip_waiting_for_build_processing: true)
+      return
+    rescue StandardError => e
+      last_error = e
+      if testflight_upload_already_delivered?(e)
+        UI.success("Build is already on App Store Connect (duplicate CFBundleVersion). Check TestFlight for processing.")
+        return
+      end
+
+      unless testflight_upload_retryable?(e) && attempt < max_attempts - 1
+        UI.important("If altool logged 'UPLOAD SUCCEEDED', check App Store Connect -> TestFlight before re-uploading.")
+        raise e
+      end
+
+      wait = retry_delays_sec[attempt] || 180
+      UI.important("TestFlight upload #{attempt + 1}/#{max_attempts} failed (usually a transient Apple 500). Retrying in #{wait}s…")
+      sleep(wait)
+    end
+  end
+
+  raise last_error
+end
+
+# --- Android ---------------------------------------------------------------
+
+def android_aab_path
+  mobile_path("android/app/build/outputs/bundle/release/app-release.aab")
+end
+
+def supply_json_key
+  key = ENV["SUPPLY_JSON_KEY_PATH"]
+  UI.user_error!("SUPPLY_JSON_KEY_PATH is required (set it in fastlane/.env)") if key.to_s.empty?
+
+  resolved = File.expand_path(key, MOBILE_ROOT)
+  UI.user_error!("Play service account JSON not found at #{resolved}") unless File.exist?(resolved)
+  resolved
+end
+
+# Expo prebuild writes versionCode from APP_VERSION_CODE, but a regenerated
+# android/ can still disagree after a manual edit — patch it in place and let
+# verify-build-number-sync.mjs confirm.
+def apply_android_version_code!
+  gradle_file = mobile_path("android/app/build.gradle")
+  UI.user_error!("Android build.gradle not found at #{gradle_file}") unless File.exist?(gradle_file)
+
+  build = ENV.fetch("BUILD")
+  content = File.read(gradle_file)
+  UI.user_error!("Could not set versionCode in #{gradle_file}") unless content.gsub!(/versionCode\s+\d+/, "versionCode #{build}")
+  File.write(gradle_file, content)
+end
+
+def android_build_bundle!
+  run_prebuild!("android")
+  apply_android_version_code!
+  verify_build_number_sync!("android")
+
+  keystore_path = ENV["ANDROID_KEYSTORE_PATH"]
+  UI.user_error!("ANDROID_KEYSTORE_PATH is required (set it in fastlane/.env)") if keystore_path.to_s.empty?
+
+  resolved_keystore = File.expand_path(keystore_path, MOBILE_ROOT)
+  UI.user_error!("Upload keystore not found at #{resolved_keystore}") unless File.exist?(resolved_keystore)
+
+  # Signing is injected as gradle properties rather than a committed
+  # keystore.properties, so nothing secret lands in the repo.
+  gradle(
+    project_dir: mobile_path("android"),
+    task: "bundle",
+    build_type: "Release",
+    properties: {
+      "android.injected.signing.store.file" => resolved_keystore,
+      "android.injected.signing.store.password" => ENV["ANDROID_KEYSTORE_PASSWORD"],
+      "android.injected.signing.key.alias" => ENV["ANDROID_KEY_ALIAS"],
+      "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASSWORD"],
+    },
+  )
+
+  lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]
+end
+
+def upload_android!(aab:, track:, release_status:)
+  upload_to_play_store(
+    track: track,
+    package_name: PACKAGE_NAME,
+    aab: aab,
+    json_key: supply_json_key,
+    release_status: release_status,
+    skip_upload_metadata: true,
+    skip_upload_images: true,
+    skip_upload_screenshots: true,
+    skip_upload_changelogs: true,
+  )
+end
+
+before_all do
+  load_dotenv
+  require_api_url!
+end
+
+platform :ios do
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    api_key = ios_prepare_and_build!
+    upload_ios_testflight!(api_key: api_key)
+  end
+
+  desc "Upload the existing IPA to TestFlight (skip the build)"
+  lane :upload_beta do
+    upload_ios_testflight!(api_key: connect_api_key)
+  end
+
+  desc "Build and upload to App Store Connect (does not submit for review)"
+  lane :release do
+    api_key = ios_prepare_and_build!
+
+    upload_to_app_store(
+      api_key: api_key,
+      submit_for_review: false,
+      automatic_release: false,
+      skip_metadata: true,
+      skip_screenshots: true,
+      precheck_include_in_app_purchases: false,
+    )
+  end
+end
+
+platform :android do
+  desc "Build an AAB and upload to the Play internal track"
+  lane :beta do
+    aab = android_build_bundle!
+    upload_android!(aab: aab, track: "internal", release_status: "completed")
+  end
+
+  desc "Upload the existing release AAB to the Play internal track (skip the build)"
+  lane :upload_beta do
+    aab = android_aab_path
+    UI.user_error!("AAB not found at #{aab} — run `android beta` first") unless File.exist?(aab)
+
+    upload_android!(aab: aab, track: "internal", release_status: "completed")
+  end
+
+  desc "Build an AAB and upload to the Play production track as a draft"
+  lane :release do
+    aab = android_build_bundle!
+    upload_android!(aab: aab, track: "production", release_status: "draft")
+  end
+end

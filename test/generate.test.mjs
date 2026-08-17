@@ -11,6 +11,9 @@ import { allSentinels } from "../src/tokens/catalog.mjs";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const CLI = join(ROOT, "bin", "create.mjs");
 const MANIFEST = JSON.parse(readFileSync(join(ROOT, "templates", "manifest.json"), "utf8"));
+const AUTHORED = JSON.parse(readFileSync(join(ROOT, "templates", "authored.json"), "utf8"));
+// Both template roots ship files, so any manifest-driven assertion must cover both.
+const TEMPLATE_FILES = [...MANIFEST.files, ...AUTHORED.files];
 
 /** Literals from the reference project that must never reach a generated tree. */
 const FORBIDDEN = ["botonistas", "gustavopaixao", "gmpaixao", "palpitepro"];
@@ -76,7 +79,7 @@ describe("generated project", () => {
   test("restores the executable bit on every script that had one", () => {
     // Standalone mode legitimately drops some 0755 bootstrap scripts, so assert
     // over the files that were actually generated rather than a raw count.
-    const notExecutable = MANIFEST.files
+    const notExecutable = TEMPLATE_FILES
       .filter((f) => f.mode === 755)
       .map((f) => join(dir, f.dest.replace("__PROJECT_SLUG__", "demo-shop")))
       .filter((p) => existsSync(p))
@@ -137,5 +140,87 @@ describe("workspace pruning", () => {
     assert.ok(!existsSync(join(dir, ".cursor")));
     assert.ok(existsSync(join(dir, ".github")));
     rmSync(dir, { recursive: true, force: true });
+  });
+});
+
+/**
+ * The Fastlane setup comes from `templates/authored/`, not from the reference
+ * extraction, so it needs its own coverage: nothing in `sync-from-reference.mjs`
+ * would notice if these stopped shipping.
+ */
+describe("fastlane release tooling", () => {
+  let dir;
+
+  before(() => {
+    // A display name with punctuation and a space, because that is exactly what
+    // breaks a hardcoded Xcode scheme name.
+    dir = generate(["--slug", "demo-shop", "--name", "Demo Shop!", "--workspaces", "api,mobile"]);
+  });
+
+  after(() => rmSync(dir, { recursive: true, force: true }));
+
+  test("ships with the mobile workspace", () => {
+    for (const f of [
+      "mobile/fastlane/Fastfile",
+      "mobile/fastlane/Appfile",
+      "mobile/fastlane/.env.example",
+      "mobile/Gemfile",
+      "mobile/.ruby-version",
+      "mobile/scripts/prebuild-release.sh",
+      "mobile/scripts/android-play-preflight.sh",
+      "mobile/scripts/android-google-oauth-sha1.sh",
+      "make/mobile-release.mk",
+      "docs/runbooks/release-deploy-checklist.md",
+    ]) {
+      assert.ok(existsSync(join(dir, f)), `${f} should ship`);
+    }
+  });
+
+  test("derives the iOS scheme the way expo prebuild does", () => {
+    // "Demo Shop!" -> "DemoShop". A near-miss here fails deep inside xcodebuild.
+    // (The display name still appears in prose comments — only the constant matters.)
+    const fastfile = readFileSync(join(dir, "mobile/fastlane/Fastfile"), "utf8");
+    const scheme = fastfile.match(/IOS_PROJECT_NAME = "([^"]*)"/)?.[1];
+    assert.equal(scheme, "DemoShop");
+
+    // The same derivation has to reach the scripts that patch the native project,
+    // or the Fastfile and the build-number sync would look in different places.
+    const syncScript = readFileSync(join(dir, "mobile/scripts/sync-ios-build-number.mjs"), "utf8");
+    assert.ok(syncScript.includes("ios/DemoShop.xcodeproj"), "sync-ios-build-number must use the same name");
+  });
+
+  test("renders the bundle id into the Appfile and the Android package", () => {
+    const appfile = readFileSync(join(dir, "mobile/fastlane/Appfile"), "utf8");
+    assert.match(appfile, /app_identifier\("com\.demoshop\.app"\)/);
+    assert.match(appfile, /package_name\("com\.demoshop\.app"\)/);
+
+    const fastfile = readFileSync(join(dir, "mobile/fastlane/Fastfile"), "utf8");
+    assert.match(fastfile, /PACKAGE_NAME = "com\.demoshop\.app"/);
+  });
+
+  test("ships no credentials and no Gemfile.lock", () => {
+    // A lockfile resolved elsewhere pins platform-specific gems; the Gemfile pin
+    // is the reproducibility story instead.
+    assert.ok(!existsSync(join(dir, "mobile/Gemfile.lock")));
+    assert.ok(!existsSync(join(dir, "mobile/fastlane/.env")));
+    for (const f of walk(join(dir, "mobile", "fastlane"))) {
+      assert.ok(!f.endsWith(".p8"), `${f} should not ship`);
+      assert.ok(!f.endsWith(".keystore"), `${f} should not ship`);
+    }
+  });
+
+  test("gitignores the credentials it tells you to create", () => {
+    const ignore = readFileSync(join(dir, "mobile/.gitignore"), "utf8");
+    for (const pattern of ["fastlane/.env", "fastlane/AuthKey_*.p8", "fastlane/*.keystore"]) {
+      assert.ok(ignore.includes(pattern), `mobile/.gitignore should cover ${pattern}`);
+    }
+  });
+
+  test("does not ship for a project without the mobile workspace", () => {
+    const apiOnly = generate(["--slug", "api-only", "--workspaces", "api"]);
+    assert.ok(!existsSync(join(apiOnly, "mobile")));
+    assert.ok(!existsSync(join(apiOnly, "make/mobile-release.mk")));
+    assert.ok(!existsSync(join(apiOnly, "docs/runbooks/release-deploy-checklist.md")));
+    rmSync(apiOnly, { recursive: true, force: true });
   });
 });
