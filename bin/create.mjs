@@ -9,7 +9,7 @@ import { closePrompts, interactive, colors as c } from "../src/cli/prompt.mjs";
 import { derive, validate, DEFAULT_PORTS, ALL_WORKSPACES } from "../src/config/derive.mjs";
 import { ALL_SERVICES } from "../src/generate/compose.mjs";
 import { apiClaudeMd, mobileClaudeMd, sharedPackagesDoc } from "../src/generate/extradocs.mjs";
-import { planFiles, ALL_MAKE_GROUPS } from "../src/generate/plan.mjs";
+import { planFiles, makeGroupsFor } from "../src/generate/plan.mjs";
 import { writeProject } from "../src/generate/write.mjs";
 import { initRepo, createGithubRepo, installWorkspaces } from "../src/post/git.mjs";
 import { nextSteps } from "../src/post/nextsteps.mjs";
@@ -33,7 +33,7 @@ Options
   --bundle-id <id>       mobile bundle id     (default: com.<slug>.app)
   --dev-host <host>      mobile LAN dev host
   --workspaces <list>    ${ALL_WORKSPACES.join(",")}
-  --make-groups <list>   Make target groups   (default: all applicable)
+  --make-groups <list>   narrow the Make targets (default: follows --workspaces)
   --services <list>      compose services     (default: ${ALL_SERVICES.join(",")})
   --ai <list>            claude,cursor,github (default: claude,github)
   --wyscan <mode>        local | registry | standalone
@@ -113,11 +113,12 @@ async function main() {
 
   let answers;
   if (skipPrompts) {
+    const workspaces = known.workspaces ?? ALL_WORKSPACES;
     answers = {
       ...known,
       slug: known.slug,
-      workspaces: known.workspaces ?? ALL_WORKSPACES,
-      makeGroups: known.makeGroups ?? ALL_MAKE_GROUPS,
+      workspaces,
+      makeGroups: known.makeGroups ?? makeGroupsFor(workspaces),
       services: known.services ?? ALL_SERVICES,
       aiTools: known.aiTools ?? ["claude", "github"],
       wyscanMode: known.wyscanMode ?? "standalone",

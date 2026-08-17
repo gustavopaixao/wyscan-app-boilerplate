@@ -10,7 +10,7 @@ import { resolve } from "node:path";
 
 import { text, confirm, select, multiselect, colors as c } from "./prompt.mjs";
 import { titleCase, DEFAULT_PORTS, ALL_WORKSPACES } from "../config/derive.mjs";
-import { ALL_MAKE_GROUPS } from "../generate/plan.mjs";
+import { makeGroupsFor } from "../generate/plan.mjs";
 import { ALL_SERVICES } from "../generate/compose.mjs";
 
 const WORKSPACE_CHOICES = [
@@ -26,19 +26,6 @@ const AI_CHOICES = [
   { value: "cursor", label: ".cursor", hint: "agents, rules, commands" },
   { value: "github", label: ".github", hint: "CI workflows" },
 ];
-
-/** Make groups whose workspace must also be selected. */
-const GROUP_REQUIRES = {
-  "docker-dev": "api",
-  "api-dev": "api",
-  "api-build": "api",
-  "docker-release": "api",
-  production: "api",
-  mobile: "mobile",
-  "web:site": "web:site",
-  "web:app": "web:app",
-  "web:admin": "web:admin",
-};
 
 const slugRules = (v) => {
   if (!/^[a-z][a-z0-9-]{1,42}[a-z0-9]$/.test(v)) {
@@ -123,17 +110,9 @@ export async function runFlow(known) {
     default: ["claude", "github"],
   });
 
-  const applicableGroups = ALL_MAKE_GROUPS.filter((g) => {
-    const req = GROUP_REQUIRES[g];
-    return !req || a.workspaces.includes(req);
-  });
-
-  a.makeGroups ??= await multiselect({
-    message: "Which Make command groups?",
-    choices: applicableGroups.map((g) => ({ value: g, label: g })),
-    default: applicableGroups,
-    min: 1,
-  });
+  // Not a question: Make groups follow the workspaces. --make-groups remains
+  // available for the rare case where you want a narrower set.
+  a.makeGroups ??= makeGroupsFor(a.workspaces);
 
   if (a.workspaces.includes("api")) {
     a.services ??= await multiselect({

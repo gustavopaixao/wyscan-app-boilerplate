@@ -35,7 +35,10 @@ my-app/
 └── CLAUDE.md               generated for the stack you actually chose
 ```
 
-Every workspace is optional — pick any subset.
+Every workspace is optional — pick any subset. Make targets follow from that
+choice: workspace-specific groups ship with their workspace, and the rest
+(`setup`, `verify`, `ship`, `docs`) always ship. So an api-only project gets
+`make api-watch` and `make start` but no `make mobile-dev`.
 
 ## First run after scaffolding
 
@@ -61,7 +64,7 @@ npx github:gustavopaixao/wyscan-app-boilerplate --slug my-app --owner my-org ./m
   --domain <host>      default: <slug>.com
   --bundle-id <id>     default: com.<slug-without-hyphens>.app
   --workspaces <list>  api,web:site,web:app,web:admin,mobile
-  --make-groups <list> Make target groups to include
+  --make-groups <list> narrow the Make targets (default: follows --workspaces)
   --services <list>    compose services to include
   --ai <list>          claude,cursor,github
   --wyscan <mode>      local | registry | standalone

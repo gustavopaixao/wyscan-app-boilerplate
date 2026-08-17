@@ -42,6 +42,19 @@ export const ALL_MAKE_GROUPS = [
   "docs",
 ];
 
+/**
+ * Make groups follow the workspaces: a group tied to a workspace ships when
+ * that workspace does, and everything else (setup, ship, verify, docs) always
+ * ships. There is nothing to ask — a group whose workspace is absent would
+ * only produce targets that cd into a directory that was never generated.
+ */
+export function makeGroupsFor(workspaces) {
+  return ALL_MAKE_GROUPS.filter((g) => {
+    const required = MAKE_GROUP_REQUIRES[g];
+    return !required || workspaces.includes(required);
+  });
+}
+
 /** Map a manifest group to the config flag that gates it. */
 function isGroupSelected(group, cfg) {
   if (ALWAYS.has(group)) return true;
