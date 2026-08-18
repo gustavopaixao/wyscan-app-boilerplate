@@ -1,6 +1,7 @@
 /** The closing summary: what to run next, tailored to what was generated. */
 
 import { colors as c } from "../cli/prompt.mjs";
+import { ROOT_USER } from "../generate/seed.mjs";
 
 export function nextSteps(cfg, targetDir, { warnings = [], committed, sha }) {
   const L = [];
@@ -37,6 +38,14 @@ export function nextSteps(cfg, targetDir, { warnings = [], committed, sha }) {
     L.push(`  make jwt-secret            ${c.dim("# seed api/.env")}`);
     L.push(`  make start                 ${c.dim("# bring up the docker stack")}`);
     L.push(`  make health                ${c.dim(`# http://localhost:${cfg.ports.nginx}`)}`);
+
+    // The generated project has no account that can reach the admin console
+    // until this user exists, and nothing else ever prints the password.
+    L.push("");
+    L.push(`  ${c.bold("Root user")} ${c.dim("— created automatically on the first API start")}`);
+    L.push(`    email     ${ROOT_USER.email}`);
+    L.push(`    password  ${ROOT_USER.password}`);
+    L.push(`    ${c.dim("role: admin — signs into the admin console. Change it before deploying.")}`);
   }
 
   const webs = ["site", "app", "admin"].filter((w) => has(`web:${w}`));

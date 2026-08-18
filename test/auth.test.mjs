@@ -7,6 +7,7 @@ import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { ANCHORS } from "../src/generate/auth.mjs";
+import { ROOT_USER, SEED_ANCHORS } from "../src/generate/seed.mjs";
 import { AUTH_STRING_KEYS, AUTH_STRINGS } from "../src/generate/authStrings.mjs";
 import { FORMAT_SUPPRESSIONS } from "../src/tokens/patches.mjs";
 
@@ -51,6 +52,64 @@ describe("auth transform anchors", () => {
   test("the admin layout still has the <Providers> element the guard wraps", () => {
     const text = readFileSync(join(TEMPLATES, "tree/web/_admin/src/app/layout.tsx"), "utf8");
     assert.match(text, /<Providers>[\s\S]*?<\/Providers>/);
+  });
+});
+
+/**
+ * The root-user seed injects itself into `api/src/server.ts` the same way, and
+ * the credentials it writes are printed by the CLI from a SEPARATE constant.
+ * Both can drift silently, so both are pinned here.
+ */
+describe("root user seed", () => {
+  for (const [src, anchor] of Object.entries(SEED_ANCHORS)) {
+    test(`${src} still contains its anchor`, () => {
+      const text = readFileSync(join(TEMPLATES, src), "utf8");
+      assert.ok(
+        text.includes(anchor),
+        `Anchor missing from templates/${src}. Update SEED_ANCHORS in src/generate/seed.mjs.`,
+      );
+    });
+  }
+
+  test("the seeded credentials match the ones the CLI prints", () => {
+    const impl = readFileSync(join(TEMPLATES, "authored/api/src/lib/seedRootUser.ts"), "utf8");
+    // nextsteps.mjs prints ROOT_USER; the hashing uses these literals. A
+    // mismatch hands the user a password that does not work.
+    assert.ok(
+      impl.includes(`"${ROOT_USER.email}"`),
+      `seedRootUser.ts must seed ${ROOT_USER.email} — the CLI prints it as the login`,
+    );
+    assert.ok(
+      impl.includes(`"${ROOT_USER.password}"`),
+      `seedRootUser.ts must seed the password the CLI prints (${ROOT_USER.password})`,
+    );
+  });
+
+  test("the seeded password satisfies the project's own strength policy", () => {
+    // core-api/utils/validation rejects anything weaker on register, so a
+    // seeded credential that fails it could not be re-created by a user.
+    const { password } = ROOT_USER;
+    assert.ok(password.length >= 8, "8 characters minimum");
+    assert.match(password, /[a-z]/);
+    assert.match(password, /[A-Z]/);
+    assert.match(password, /[0-9]/);
+  });
+
+  test("seeds an active admin, not a pending user", () => {
+    const impl = readFileSync(join(TEMPLATES, "authored/api/src/lib/seedRootUser.ts"), "utf8");
+    // PENDING would demand the emailed verification code, and `moderator` is
+    // rejected by the admin console — either one makes the seed pointless.
+    assert.match(impl, /status: UserStatus\.ACTIVE/);
+    assert.match(impl, /role: UserRole\.ADMIN/);
+  });
+
+  test("never runs against a production database", () => {
+    const impl = readFileSync(join(TEMPLATES, "authored/api/src/lib/seedRootUser.ts"), "utf8");
+    assert.match(
+      impl,
+      /NODE_ENV[\s\S]{0,60}"production"/,
+      "these credentials are published in the docs — production must be excluded",
+    );
   });
 });
 
@@ -217,6 +276,17 @@ describe("generated project (standalone, all workspaces)", () => {
     );
   });
 
+  test("seeds the root user once the API has a database connection", () => {
+    const server = readFileSync(join(dir, "api/src/server.ts"), "utf8");
+    assert.match(server, /seedRootUser\(\)/);
+    // Seeding before connect() would run against no database at all.
+    assert.ok(
+      server.indexOf("mongoose.connect") < server.indexOf("await seedRootUser()"),
+      "the seed must run after mongoose.connect()",
+    );
+    assert.ok(existsSync(join(dir, "api/src/lib/seedRootUser.ts")));
+  });
+
   test("gates the member app's routes", () => {
     const proxy = readFileSync(join(dir, "web/demo-shop-app/src/proxy.ts"), "utf8");
     assert.match(proxy, /applySessionGate/);
@@ -357,6 +427,55 @@ describe("auth respects workspace selection", () => {
     try {
       assert.ok(existsSync(join(dir, "mobile/app/(auth)/login.tsx")));
       assert.ok(!existsSync(join(dir, "api")));
+      // The seed is api-gated; a mobile-only project has nothing to seed into.
+      assert.ok(!existsSync(join(dir, "api/src/lib/seedRootUser.ts")));
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+/**
+ * The seeded password exists nowhere the user will look afterwards — not in a
+ * .env, not in a file the scaffold writes. If the closing summary stops
+ * printing it, the account is effectively unreachable.
+ */
+describe("the closing summary hands over the credentials", () => {
+  function generateCapturingStdout(args) {
+    const dir = mkdtempSync(join(tmpdir(), "wab-auth-"));
+    const stdout = execFileSync("node", [CLI, ...args, dir], { encoding: "utf8" });
+    return { dir, stdout };
+  }
+
+  test("an api project is told the root email and password", () => {
+    const { dir, stdout } = generateCapturingStdout([
+      "--slug",
+      "demo-api",
+      "--workspaces",
+      "api",
+      "--wyscan",
+      "standalone",
+    ]);
+    try {
+      assert.ok(stdout.includes(ROOT_USER.email), "the summary must print the root email");
+      assert.ok(stdout.includes(ROOT_USER.password), "the summary must print the root password");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("a mobile-only project is not told about an account it cannot use", () => {
+    const { dir, stdout } = generateCapturingStdout([
+      "--slug",
+      "demo-mob",
+      "--workspaces",
+      "mobile",
+      "--wyscan",
+      "standalone",
+    ]);
+    try {
+      assert.ok(!stdout.includes(ROOT_USER.email));
+      assert.ok(!stdout.includes(ROOT_USER.password));
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
@@ -386,6 +505,13 @@ describe("auth in every shared-package mode", () => {
         // makes graduating between them a dependency swap, not a rewrite.
         const routes = readFileSync(join(dir, "api/src/v1/authRoutes.ts"), "utf8");
         assert.match(routes, /@octocat\/auth-api\/routes\/auth\/login/);
+
+        // Same for the seed: it reaches the models through the package
+        // specifier, so it must resolve in all three modes and leave no
+        // sentinel behind.
+        const seed = readFileSync(join(dir, "api/src/lib/seedRootUser.ts"), "utf8");
+        assert.match(seed, /@octocat\/auth-api\/models/);
+        assert.ok(!seed.includes("__NPM_SCOPE__"), "unresolved sentinel in seedRootUser.ts");
       } finally {
         rmSync(dir, { recursive: true, force: true });
       }

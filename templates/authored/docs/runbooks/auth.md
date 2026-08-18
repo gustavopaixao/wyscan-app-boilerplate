@@ -5,8 +5,10 @@ sign up, sign out, email verification, forgot/reset password, and Google, Apple
 and Facebook OAuth — across the API, the member web app, the admin console and
 mobile.
 
-You should be able to register and sign in **immediately after generating the
-project**, with no accounts to create and no credentials to configure. Read the
+You should be able to sign in **immediately after generating the project**, with
+no accounts to create and no credentials to configure — a
+[root user](#seeded-root-user) is seeded on the API's first boot. To register a
+fresh account instead, read the
 [verification codes in development](#verification-codes-in-development) section
 before you wonder where the email went.
 
@@ -61,6 +63,40 @@ three modes, so moving between them is a dependency swap, not a rewrite.
 If you generated in `standalone` and later adopt the shared packages, delete
 `packages/stubs/auth-api` and point the dependency at the published package.
 No application code changes.
+
+## Seeded root user
+
+**A root user is created automatically the first time the API connects to
+MongoDB** — no command to run, nothing to configure:
+
+| | |
+|---|---|
+| email | `root@wyscan.local` |
+| password | `Password@1` |
+| role | `admin` |
+| status | `active` |
+
+It is created `active` rather than `pending`, so it skips the verification-code
+exchange below and can sign in immediately, and `admin` so it can open the admin
+console. Sign in at `web/__PROJECT_SLUG__-admin` (`make admin-dev`) or in the
+member app and mobile client with the same credentials.
+
+Seeding is idempotent — a restart never creates a second user and logs nothing.
+It runs again after `make fresh`, which drops the database volume. Look for it
+once, on first boot:
+
+```
+[info] root_user_seeded {"email":"root@wyscan.local"}
+```
+
+**It is skipped entirely when `NODE_ENV=production`**, for the same reason the
+dev mail fallback is: these credentials are published in this file, so they must
+never reach a real database. Change the password or delete the account before
+exposing an environment anywhere else either — a staging box is reachable too.
+
+The implementation is `api/src/lib/seedRootUser.ts`, called from
+`api/src/server.ts` right after `mongoose.connect()`. Editing the constants
+there changes the seeded account; deleting the call disables seeding.
 
 ## Verification codes in development
 
@@ -138,8 +174,11 @@ Override with `RATE_LIMIT_FAIL_CLOSED=0|1`.
 
 ## Roles
 
-`user` (default), `moderator`, `admin`. There is no self-service promotion —
-grant admin directly:
+`user` (default), `moderator`, `admin`. The seeded root user is already `admin`,
+so there is an admin account from the first boot.
+
+There is no self-service promotion, so **additional** admins are granted
+directly:
 
 ```js
 db.users.updateOne({ email: "you@example.com" }, { $set: { role: "admin" } })

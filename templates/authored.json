@@ -1192,6 +1192,14 @@
       "mode": 644,
       "raw": false,
       "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/lib/seedRootUser.ts",
+      "dest": "api/src/lib/seedRootUser.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
     }
   ]
 }

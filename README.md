@@ -35,6 +35,11 @@ my-app/
 └── CLAUDE.md               generated for the stack you actually chose
 ```
 
+Every generated project ships working authentication and one design system
+across web and mobile — always on, no flag. A root user (`root@wyscan.local` /
+`Password@1`, role `admin`) is seeded the first time the API starts, so the
+admin console is reachable without a manual database edit.
+
 Every workspace is optional — pick any subset. Make targets follow from that
 choice: workspace-specific groups ship with their workspace, and the rest
 (`setup`, `verify`, `ship`, `docs`, `completion`) always ship. So an api-only project gets
@@ -53,6 +58,13 @@ make help                          # everything else
 make completion >> ~/.zshrc        # tab-complete every target (zsh or bash)
 exec zsh
 ```
+
+`make start` boots the API, which seeds a root user on its first connection to
+MongoDB — `root@wyscan.local` / `Password@1`, role `admin`. That is the account
+to sign into the admin console with; registering normally leaves you `pending`
+behind an emailed verification code. Seeding is idempotent, re-runs after a
+`make fresh`, and is skipped when `NODE_ENV=production`. Change or delete the
+account before exposing an environment: see `docs/runbooks/auth.md`.
 
 `make completion` prints one `source` line for `scripts/completion/make.{zsh,bash}`.
 It is worth running: the root Makefile collects its targets with
@@ -156,8 +168,8 @@ catalog (`src/tokens/catalog.mjs`), so the templates contain no reference
 identity in either file contents or path names.
 
 `templates/authored/` is the other half: content maintained **by hand here**,
-because the reference has nothing to extract it from (currently the Fastlane
-release setup). `npm run sync` rebuilds `tree/` and never touches `authored/`, so
+because the reference has nothing to extract it from — auth, the design system
+and navigation, the root-user seed, and the Fastlane release setup. `npm run sync` rebuilds `tree/` and never touches `authored/`, so
 the two coexist and `sync:check` stays green. See `templates/authored/README.md`.
 
 ```
