@@ -74,6 +74,46 @@ Primitives are in `components/ui/`: `PrimaryButton`, `SecondaryButton`,
 `AuthTextField`, `DividerWithLabel`, `OAuthIconButton`, `ToolbarBackButton`,
 `BrandWordmark`. Build screens from these.
 
+### The shared package, and why nothing imports it
+
+`mobile/package.json` declares `wyscan-react-native` and `metro.config.js`
+aliases it — but **nothing in the generated app imports it, and nothing should.**
+It only survives intact in `--wyscan local`:
+
+| | `local` | `registry` | `standalone` |
+|---|---|---|---|
+| `wyscan-react-native` dependency | `file:` link to the sibling checkout | `latest` | removed |
+| `metro.config.js` alias | present | removed | removed |
+
+So `import { PrimaryButton } from "wyscan-react-native"` compiles and runs for
+whoever is working in `local`, and breaks the build for everyone else. Nothing
+warns you, because the modes that break are not the mode you are working in.
+
+`components/ui/` reimplements what the app needs, which is what lets mobile stay
+app-local in every mode. It is deliberately a subset:
+
+| | `components/ui/` | package |
+|---|---|---|
+| `PrimaryButton`, `SecondaryButton` | ✅ | ✅ |
+| `AuthTextField`, `DividerWithLabel`, `OAuthIconButton` | ✅ | ✅ |
+| `ToolbarBackButton` | ✅ | ✅ |
+| `BrandWordmark` | ✅ | — |
+| `AuthScreenContainer`, `AuthOAuthButtonsSection`, `CounterTextField` | — | ✅ |
+| skeleton loaders (`SkeletonCard`, `SkeletonScreen`, …) | — | ✅ (11) |
+
+If you need one of the package-only pieces, copy it into `components/ui/` rather
+than reaching for the dependency. That keeps all three modes building.
+
+**Do not confuse it with `__NPM_SCOPE__/core-react-native`**, which *is* imported
+(`createI18n`, in `lib/i18n/engine.ts`) and *is* vendored into
+`packages/stubs/` in standalone mode — so that one genuinely works everywhere.
+The design-system package is the exception, not the rule.
+
+In `registry` mode `wyscan-react-native` is left behind as a bare `latest` range
+for a package nothing imports, and it is not published to the public registry.
+Publish it, pin it, or just delete the line from `mobile/package.json` — nothing
+in the app references it either way.
+
 ## Navigation
 
 - **Mobile** — bottom tabs in `app/(app)/(tabs)/_layout.tsx`, shared toolbar

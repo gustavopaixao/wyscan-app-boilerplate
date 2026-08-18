@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, rmSync, readFileSync, existsSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve, dirname } from "node:path";
+import { join, resolve, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { DESIGN_ANCHORS } from "../src/generate/design.mjs";
@@ -167,6 +167,65 @@ describe("generated design system", () => {
     }
 
     assert.deepEqual(offenders, []);
+  });
+});
+
+/**
+ * The shared design-system package is declared in `mobile/package.json` and
+ * aliased in `metro.config.js`, so an import of it resolves cleanly while you
+ * work in `--wyscan local` — and breaks the build in `registry` and
+ * `standalone`, where both the alias and the dependency are gone.
+ *
+ * Nothing in the app imports it, and `docs/runbooks/design-system.md` says
+ * nothing should. This is what stops that rule from being prose only: the mode
+ * that breaks is never the mode the author is working in, so without a guard
+ * the mistake ships.
+ */
+describe("mobile never imports the shared design-system package", () => {
+  const PACKAGE = "wyscan-react-native";
+
+  test("no shipped mobile template imports it", () => {
+    const offenders = [];
+    for (const file of walk(join(TEMPLATES, "authored/mobile"))) {
+      if (!/\.(ts|tsx|js|jsx)$/.test(file)) continue;
+      const text = readFileSync(file, "utf8");
+      // Only an actual import binds the app to the package; a comment naming it
+      // (several do, explaining precisely this) is fine.
+      if (new RegExp(`from\\s+["']${PACKAGE}["']|require\\(["']${PACKAGE}["']`).test(text)) {
+        offenders.push(relative(TEMPLATES, file));
+      }
+    }
+    assert.deepEqual(
+      offenders,
+      [],
+      `These import \`${PACKAGE}\`, which only resolves in --wyscan local and ` +
+        `breaks the mobile build in registry and standalone. Reimplement what you ` +
+        `need in mobile/components/ui/ — see "The shared package, and why nothing ` +
+        `imports it" in templates/authored/docs/runbooks/design-system.md.`,
+    );
+  });
+
+  test("the generated app does not import it either", () => {
+    // Covers the extracted tree/ templates too, not just the authored ones.
+    const dir = generate(["--slug", "demo-ds", "--workspaces", "mobile", "--wyscan", "local"]);
+    try {
+      const offenders = walk(join(dir, "mobile"))
+        .filter((f) => /\.(ts|tsx|js|jsx)$/.test(f) && !f.includes("node_modules"))
+        .filter((f) => {
+          const text = readFileSync(f, "utf8");
+          return new RegExp(`from\\s+["']${PACKAGE}["']`).test(text);
+        })
+        .map((f) => relative(dir, f));
+      assert.deepEqual(offenders, [], `generated mobile app imports ${PACKAGE}`);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("the runbook still documents the rule it is guarding", () => {
+    const runbook = readFileSync(join(TEMPLATES, "authored/docs/runbooks/design-system.md"), "utf8");
+    assert.match(runbook, /The shared package, and why nothing imports it/);
+    assert.match(runbook, /nothing in the generated app imports it, and nothing should/i);
   });
 });
 
