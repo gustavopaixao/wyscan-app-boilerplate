@@ -169,9 +169,17 @@ clobber it.
 
 Mobile is app-local in every `--wyscan` mode. The shared design-system package
 (`wyscan-react-native`) is declared in `mobile/package.json` and aliased in
-`metro.config.js` but **imported by nothing**, and `wyscan.mjs` drops it in
-`registry` and `standalone` — so importing it would break two modes of three.
-`components/ui/` reimplements what is needed.
+`metro.config.js` but **imported by nothing**, and it must stay that way:
+`wyscan.mjs` strips the metro alias in `registry` and `standalone`, deletes the
+dependency in `standalone` (it is not in `STUBBED`), and in `registry` leaves it
+as a bare version range for a package published nowhere. So an import resolves
+only in `local` and breaks the mobile build in the other two — and the mode that
+breaks is never the one the author is working in. `components/ui/` reimplements
+what is needed; `test/design.test.mjs` fails on any import of the package.
+
+Not to be confused with `<scope>/core-react-native`, which *is* imported
+(`createI18n` in `mobile/lib/i18n/engine.ts`) and *is* stubbed in `standalone`,
+so it works in all three modes.
 
 Copy shared by web and mobile lives in `src/generate/authStrings.mjs` under two
 namespaces — `auth` and `nav` — reshaped per consumer (nested for next-intl,
