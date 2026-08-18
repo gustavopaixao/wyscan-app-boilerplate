@@ -1216,6 +1216,126 @@
       "mode": 644,
       "raw": false,
       "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/app/users/page.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/app/users/page.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/users/UserBadges.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/users/UserBadges.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/users/UsersFilters.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/users/UsersFilters.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/users/UsersPagination.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/users/UsersPagination.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/users/UsersScreen.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/users/UsersScreen.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/users/UsersTable.test.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/users/UsersTable.test.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/users/UsersTable.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/users/UsersTable.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/hooks/useUsers.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/hooks/useUsers.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/api/admin-client.test.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/api/admin-client.test.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/api/admin-client.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/api/admin-client.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/i18n/usersStrings.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/i18n/usersStrings.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/users/usersQuery.test.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/users/usersQuery.test.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/users/usersQuery.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/users/usersQuery.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/adminRoutes.test.ts",
+      "dest": "api/src/v1/adminRoutes.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/adminRoutes.ts",
+      "dest": "api/src/v1/adminRoutes.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
     }
   ]
 }

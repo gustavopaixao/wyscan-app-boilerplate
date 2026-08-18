@@ -48,6 +48,12 @@ POST /auth/google | /auth/apple | /auth/facebook
 GET|PATCH|DELETE /me
 ```
 
+Plus one admin-only endpoint, registered by `api/src/v1/adminRoutes.ts`:
+
+```
+GET  /admin/users            -> { users, page, limit, total, totalPages }
+```
+
 ## Where the implementation lives
 
 This depends on the shared-package mode the project was generated with
@@ -249,6 +255,80 @@ db.users.updateOne({ email: "you@example.com" }, { $set: { role: "admin" } })
 The admin console requires `admin` specifically; `moderator` is **not** enough
 (`web/__PROJECT_SLUG__-admin/src/lib/admin-access.ts`). Widen it there, in one
 place, if you need to.
+
+## Admin: listing users
+
+`GET /api/v1/admin/users` backs the **Users** screen in the admin console
+(`web/__PROJECT_SLUG__-admin/src/app/users/page.tsx`). Read-only: it lists,
+searches, filters and pages, and changes nothing.
+
+| Parameter | Default | Notes |
+|---|---|---|
+| `page` | `1` | Clamped to at least 1. |
+| `limit` | `20` | Capped at 100, so one request cannot pull the whole table. |
+| `search` | — | Case-insensitive, matches email **or** display name. |
+| `role` | — | `user`, `moderator`, `admin`. |
+| `status` | — | `pending`, `active`, `blocked`, `deleted`. |
+
+An unknown `role` or `status` is ignored rather than rejected — a stale bookmark
+shows the unfiltered list instead of an error page. Soft-deleted users are
+listed by default; narrow with `?status=` to hide them. Results are newest
+first.
+
+Users are serialized with the model's `toPublicJSON()`. That is not a
+convenience — it is the only thing keeping `passwordHash` and the OAuth provider
+ids out of the response, which is why the query must never use `.lean()`
+(`.lean()` returns plain objects and the method disappears).
+
+The console never calls the API directly. It goes through its own BFF proxy
+(`src/app/api/v1/[...path]/route.ts`), which attaches the bearer token from the
+HttpOnly cookies and re-checks the caller's role on every request, so the
+browser never holds a token. `src/lib/api/admin-client.ts` is the one place that
+speaks to it.
+
+### Guarding a privileged route
+
+Use `isAuthenticatedUser` from `api/src/v1/routeHelpers.ts`, never
+`instanceof Response`:
+
+```ts
+const admin = await requireAdminUser(c);
+if (!isAuthenticatedUser(admin)) return admin;
+```
+
+`requireAdmin` refuses with a `NextResponse`, which extends the `Response`
+class that `next/server` was loaded with. `@hono/node-server` installs its
+**own** `Response` global over that one, so in the running API the refusal is
+not an instance of the ambient `Response` — `instanceof` returns false, the
+guard falls through, and the route answers anonymous callers as though they
+were admins.
+
+This is worth knowing because of how it fails: it passes every unit test.
+Under Vitest there is only one `Response` class, so `instanceof` is true and
+the guard looks correct. It only breaks once the route is served by the real
+Node server. `isAuthenticatedUser` identifies the *success* case instead, so
+anything unrecognisable is treated as a refusal and the route fails closed.
+`adminRoutes.test.ts` pins this with a refusal from a deliberately foreign
+class.
+
+### Why this route lives in the app, not the package
+
+Every other auth endpoint is re-exported from `__NPM_SCOPE__/auth-api`. This one
+is implemented in the API workspace, and that is deliberate: **the shared
+package has no user-listing route.** Its `exports` map stops at `routes/auth/*`
+and `routes/me/*`.
+
+Adding `__NPM_SCOPE__/auth-api/routes/admin/users` to the stub and importing it
+would work in `standalone` and fail to resolve in `local` and `registry` — and
+the mode that breaks is never the one you are working in. So the route is built
+on the two surfaces the package and the stub genuinely agree on: `requireAdmin`
+(via `requireAdminUser` in `api/src/v1/routeHelpers.ts`) and the `User` model.
+Built that way, `adminRoutes.ts` is byte-identical in all three modes, and a
+test asserts it stays that way.
+
+If the shared package ever grows the endpoint, move the route the same way
+everything else moved: swap the implementation for a re-export, and leave the
+URL alone.
 
 ## Behaviour worth not breaking
 
