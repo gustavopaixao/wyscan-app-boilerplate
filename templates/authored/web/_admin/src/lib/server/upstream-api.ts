@@ -24,6 +24,28 @@ export type UpstreamResult = {
   setCookies?: SessionTokens;
 };
 
+/**
+ * Read the user out of a `GET /api/v1/me` body.
+ *
+ * The two auth-api implementations disagree on the envelope: the shared package
+ * returns the user at the top level, the standalone stub nests it under `user`.
+ * A client that assumes one shape signs everyone out against the other — the
+ * role reads as `undefined`, which looks exactly like "not an admin".
+ *
+ * So accept both. `user` first, since that is the documented shape; fall back to
+ * the body itself when it looks like a user rather than a wrapper.
+ */
+export function readMeUser(body: unknown): Record<string, unknown> | null {
+  if (!body || typeof body !== "object") return null;
+  const envelope = body as { user?: unknown };
+  if (envelope.user && typeof envelope.user === "object") {
+    return envelope.user as Record<string, unknown>;
+  }
+  // Flat shape. Checking for `id` keeps an error payload from being mistaken
+  // for a user, which would turn a failed call into a silently roleless one.
+  return "id" in envelope ? (envelope as Record<string, unknown>) : null;
+}
+
 type UpstreamOptions = {
   method?: string;
   body?: unknown;

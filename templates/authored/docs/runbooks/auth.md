@@ -55,7 +55,8 @@ This depends on the shared-package mode the project was generated with
 
 - **`local` / `registry`** — the real `__NPM_SCOPE__/auth-api` package.
 - **`standalone`** (the default) — `packages/stubs/auth-api/`, a complete local
-  implementation with the same subpath exports and the same wire contracts.
+  implementation with the same subpath exports and the same request/response
+  contracts, with one documented exception — see below.
 
 The import specifiers in `api/src/v1/authRoutes.ts` are **identical** in all
 three modes, so moving between them is a dependency swap, not a rewrite.
@@ -66,10 +67,9 @@ No application code changes.
 
 ### Where the stub is narrower than the package
 
-The stub matches the package on every **wire contract** — `toPublicJSON()`
-returns the same fields, and the routes take and return the same JSON. It is
-not a field-for-field copy of the stored documents, and `user.location` is the
-one place that matters today:
+The stub matches the package on the **user payload** — `toPublicJSON()` returns
+the same fields in both. It is not a field-for-field copy of the stored
+documents, and `user.location` is the one place that matters today:
 
 | | stub | package |
 |---|---|---|
@@ -106,6 +106,25 @@ type-checks in `local` and fails to resolve in `standalone`.
 
 Nothing shipped reads or writes `location`, including the
 [root user seed](#seeded-root-user), so today the divergence costs nothing.
+
+#### `GET /api/v1/me` returns two different envelopes
+
+The **routes** are not identical either, and this one bites:
+
+```js
+// shared package (local / registry)     // standalone stub
+{ id, email, role, … }                   { user: { id, email, role, … } }
+```
+
+A client that reads only `body.user` gets `undefined` for the role against the
+package — and `undefined` is indistinguishable from "not an admin", so the admin
+session route answers 403 and clears the cookies. The symptom is being **signed
+out a second after a successful sign-in**, in `local` and `registry` only.
+
+Every shipped consumer therefore reads it tolerantly rather than assuming a
+shape — `readMeUser()` in each web app's `lib/server/upstream-api.ts`, and an
+inline check in `mobile/lib/auth/authApi.ts`. **Any new caller of `/api/v1/me`
+must do the same**; a test fails if one reads `body.user` directly.
 
 ## Seeded root user
 

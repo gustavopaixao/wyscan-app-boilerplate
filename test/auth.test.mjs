@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, rmSync, readFileSync, existsSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve, dirname } from "node:path";
+import { join, resolve, dirname, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { ANCHORS } from "../src/generate/auth.mjs";
@@ -226,6 +226,71 @@ describe("documented stub/package divergence", () => {
     const runbook = readFileSync(join(TEMPLATES, RUNBOOK), "utf8");
     assert.match(runbook, /Where the stub is narrower than the package/);
     assert.match(runbook, /location\.coordinates/);
+  });
+});
+
+/**
+ * `GET /api/v1/me` has two envelopes in the wild: the shared package returns the
+ * user at the top level, the standalone stub nests it under `user`. A consumer
+ * that reads only one gets `undefined` for the role — which is indistinguishable
+ * from "not an admin", so the session route 403s and clears the cookies. The
+ * symptom is being signed out seconds after a successful sign-in, in
+ * `local`/`registry` only, which is why it survived so long.
+ */
+describe("/api/v1/me consumers tolerate both response envelopes", () => {
+  // Every file that calls the endpoint, per surface.
+  const CONSUMERS = [
+    "authored/web/_admin/src/app/api/auth/session/route.ts",
+    "authored/web/_admin/src/lib/server/require-app-admin.ts",
+    "authored/web/_app/src/lib/server/auth-bff.ts",
+    "authored/mobile/lib/auth/authApi.ts",
+  ];
+
+  test("every known consumer is accounted for", () => {
+    // A new caller that reads `body.user` directly would reintroduce the bug,
+    // so the list must not silently fall behind the code.
+    const callers = [];
+    for (const file of walk(join(TEMPLATES, "authored"))) {
+      if (!/\.(ts|tsx)$/.test(file) || /\.test\.tsx?$/.test(file)) continue;
+      // An actual call, not a mention: the helper module and several comments
+      // name the endpoint while explaining exactly this problem.
+      if (/\(\s*"\/api\/v1\/me"/.test(readFileSync(file, "utf8"))) {
+        callers.push(relative(TEMPLATES, file).split(sep).join("/"));
+      }
+    }
+    // authRoutes.ts mounts the endpoint rather than consuming it.
+    const consuming = callers.filter((f) => !f.endsWith("api/src/v1/authRoutes.ts"));
+    assert.deepEqual(
+      consuming.sort(),
+      [...CONSUMERS].sort(),
+      "the set of /api/v1/me callers changed — a new one must read the user " +
+        "tolerantly (readMeUser on web, the inline check on mobile), not `body.user`",
+    );
+  });
+
+  for (const file of CONSUMERS) {
+    test(`${file} does not assume the nested shape`, () => {
+      const text = readFileSync(join(TEMPLATES, file), "utf8");
+      // The exact expressions that broke admin sign-in.
+      for (const bad of ["result.body as { user", "body.user;", "<{ user: AuthUser }>"]) {
+        assert.ok(
+          !text.includes(bad),
+          `${file} reads the \`user\` envelope directly (\`${bad}\`). That works ` +
+            `against the stub and signs everyone out against the shared package.`,
+        );
+      }
+    });
+  }
+
+  test("both web surfaces ship the shared helper and its tests", () => {
+    for (const surface of ["_admin", "_app"]) {
+      const helper = join(TEMPLATES, `authored/web/${surface}/src/lib/server/upstream-api.ts`);
+      assert.match(readFileSync(helper, "utf8"), /export function readMeUser/);
+      assert.ok(
+        existsSync(join(TEMPLATES, `authored/web/${surface}/src/lib/server/upstream-api.test.ts`)),
+        `web/${surface} is missing the readMeUser test`,
+      );
+    }
   });
 });
 

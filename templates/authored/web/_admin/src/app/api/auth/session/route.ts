@@ -7,7 +7,7 @@
 import { NextResponse } from "next/server";
 import { ADMIN_ACCESS_REQUIRED, isAppAdminRole } from "@/lib/admin-access";
 import { clearTokenCookies, setTokenCookies } from "@/lib/server/auth-cookies";
-import { upstreamFetch } from "@/lib/server/upstream-api";
+import { readMeUser, upstreamFetch } from "@/lib/server/upstream-api";
 
 export async function GET(): Promise<NextResponse> {
   const result = await upstreamFetch("/api/v1/me", { authenticated: true });
@@ -25,7 +25,7 @@ export async function GET(): Promise<NextResponse> {
     );
   }
 
-  const user = (result.body as { user?: { role?: unknown } })?.user;
+  const user = readMeUser(result.body);
 
   if (!isAppAdminRole(user?.role)) {
     return clearTokenCookies(

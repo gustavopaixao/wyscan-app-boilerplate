@@ -3,7 +3,7 @@
   "version": "0.0.0-stub",
   "private": true,
   "type": "module",
-  "description": "Local auth implementation for standalone mode. Drop-in replacement for the shared auth-api package: same subpath exports, same request/response contracts. Swap for the published package by re-running the generator with --wyscan local|registry.",
+  "description": "Local auth implementation for standalone mode. Drop-in replacement for the shared auth-api package: same subpath exports, and the same request/response contracts except GET /me, which the package returns unwrapped. Swap for the published package by re-running the generator with --wyscan local|registry.",
   "exports": {
     "./models": { "types": "./models/index.d.ts", "default": "./models/index.js" },
     "./models/index": { "types": "./models/index.d.ts", "default": "./models/index.js" },

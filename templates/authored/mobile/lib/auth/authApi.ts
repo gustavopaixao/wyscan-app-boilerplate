@@ -179,8 +179,15 @@ export const authApi = {
 	/** Current user, or null when the session is gone. */
 	me: async (): Promise<AuthUser | null> => {
 		try {
-			const result = await authedRequest<{ user: AuthUser }>("/api/v1/me");
-			return result.user;
+			// The two auth-api implementations disagree on the envelope: the shared
+			// package returns the user at the top level, the standalone stub nests
+			// it under `user`. Assuming one shape signs the user out against the
+			// other, so accept both.
+			const result = await authedRequest<{ user?: AuthUser } & Partial<AuthUser>>(
+				"/api/v1/me",
+			);
+			if (result.user) return result.user;
+			return result.id ? (result as AuthUser) : null;
 		} catch {
 			return null;
 		}

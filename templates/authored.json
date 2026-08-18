@@ -1200,6 +1200,22 @@
       "mode": 644,
       "raw": false,
       "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/server/upstream-api.test.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/server/upstream-api.test.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/lib/server/upstream-api.test.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/server/upstream-api.test.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
     }
   ]
 }

@@ -11,7 +11,7 @@
 import { NextResponse } from "next/server";
 import { clearTokenCookies, setTokenCookies } from "./auth-cookies";
 import { csrfForbiddenResponse, isSameOriginRequest } from "./csrf";
-import { upstreamFetch } from "./upstream-api";
+import { readMeUser, upstreamFetch } from "./upstream-api";
 
 type UpstreamAuthBody = {
   accessToken?: string;
@@ -141,10 +141,9 @@ export function createSessionProbeRoute() {
       );
     }
 
-    const body = (result.body ?? {}) as { user?: unknown };
     const response = NextResponse.json({
       authenticated: true,
-      user: body.user,
+      user: readMeUser(result.body),
     });
     // Carry over tokens rotated during the probe.
     return result.setCookies

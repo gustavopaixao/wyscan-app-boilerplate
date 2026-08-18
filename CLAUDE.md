@@ -141,7 +141,9 @@ modes:
 
 - `local` / `registry` → the real `<scope>/auth-api` package.
 - `standalone` (default) → `templates/partials/stubs/auth-api/`, a full local
-  implementation with the same subpath exports and wire contracts.
+  implementation with the same subpath exports and wire contracts, except that
+  `GET /me` returns `{ user }` while the package returns the user unwrapped —
+  every consumer reads it tolerantly, and a test enforces that.
 
 The reference has no auth at all, so everything lives in `templates/authored/`.
 The hooks into reference files that must *call* it (`api/src/app.ts` registering

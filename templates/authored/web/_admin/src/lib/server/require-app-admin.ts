@@ -8,7 +8,7 @@
  */
 import { NextResponse } from "next/server";
 import { ADMIN_ACCESS_REQUIRED, isAppAdminRole } from "@/lib/admin-access";
-import { upstreamFetch } from "./upstream-api";
+import { readMeUser, upstreamFetch } from "./upstream-api";
 
 export type AdminSession = { userId: string; email: string; role: "admin" };
 
@@ -28,9 +28,11 @@ export async function requireAppAdminSession(): Promise<
     );
   }
 
-  const user = (
-    result.body as { user?: { id?: string; email?: string; role?: unknown } }
-  )?.user;
+  const user = readMeUser(result.body) as {
+    id?: string;
+    email?: string;
+    role?: unknown;
+  } | null;
   if (!isAppAdminRole(user?.role)) {
     return NextResponse.json(
       { message: ADMIN_ACCESS_REQUIRED },
