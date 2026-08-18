@@ -17,7 +17,6 @@ export const navStrings = {
   nav_dashboard: "Dashboard",
   nav_group_management: "Management",
   nav_users: "Users",
-  nav_content: "Content",
   nav_group_system: "System",
   nav_settings: "Settings",
   nav_logs: "Logs",

@@ -5,13 +5,7 @@
  * and the sidebar follows; nothing else needs to change.
  */
 import type { IconType } from "react-icons";
-import {
-  MdArticle,
-  MdDashboard,
-  MdPeople,
-  MdSettings,
-  MdTerminal,
-} from "react-icons/md";
+import { MdDashboard, MdPeople, MdSettings, MdTerminal } from "react-icons/md";
 import { type NavStringKey, tn } from "@/lib/i18n/navStrings";
 
 export type NavItem = {
@@ -43,10 +37,7 @@ export const navGroups: NavGroup[] = [
   {
     id: "management",
     labelKey: "nav_group_management",
-    items: [
-      { href: "/users", labelKey: "nav_users", icon: MdPeople },
-      { href: "/content", labelKey: "nav_content", icon: MdArticle },
-    ],
+    items: [{ href: "/users", labelKey: "nav_users", icon: MdPeople }],
   },
   {
     id: "system",

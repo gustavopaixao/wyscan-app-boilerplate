@@ -4,8 +4,8 @@ import {
   buildUserFilter,
   escapeRegex,
   parseUserListQuery,
-  registerV1AdminRoutes,
-} from "./adminRoutes.js";
+  registerAdminUserRoutes,
+} from "./users.js";
 
 /**
  * Parsing and routing only — never database behaviour. Everything asserted here
@@ -92,9 +92,9 @@ describe("buildUserFilter", () => {
   });
 });
 
-describe("registerV1AdminRoutes", () => {
+describe("registerAdminUserRoutes", () => {
   const app = new Hono();
-  registerV1AdminRoutes(app);
+  registerAdminUserRoutes(app);
 
   it("binds the route", async () => {
     const res = await app.request("/api/v1/admin/users");
@@ -139,10 +139,10 @@ describe("the admin guard fails closed", () => {
     expect(foreign instanceof Response).toBe(false); // the whole point
 
     vi.resetModules();
-    vi.doMock("./routeHelpers.js", async () => {
+    vi.doMock("../routeHelpers.js", async () => {
       const actual =
-        await vi.importActual<typeof import("./routeHelpers.js")>(
-          "./routeHelpers.js",
+        await vi.importActual<typeof import("../routeHelpers.js")>(
+          "../routeHelpers.js",
         );
       return {
         ...actual,
@@ -150,9 +150,7 @@ describe("the admin guard fails closed", () => {
       };
     });
 
-    const { registerV1AdminRoutes: register } = await import(
-      "./adminRoutes.js"
-    );
+    const { registerAdminUserRoutes: register } = await import("./users.js");
     const app = new Hono();
     register(app);
 
@@ -160,7 +158,7 @@ describe("the admin guard fails closed", () => {
     expect(res.status).toBe(401);
     await expect(res.text()).resolves.not.toContain("users");
 
-    vi.doUnmock("./routeHelpers.js");
+    vi.doUnmock("../routeHelpers.js");
     vi.resetModules();
   });
 });

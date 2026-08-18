@@ -63,7 +63,7 @@ export function wireApiApp(text, dest) {
   registerV1AuthRoutes(app);
   // The admin directory. Gated on \`requireAdmin\` in the handler itself, so it
   // needs no middleware of its own.
-  const { registerV1AdminRoutes } = await import("./v1/adminRoutes.js");
+  const { registerV1AdminRoutes } = await import("./v1/admin/routes.js");
   registerV1AdminRoutes(app);
 ${anchor}`,
     dest,

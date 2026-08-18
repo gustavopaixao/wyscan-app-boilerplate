@@ -9,14 +9,14 @@
  * the mode that breaks is never the one the author is working in.
  *
  * What the package and the stub DO agree on is the raw material: `requireAdmin`
- * (via `requireAdminUser` in `./routeHelpers.js`) and the `User` model with its
+ * (via `requireAdminUser` in `../routeHelpers.js`) and the `User` model with its
  * `toPublicJSON()`. Built on those, this file is byte-identical in all three
  * modes.
  */
 // biome-ignore format: width depends on the npm scope, so the wrapping is not stable across projects
 import { User, UserRole, UserStatus } from "__NPM_SCOPE__/auth-api/models";
 import type { Hono } from "hono";
-import { isAuthenticatedUser, requireAdminUser } from "./routeHelpers.js";
+import { isAuthenticatedUser, requireAdminUser } from "../routeHelpers.js";
 
 /** Page size when the caller does not ask, and the ceiling when it asks for too much. */
 const DEFAULT_LIMIT = 20;
@@ -110,7 +110,7 @@ export function buildUserFilter(query: UserListQuery): Record<string, unknown> {
   return filter;
 }
 
-export function registerV1AdminRoutes(app: Hono): void {
+export function registerAdminUserRoutes(app: Hono): void {
   app.get("/api/v1/admin/users", async (c) => {
     const admin = await requireAdminUser(c);
     // 401 for no session, 403 for a non-admin one, returned verbatim.

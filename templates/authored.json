@@ -1322,16 +1322,248 @@
       "dotEscaped": false
     },
     {
-      "src": "authored/api/src/v1/adminRoutes.test.ts",
-      "dest": "api/src/v1/adminRoutes.test.ts",
+      "src": "authored/api/src/logAgent/containerLogs.test.ts",
+      "dest": "api/src/logAgent/containerLogs.test.ts",
       "group": "api",
       "mode": 644,
       "raw": false,
       "dotEscaped": false
     },
     {
-      "src": "authored/api/src/v1/adminRoutes.ts",
-      "dest": "api/src/v1/adminRoutes.ts",
+      "src": "authored/api/src/logAgent/containerLogs.ts",
+      "dest": "api/src/logAgent/containerLogs.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/admin/logs.test.ts",
+      "dest": "api/src/v1/admin/logs.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/admin/logs.ts",
+      "dest": "api/src/v1/admin/logs.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/admin/redactLogLine.test.ts",
+      "dest": "api/src/v1/admin/redactLogLine.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/admin/redactLogLine.ts",
+      "dest": "api/src/v1/admin/redactLogLine.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/admin/routes.ts",
+      "dest": "api/src/v1/admin/routes.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/admin/system.test.ts",
+      "dest": "api/src/v1/admin/system.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/admin/system.ts",
+      "dest": "api/src/v1/admin/system.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/admin/users.test.ts",
+      "dest": "api/src/v1/admin/users.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/admin/users.ts",
+      "dest": "api/src/v1/admin/users.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/app/logs/page.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/app/logs/page.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/app/settings/page.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/app/settings/page.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/logs/LogToolbar.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/logs/LogToolbar.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/logs/LogViewer.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/logs/LogViewer.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/logs/LogsScreen.test.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/logs/LogsScreen.test.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/logs/LogsScreen.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/logs/LogsScreen.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/system/InfoCard.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/system/InfoCard.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/system/StatusPill.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/system/StatusPill.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/system/SystemScreen.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/system/SystemScreen.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/hooks/useLogs.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/hooks/useLogs.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/hooks/useSystemOverview.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/hooks/useSystemOverview.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/i18n/logsStrings.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/i18n/logsStrings.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/i18n/systemStrings.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/i18n/systemStrings.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/logs/logsQuery.test.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/logs/logsQuery.test.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/logs/logsQuery.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/logs/logsQuery.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/system/systemQuery.test.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/system/systemQuery.test.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/system/systemQuery.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/system/systemQuery.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/logs/LogViewer.test.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/logs/LogViewer.test.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/system/SystemScreen.test.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/system/SystemScreen.test.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/docs/runbooks/admin-console.md",
+      "dest": "docs/runbooks/admin-console.md",
       "group": "api",
       "mode": 644,
       "raw": false,

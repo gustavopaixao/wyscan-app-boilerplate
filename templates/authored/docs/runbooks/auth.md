@@ -48,11 +48,15 @@ POST /auth/google | /auth/apple | /auth/facebook
 GET|PATCH|DELETE /me
 ```
 
-Plus one admin-only endpoint, registered by `api/src/v1/adminRoutes.ts`:
+Plus the admin-only endpoints, registered by `api/src/v1/admin/routes.ts`:
 
 ```
 GET  /admin/users            -> { users, page, limit, total, totalPages }
+GET  /admin/settings         -> { api, infrastructure, integrations }
+GET  /admin/logs             -> { service, container, services, lines }
 ```
+
+See `docs/runbooks/admin-console.md` for the console that consumes them.
 
 ## Where the implementation lives
 
@@ -308,7 +312,7 @@ Under Vitest there is only one `Response` class, so `instanceof` is true and
 the guard looks correct. It only breaks once the route is served by the real
 Node server. `isAuthenticatedUser` identifies the *success* case instead, so
 anything unrecognisable is treated as a refusal and the route fails closed.
-`adminRoutes.test.ts` pins this with a refusal from a deliberately foreign
+`admin/users.test.ts` pins this with a refusal from a deliberately foreign
 class.
 
 ### Why this route lives in the app, not the package
@@ -323,7 +327,7 @@ would work in `standalone` and fail to resolve in `local` and `registry` — and
 the mode that breaks is never the one you are working in. So the route is built
 on the two surfaces the package and the stub genuinely agree on: `requireAdmin`
 (via `requireAdminUser` in `api/src/v1/routeHelpers.ts`) and the `User` model.
-Built that way, `adminRoutes.ts` is byte-identical in all three modes, and a
+Built that way, `admin/users.ts` is byte-identical in all three modes, and a
 test asserts it stays that way.
 
 If the shared package ever grows the endpoint, move the route the same way

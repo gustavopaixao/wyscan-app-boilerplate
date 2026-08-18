@@ -14,11 +14,19 @@ import { handleUnauthorized } from "@/lib/auth/handle-unauthorized";
 export class AdminApiError extends Error {
   /** 0 when the request never reached the server. */
   readonly status: number;
+  /**
+   * The API's machine-readable code, when it sent one.
+   *
+   * A status alone is not enough for every caller: the log viewer has to tell
+   * "the agent is down" from "the socket is denied", and both are 503.
+   */
+  readonly code?: string;
 
-  constructor(message: string, status: number) {
+  constructor(message: string, status: number, code?: string) {
     super(message);
     this.name = "AdminApiError";
     this.status = status;
+    this.code = code;
   }
 }
 
@@ -59,12 +67,14 @@ export async function adminFetch<T>(
 
   const body = (await response.json().catch(() => ({}))) as {
     message?: string;
+    code?: string;
   };
 
   if (!response.ok) {
     throw new AdminApiError(
       body.message ?? `Request failed with ${response.status}.`,
       response.status,
+      body.code,
     );
   }
 

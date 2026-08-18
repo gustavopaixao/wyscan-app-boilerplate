@@ -31,6 +31,7 @@ import {
   wireWebAppLocaleLayout,
   wireWebAppProxy,
 } from "./auth.mjs";
+import { buildLogAgentServer } from "./logAgent.mjs";
 import { wireApiServer } from "./seed.mjs";
 
 const COMPOSE_FILES = new Set([
@@ -206,6 +207,9 @@ export function transform(dest, text, cfg) {
   if (dest === "api/.env.example") out = appendApiEnvExample(out, cfg);
   // Seeds the initial root user at boot (see src/generate/seed.mjs).
   if (dest === "api/src/server.ts") out = wireApiServer(out, dest);
+  if (dest === "api/src/logAgent/server.ts") {
+    out = buildLogAgentServer(out, dest, cfg);
+  }
 
   if (dest.match(/^web\/.*-app\/src\/proxy\.ts$/)) out = wireWebAppProxy(out, dest);
   if (dest.match(/^web\/.*-app\/src\/app\/\[locale\]\/layout\.tsx$/)) {
