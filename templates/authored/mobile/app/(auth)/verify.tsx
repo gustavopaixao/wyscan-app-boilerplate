@@ -1,22 +1,23 @@
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, useColorScheme } from "react-native";
-import { AuthButton } from "@/components/auth/AuthButton";
-import { AuthFormError } from "@/components/auth/AuthFormError";
+import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import { AuthBrandLogo } from "@/components/auth/AuthBrandLogo";
 import { AuthScreen } from "@/components/auth/AuthScreen";
-import { AuthTextField } from "@/components/auth/AuthTextField";
+import { AuthTextField } from "@/components/ui/AuthTextField";
+import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { authErrorMessage } from "@/lib/auth/authErrors";
 import { useStrings } from "@/lib/i18n";
-import { semanticColors } from "@/lib/theme";
+import { BUTTON_STACK_GAP, appColors, resolveScheme, typography } from "@/lib/theme";
 
 export default function VerifyScreen() {
 	const { t } = useStrings();
 	const router = useRouter();
+	const c = appColors(resolveScheme(useColorScheme()));
 	const { verifyEmail, resendCode } = useAuth();
-	const colors = semanticColors(useColorScheme() === "dark" ? "dark" : "light");
 
-	// Both login and register push here with these params.
+	// Both sign-in and register push here with these.
 	const params = useLocalSearchParams<{ email?: string; userId?: string }>();
 	const email = params.email ?? "";
 	const userId = params.userId ?? "";
@@ -24,25 +25,25 @@ export default function VerifyScreen() {
 	const [code, setCode] = useState("");
 	const [error, setError] = useState<string | null>(null);
 	const [notice, setNotice] = useState<string | null>(null);
-	const [pending, setPending] = useState(false);
+	const [busy, setBusy] = useState(false);
 	const [resending, setResending] = useState(false);
 
-	async function handleSubmit() {
+	async function onVerify() {
 		setError(null);
 		setNotice(null);
-		setPending(true);
+		setBusy(true);
 		try {
 			await verifyEmail(email, code);
-			// Verification returns a full session, so go straight into the app.
-			router.replace("/(app)");
+			// Verification returns a full session, so go straight in.
+			router.replace("/(app)/(tabs)");
 		} catch (cause) {
 			setError(authErrorMessage(cause, t));
 		} finally {
-			setPending(false);
+			setBusy(false);
 		}
 	}
 
-	async function handleResend() {
+	async function onResend() {
 		setError(null);
 		setNotice(null);
 		setResending(true);
@@ -57,17 +58,15 @@ export default function VerifyScreen() {
 	}
 
 	return (
-		<AuthScreen
-			title={t("auth_verify_title")}
-			subtitle={t("auth_verify_subtitle", { email })}
-			footer={
-				<Link href="/(auth)/login" style={[styles.link, { color: colors.accent }]}>
-					{t("auth_back_to_sign_in")}
-				</Link>
-			}
-		>
-			<AuthFormError message={error} />
-			{notice ? <Text style={{ color: colors.muted }}>{notice}</Text> : null}
+		<AuthScreen>
+			<AuthBrandLogo />
+
+			<Text style={[typography.titleLarge, styles.title, { color: c.foreground }]}>
+				{t("auth_verify_title")}
+			</Text>
+			<Text style={[typography.bodySmall, styles.hint, { color: c.muted }]}>
+				{t("auth_verify_subtitle", { email })}
+			</Text>
 
 			<AuthTextField
 				label={t("auth_code_label")}
@@ -79,26 +78,48 @@ export default function VerifyScreen() {
 				autoCorrect={false}
 				maxLength={8}
 				textContentType="oneTimeCode"
-				style={styles.code}
-				onSubmitEditing={handleSubmit}
-				returnKeyType="go"
+				inputStyle={styles.code}
 			/>
 
-			<AuthButton label={t("auth_verify_submit")} onPress={handleSubmit} pending={pending} />
+			{notice ? (
+				<Text style={[typography.caption, styles.notice, { color: c.success }]}>{notice}</Text>
+			) : null}
+			{error ? (
+				<Text
+					accessibilityRole="alert"
+					style={[typography.caption, styles.error, { color: c.error }]}
+				>
+					{error}
+				</Text>
+			) : null}
+
+			<PrimaryButton title={t("auth_verify_submit")} onPress={() => void onVerify()} loading={busy} />
 
 			{userId ? (
-				<AuthButton
-					variant="secondary"
-					label={t("auth_resend_code")}
-					onPress={handleResend}
-					pending={resending}
-				/>
+				<>
+					<View style={styles.gap} />
+					<SecondaryButton
+						title={t("auth_resend_code")}
+						onPress={() => void onResend()}
+						disabled={resending}
+					/>
+				</>
 			) : null}
+
+			<View style={styles.gap} />
+			<SecondaryButton
+				title={t("auth_back_to_sign_in")}
+				onPress={() => router.replace("/(auth)/login")}
+			/>
 		</AuthScreen>
 	);
 }
 
 const styles = StyleSheet.create({
-	link: { fontWeight: "600" },
+	title: { marginBottom: 8 },
+	hint: { marginBottom: 16 },
 	code: { letterSpacing: 6, fontSize: 20 },
+	notice: { marginBottom: 12 },
+	error: { marginBottom: 12 },
+	gap: { height: BUTTON_STACK_GAP },
 });

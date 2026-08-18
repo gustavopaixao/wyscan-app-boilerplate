@@ -1,66 +1,39 @@
 /**
- * Shared frame for the auth screens.
+ * Shell for the auth screens.
  *
- * Bottom padding derives from `useSafeAreaInsets().bottom` and is applied
- * exactly once here (edge-to-edge rule; see .claude/rules/mobile-safe-area.md).
- * Screens must not add their own bottom inset on top of this.
+ * Owns the safe-area insets exactly once: top padding for the status bar and
+ * bottom padding for the gesture bar. Screens inside must not add either again —
+ * see `.claude/rules/mobile-safe-area.md`.
  */
 import type { ReactNode } from "react";
-import {
-	KeyboardAvoidingView,
-	Platform,
-	ScrollView,
-	StyleSheet,
-	Text,
-	useColorScheme,
-	View,
-} from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet, useColorScheme, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { semanticColors } from "@/lib/theme";
+import { SCREEN_EDGE_PADDING, appColors, resolveScheme } from "@/lib/theme";
 
-type Props = {
-	title: string;
-	subtitle?: string;
-	children: ReactNode;
-	footer?: ReactNode;
-};
-
-export function AuthScreen({ title, subtitle, children, footer }: Props) {
-	const scheme = useColorScheme() === "dark" ? "dark" : "light";
-	const colors = semanticColors(scheme);
+export function AuthScreen({ children }: { children: ReactNode }) {
+	const c = appColors(resolveScheme(useColorScheme()));
 	const insets = useSafeAreaInsets();
 
 	return (
 		<KeyboardAvoidingView
-			style={[styles.flex, { backgroundColor: colors.background }]}
-			// Only iOS needs this; Android's windowSoftInputMode already resizes.
+			style={[styles.flex, { backgroundColor: c.background }]}
+			// iOS needs this; Android's windowSoftInputMode already resizes, and
+			// applying both double-shifts the form.
 			behavior={Platform.OS === "ios" ? "padding" : undefined}
 		>
-			<ScrollView
-				contentContainerStyle={[
-					styles.content,
-					{ paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 },
+			<View
+				style={[
+					styles.body,
+					{ paddingTop: insets.top + 24, paddingBottom: insets.bottom + 20 },
 				]}
-				keyboardShouldPersistTaps="handled"
 			>
-				<Text style={[styles.title, { color: colors.foreground }]}>{title}</Text>
-				{subtitle ? (
-					<Text style={[styles.subtitle, { color: colors.muted }]}>{subtitle}</Text>
-				) : null}
-
-				<View style={styles.body}>{children}</View>
-
-				{footer ? <View style={styles.footer}>{footer}</View> : null}
-			</ScrollView>
+				{children}
+			</View>
 		</KeyboardAvoidingView>
 	);
 }
 
 const styles = StyleSheet.create({
 	flex: { flex: 1 },
-	content: { flexGrow: 1, justifyContent: "center", paddingHorizontal: 24 },
-	title: { fontSize: 28, fontWeight: "600", letterSpacing: -0.5 },
-	subtitle: { marginTop: 6, fontSize: 15 },
-	body: { marginTop: 24, gap: 16 },
-	footer: { marginTop: 24, alignItems: "center", gap: 8 },
+	body: { flex: 1, paddingHorizontal: SCREEN_EDGE_PADDING + 4 },
 });

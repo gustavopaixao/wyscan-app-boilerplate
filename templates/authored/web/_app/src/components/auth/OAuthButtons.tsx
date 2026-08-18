@@ -9,6 +9,7 @@ import {
   isGoogleEnabled,
   isOAuthEnabled,
 } from "@/lib/auth/oauth-config";
+import { SECONDARY_BUTTON_CLASS } from "@/lib/styles/formControlClassName";
 import { FormError } from "./fields/FormError";
 
 /**
@@ -40,11 +41,11 @@ export function OAuthButtons({ next }: { next?: string }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center gap-3">
-        <span className="h-px flex-1 bg-black/10 dark:bg-white/15" />
-        <span className="text-xs uppercase tracking-wide text-foreground/50">
+        <span className="h-px flex-1 bg-border" />
+        <span className="text-xs uppercase tracking-wide text-muted">
           {t("orContinueWith")}
         </span>
-        <span className="h-px flex-1 bg-black/10 dark:bg-white/15" />
+        <span className="h-px flex-1 bg-border" />
       </div>
 
       <FormError message={error} />
@@ -54,7 +55,7 @@ export function OAuthButtons({ next }: { next?: string }) {
           type="button"
           onClick={run(google)}
           disabled={busy}
-          className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-black/10 px-4 py-2.5 text-sm font-medium transition hover:bg-black/[0.03] disabled:opacity-50 dark:border-white/15 dark:hover:bg-white/[0.06]"
+          className={SECONDARY_BUTTON_CLASS}
         >
           <FaGoogle aria-hidden className="size-4" />
           {t("continueWithGoogle")}
@@ -66,7 +67,7 @@ export function OAuthButtons({ next }: { next?: string }) {
           type="button"
           onClick={run(apple)}
           disabled={busy}
-          className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-black/10 px-4 py-2.5 text-sm font-medium transition hover:bg-black/[0.03] disabled:opacity-50 dark:border-white/15 dark:hover:bg-white/[0.06]"
+          className={SECONDARY_BUTTON_CLASS}
         >
           <FaApple aria-hidden className="size-4" />
           {t("continueWithApple")}

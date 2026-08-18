@@ -15,7 +15,7 @@
  * generated project.
  */
 
-import { mobileAuthStrings, webAuthMessages } from "./authStrings.mjs";
+import { mobileStringsFor, webAuthMessages, webNavMessages } from "./authStrings.mjs";
 
 /**
  * Replace `anchor` with `replacement`, or throw naming the file.
@@ -191,8 +191,10 @@ export default function Index() {
  */
 export function mergeWebMessages(text, locale) {
   const messages = JSON.parse(text);
-  if (messages.auth) return text;
-  messages.auth = webAuthMessages(locale);
+  if (messages.auth && messages.nav) return text;
+  // An existing namespace wins, so a future reference translation is not lost.
+  messages.auth ??= webAuthMessages(locale);
+  messages.nav ??= webNavMessages(locale);
   return `${JSON.stringify(messages, null, 2)}\n`;
 }
 
@@ -202,7 +204,7 @@ export function mergeWebMessages(text, locale) {
  */
 export function mergeMobileLocale(text, locale) {
   const strings = JSON.parse(text);
-  const additions = mobileAuthStrings(locale);
+  const additions = mobileStringsFor(locale);
   let changed = false;
   for (const [key, value] of Object.entries(additions)) {
     if (!(key in strings)) {

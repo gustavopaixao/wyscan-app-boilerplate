@@ -11,6 +11,7 @@ const APP_NAME = "__PROJECT_NAME__";
 export const authStrings = {
   auth_sign_in_title: "Admin sign in",
   auth_sign_in_subtitle: `${APP_NAME} administration`,
+  auth_sign_in_prompt: "Enter your credentials to access the dashboard.",
   auth_sign_in_submit: "Sign in",
   auth_email_label: "Email",
   auth_password_label: "Password",

@@ -1,13 +1,16 @@
 /**
  * Native Google and Apple sign-in.
  *
- * Renders NOTHING when neither provider is configured, so a freshly generated
- * app shows a clean email/password form instead of buttons that fail on tap.
+ * Renders NOTHING when no provider is configured, so a freshly generated app
+ * shows a clean email/password form rather than buttons that fail on tap.
  */
 import * as AppleAuthentication from "expo-apple-authentication";
 import * as Google from "expo-auth-session/providers/google";
 import { useEffect, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import { Platform, StyleSheet, Text, useColorScheme, View } from "react-native";
+import { DividerWithLabel } from "@/components/ui/DividerWithLabel";
+import { OAuthIconButton } from "@/components/ui/OAuthIconButton";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { authErrorMessage } from "@/lib/auth/authErrors";
 import {
@@ -19,19 +22,21 @@ import {
 	isGoogleEnabled,
 } from "@/lib/auth/googleOAuthConfig";
 import { useStrings } from "@/lib/i18n";
-import { semanticColors } from "@/lib/theme";
-import { AuthButton } from "./AuthButton";
-import { AuthFormError } from "./AuthFormError";
+import { appColors, resolveScheme, typography } from "@/lib/theme";
 
-export function OAuthButtons({ onSignedIn }: { onSignedIn: () => void }) {
+type Props = {
+	onSignedIn: () => void;
+	disabled?: boolean;
+};
+
+export function OAuthButtons({ onSignedIn, disabled }: Props) {
 	const { t } = useStrings();
+	const c = appColors(resolveScheme(useColorScheme()));
 	const { signInWithGoogle, signInWithApple } = useAuth();
-	const scheme = useColorScheme() === "dark" ? "dark" : "light";
-	const colors = semanticColors(scheme);
 
 	const [error, setError] = useState<string | null>(null);
 	const [pending, setPending] = useState<"google" | "apple" | null>(null);
-	// Apple Sign In is iOS-only and unavailable on older devices/simulators.
+	// Apple Sign In is iOS-only and missing on older devices and simulators.
 	const [appleAvailable, setAppleAvailable] = useState(false);
 
 	useEffect(() => {
@@ -39,8 +44,8 @@ export function OAuthButtons({ onSignedIn }: { onSignedIn: () => void }) {
 		void AppleAuthentication.isAvailableAsync().then(setAppleAvailable);
 	}, []);
 
-	// The ID-token flow: we need Google's `id_token`, which the API verifies
-	// against Google's JWKS. An access token would not be verifiable.
+	// The ID-token flow: the API verifies Google's id_token against its JWKS, so
+	// an access token would be unverifiable.
 	const [, googleResponse, promptGoogle] = Google.useIdTokenAuthRequest({
 		clientId: googleWebClientId,
 		iosClientId: googleIosClientId,
@@ -51,10 +56,11 @@ export function OAuthButtons({ onSignedIn }: { onSignedIn: () => void }) {
 	});
 
 	useEffect(() => {
-		if (googleResponse?.type !== "success") {
-			// `dismiss`/`cancel` are the user backing out — not an error to report.
-			if (googleResponse?.type === "error") setError(t("auth_error_generic"));
-			if (googleResponse) setPending(null);
+		if (!googleResponse) return;
+		if (googleResponse.type !== "success") {
+			// dismiss/cancel is the user backing out, not a failure to report.
+			if (googleResponse.type === "error") setError(t("auth_error_generic"));
+			setPending(null);
 			return;
 		}
 
@@ -77,7 +83,7 @@ export function OAuthButtons({ onSignedIn }: { onSignedIn: () => void }) {
 		})();
 	}, [googleResponse, signInWithGoogle, onSignedIn, t]);
 
-	async function handleApple() {
+	async function onApple() {
 		setError(null);
 		setPending("apple");
 		try {
@@ -89,7 +95,7 @@ export function OAuthButtons({ onSignedIn }: { onSignedIn: () => void }) {
 			});
 			if (!credential.identityToken) throw new Error("no identity token");
 
-			// Apple returns the name ONLY on the first authorization, so forward it
+			// Apple returns the name ONLY on the first authorization — forward it
 			// now or it is lost for good.
 			const displayName = [credential.fullName?.givenName, credential.fullName?.familyName]
 				.filter(Boolean)
@@ -98,7 +104,6 @@ export function OAuthButtons({ onSignedIn }: { onSignedIn: () => void }) {
 			await signInWithApple(credential.identityToken, displayName || undefined);
 			onSignedIn();
 		} catch (cause) {
-			// The user cancelling the native sheet is not a failure to report.
 			if ((cause as { code?: string })?.code !== "ERR_REQUEST_CANCELED") {
 				setError(authErrorMessage(cause, t));
 			}
@@ -110,48 +115,55 @@ export function OAuthButtons({ onSignedIn }: { onSignedIn: () => void }) {
 	const showApple = Platform.OS === "ios" && appleAvailable;
 	if (!isGoogleEnabled && !showApple) return null;
 
+	const busy = disabled || pending !== null;
+
 	return (
-		<View style={styles.container}>
-			<View style={styles.dividerRow}>
-				<View style={[styles.rule, { backgroundColor: colors.border }]} />
-				<Text style={[styles.dividerLabel, { color: colors.muted }]}>
-					{t("auth_or_continue_with")}
+		<View>
+			<DividerWithLabel label={t("auth_or_continue_with")} />
+
+			{error ? (
+				<Text
+					accessibilityRole="alert"
+					style={[typography.caption, styles.error, { color: c.error }]}
+				>
+					{error}
 				</Text>
-				<View style={[styles.rule, { backgroundColor: colors.border }]} />
+			) : null}
+
+			<View style={styles.row}>
+				{isGoogleEnabled ? (
+					<OAuthIconButton
+						testID="oauth-google"
+						accessibilityLabel={t("auth_continue_with_google")}
+						loading={pending === "google"}
+						disabled={busy}
+						onPress={() => {
+							setError(null);
+							setPending("google");
+							void promptGoogle();
+						}}
+					>
+						<Ionicons name="logo-google" size={22} color={c.foreground} />
+					</OAuthIconButton>
+				) : null}
+
+				{showApple ? (
+					<OAuthIconButton
+						testID="oauth-apple"
+						accessibilityLabel={t("auth_continue_with_apple")}
+						loading={pending === "apple"}
+						disabled={busy}
+						onPress={() => void onApple()}
+					>
+						<Ionicons name="logo-apple" size={22} color={c.foreground} />
+					</OAuthIconButton>
+				) : null}
 			</View>
-
-			<AuthFormError message={error} />
-
-			{isGoogleEnabled ? (
-				<AuthButton
-					variant="secondary"
-					label={t("auth_continue_with_google")}
-					pending={pending === "google"}
-					disabled={pending !== null}
-					onPress={() => {
-						setError(null);
-						setPending("google");
-						void promptGoogle();
-					}}
-				/>
-			) : null}
-
-			{showApple ? (
-				<AuthButton
-					variant="secondary"
-					label={t("auth_continue_with_apple")}
-					pending={pending === "apple"}
-					disabled={pending !== null}
-					onPress={handleApple}
-				/>
-			) : null}
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: { gap: 12 },
-	dividerRow: { flexDirection: "row", alignItems: "center", gap: 12 },
-	rule: { flex: 1, height: StyleSheet.hairlineWidth },
-	dividerLabel: { fontSize: 12, textTransform: "uppercase", letterSpacing: 0.5 },
+	row: { flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 16 },
+	error: { marginBottom: 12, textAlign: "center" },
 });

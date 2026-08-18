@@ -47,7 +47,18 @@ every anchor still exists.
 `templates/manifest.json`, it needs no knowledge of this directory and
 `npm run sync:check` stays green.
 
+**Design system and navigation** followed auth for the same reason: the
+reference has tokens but no components, no admin shell and no mobile tab bar.
+The mobile navigation was additionally *specified* by a shipped rule
+(`.claude/rules/mobile-safe-area.md`) that named components which did not exist.
+
 ## Adding a file
+
+Run `npm run manifest` after adding or deleting anything here — it reconciles
+`authored.json` with the file tree. It only adds and removes entries; group,
+mode and raw on an existing entry are never touched, so hand-set values survive.
+`npm run manifest:check` fails when the two have drifted.
+
 
 1. Put it under `templates/authored/`, mirroring its path in the generated project.
    Dot-prefixed path segments are stored `_`-prefixed, exactly as in `tree/`

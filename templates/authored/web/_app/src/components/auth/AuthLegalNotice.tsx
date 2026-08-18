@@ -7,7 +7,5 @@ import { useTranslations } from "next-intl";
 export function AuthLegalNotice() {
   const t = useTranslations("auth");
 
-  return (
-    <p className="text-center text-xs text-foreground/50">{t("legalNotice")}</p>
-  );
+  return <p className="text-center text-xs text-muted">{t("legalNotice")}</p>;
 }

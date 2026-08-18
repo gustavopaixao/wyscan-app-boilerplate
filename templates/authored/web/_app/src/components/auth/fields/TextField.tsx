@@ -2,6 +2,7 @@
 
 import type { InputHTMLAttributes } from "react";
 import { useId } from "react";
+import { AUTH_FORM_CONTROL_CLASS } from "@/lib/styles/formControlClassName";
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
@@ -9,8 +10,8 @@ type Props = InputHTMLAttributes<HTMLInputElement> & {
 };
 
 /**
- * Labelled input for the auth forms. `useId` rather than a caller-supplied id
- * so two forms on one page cannot collide their label/input association.
+ * Labelled input. `useId` rather than a caller-supplied id, so two forms on one
+ * page cannot collide their label/input association.
  */
 export function TextField({ label, hint, className, ...props }: Props) {
   const id = useId();
@@ -24,11 +25,11 @@ export function TextField({ label, hint, className, ...props }: Props) {
       <input
         id={id}
         aria-describedby={hintId}
-        className={`w-full rounded-lg border border-black/10 bg-transparent px-3 py-2.5 text-base outline-none transition focus:border-transparent focus:ring-2 focus:ring-current disabled:opacity-60 dark:border-white/15 ${className ?? ""}`}
+        className={`${AUTH_FORM_CONTROL_CLASS} ${className ?? ""}`}
         {...props}
       />
       {hint ? (
-        <p id={hintId} className="text-xs text-foreground/60">
+        <p id={hintId} className="text-xs text-muted">
           {hint}
         </p>
       ) : null}

@@ -50,6 +50,11 @@ const en = {
   errorInvalidCredentials: "Invalid email or password.",
   errorNetwork: "Could not reach the server. Check your connection.",
   loading: "Loading…",
+  goRegister: "Need an account? Register",
+  goLogin: "Already have an account? Sign in",
+  showPassword: "Show password",
+  hidePassword: "Hide password",
+  legalNoticeRegister: "By creating an account you agree to our Terms and Privacy Policy.",
 };
 
 const ptBR = {
@@ -92,6 +97,11 @@ const ptBR = {
   errorInvalidCredentials: "E-mail ou senha inválidos.",
   errorNetwork: "Não foi possível conectar ao servidor. Verifique sua conexão.",
   loading: "Carregando…",
+  goRegister: "Não tem conta? Cadastre-se",
+  goLogin: "Já tem conta? Entre",
+  showPassword: "Mostrar senha",
+  hidePassword: "Ocultar senha",
+  legalNoticeRegister: "Ao criar uma conta, você concorda com nossos Termos e Política de Privacidade.",
 };
 
 const ptPT = {
@@ -117,6 +127,11 @@ const ptPT = {
   errorGeneric: "Algo correu mal. Tente novamente.",
   errorNetwork: "Não foi possível contactar o servidor. Verifique a sua ligação.",
   loading: "A carregar…",
+  goRegister: "Não tem conta? Registe-se",
+  goLogin: "Já tem conta? Inicie sessão",
+  showPassword: "Mostrar palavra-passe",
+  hidePassword: "Ocultar palavra-passe",
+  legalNoticeRegister: "Ao criar uma conta, concorda com os nossos Termos e Política de Privacidade.",
 };
 
 const es = {
@@ -159,6 +174,11 @@ const es = {
   errorInvalidCredentials: "Correo o contraseña incorrectos.",
   errorNetwork: "No se pudo conectar con el servidor. Comprueba tu conexión.",
   loading: "Cargando…",
+  goRegister: "¿No tienes cuenta? Regístrate",
+  goLogin: "¿Ya tienes cuenta? Inicia sesión",
+  showPassword: "Mostrar contraseña",
+  hidePassword: "Ocultar contraseña",
+  legalNoticeRegister: "Al crear una cuenta aceptas nuestros Términos y Política de Privacidad.",
 };
 
 const fr = {
@@ -201,6 +221,11 @@ const fr = {
   errorInvalidCredentials: "E-mail ou mot de passe invalide.",
   errorNetwork: "Impossible de joindre le serveur. Vérifiez votre connexion.",
   loading: "Chargement…",
+  goRegister: "Pas de compte ? S'inscrire",
+  goLogin: "Vous avez déjà un compte ? Se connecter",
+  showPassword: "Afficher le mot de passe",
+  hidePassword: "Masquer le mot de passe",
+  legalNoticeRegister: "En créant un compte, vous acceptez nos Conditions et notre Politique de confidentialité.",
 };
 
 const de = {
@@ -243,6 +268,11 @@ const de = {
   errorInvalidCredentials: "E-Mail oder Passwort ist ungültig.",
   errorNetwork: "Server nicht erreichbar. Prüfe deine Verbindung.",
   loading: "Wird geladen…",
+  goRegister: "Noch kein Konto? Registrieren",
+  goLogin: "Schon ein Konto? Anmelden",
+  showPassword: "Passwort anzeigen",
+  hidePassword: "Passwort verbergen",
+  legalNoticeRegister: "Mit der Kontoerstellung stimmst du unseren AGB und der Datenschutzerklärung zu.",
 };
 
 const it = {
@@ -285,6 +315,11 @@ const it = {
   errorInvalidCredentials: "Email o password non validi.",
   errorNetwork: "Impossibile raggiungere il server. Controlla la connessione.",
   loading: "Caricamento…",
+  goRegister: "Non hai un account? Registrati",
+  goLogin: "Hai già un account? Accedi",
+  showPassword: "Mostra password",
+  hidePassword: "Nascondi password",
+  legalNoticeRegister: "Creando un account accetti i nostri Termini e la Privacy Policy.",
 };
 
 const nl = {
@@ -327,16 +362,131 @@ const nl = {
   errorInvalidCredentials: "Ongeldig e-mailadres of wachtwoord.",
   errorNetwork: "Kan de server niet bereiken. Controleer je verbinding.",
   loading: "Laden…",
+  goRegister: "Nog geen account? Registreren",
+  goLogin: "Heb je al een account? Inloggen",
+  showPassword: "Wachtwoord tonen",
+  hidePassword: "Wachtwoord verbergen",
+  legalNoticeRegister: "Door een account aan te maken ga je akkoord met onze Voorwaarden en Privacyverklaring.",
 };
+
+
+/* -------------------------------------------------------------------------
+ * Navigation copy.
+ *
+ * A separate namespace from the auth strings above: these label the tab bar,
+ * the toolbar and the account menu, and prefixing them `auth_` on mobile read
+ * as though the tab bar belonged to sign-in.
+ * ------------------------------------------------------------------------- */
+
+const nav_en = {
+  menuOpen: "Open account menu",
+  menuClose: "Close menu",
+  menuProfile: "Profile",
+  menuSettings: "Settings",
+  toolbarBack: "Back",
+  tabHome: "Home",
+  tabExplore: "Explore",
+  tabProfile: "Profile",
+};
+
+const nav_ptBR = {
+  menuOpen: "Abrir menu da conta",
+  menuClose: "Fechar menu",
+  menuProfile: "Perfil",
+  menuSettings: "Configurações",
+  toolbarBack: "Voltar",
+  tabHome: "Início",
+  tabExplore: "Explorar",
+  tabProfile: "Perfil",
+};
+
+const nav_ptPT = {
+  menuOpen: "Abrir menu da conta",
+  menuClose: "Fechar menu",
+  menuProfile: "Perfil",
+  menuSettings: "Definições",
+  toolbarBack: "Voltar",
+  tabHome: "Início",
+  tabExplore: "Explorar",
+  tabProfile: "Perfil",
+};
+
+const nav_es = {
+  menuOpen: "Abrir menú de cuenta",
+  menuClose: "Cerrar menú",
+  menuProfile: "Perfil",
+  menuSettings: "Ajustes",
+  toolbarBack: "Atrás",
+  tabHome: "Inicio",
+  tabExplore: "Explorar",
+  tabProfile: "Perfil",
+};
+
+const nav_fr = {
+  menuOpen: "Ouvrir le menu du compte",
+  menuClose: "Fermer le menu",
+  menuProfile: "Profil",
+  menuSettings: "Paramètres",
+  toolbarBack: "Retour",
+  tabHome: "Accueil",
+  tabExplore: "Explorer",
+  tabProfile: "Profil",
+};
+
+const nav_de = {
+  menuOpen: "Kontomenü öffnen",
+  menuClose: "Menü schließen",
+  menuProfile: "Profil",
+  menuSettings: "Einstellungen",
+  toolbarBack: "Zurück",
+  tabHome: "Start",
+  tabExplore: "Entdecken",
+  tabProfile: "Profil",
+};
+
+const nav_it = {
+  menuOpen: "Apri il menu account",
+  menuClose: "Chiudi menu",
+  menuProfile: "Profilo",
+  menuSettings: "Impostazioni",
+  toolbarBack: "Indietro",
+  tabHome: "Home",
+  tabExplore: "Esplora",
+  tabProfile: "Profilo",
+};
+
+const nav_nl = {
+  menuOpen: "Accountmenu openen",
+  menuClose: "Menu sluiten",
+  menuProfile: "Profiel",
+  menuSettings: "Instellingen",
+  toolbarBack: "Terug",
+  tabHome: "Home",
+  tabExplore: "Ontdekken",
+  tabProfile: "Profiel",
+};
+
+export const NAV_STRINGS = {
+  en: nav_en,
+  "pt-BR": nav_ptBR,
+  "pt-PT": nav_ptPT,
+  es: nav_es,
+  fr: nav_fr,
+  de: nav_de,
+  it: nav_it,
+  nl: nav_nl,
+};
+
+export const NAV_STRING_KEYS = Object.keys(nav_en);
 
 /** Canonical catalogue, keyed by the locale tags both apps ship. */
 export const AUTH_STRINGS = { en, "pt-BR": ptBR, "pt-PT": ptPT, es, fr, de, it, nl };
 
 export const AUTH_STRING_KEYS = Object.keys(en);
 
-/** `signInTitle` -> `auth_sign_in_title` */
-function toMobileKey(key) {
-  return `auth_${key.replace(/([A-Z])/g, "_$1").toLowerCase()}`;
+/** `signInTitle` + `auth` -> `auth_sign_in_title` */
+function toMobileKey(namespace, key) {
+  return `${namespace}_${key.replace(/([A-Z])/g, "_$1").toLowerCase()}`;
 }
 
 /** Nested next-intl namespace for a web locale. */
@@ -344,8 +494,27 @@ export function webAuthMessages(locale) {
   return AUTH_STRINGS[locale] ?? AUTH_STRINGS.en;
 }
 
-/** Flat `auth_*` bundle for a mobile locale. */
+export function webNavMessages(locale) {
+  return NAV_STRINGS[locale] ?? NAV_STRINGS.en;
+}
+
+/** Flat, prefixed bundle for a mobile locale. */
+function flatten(catalogue, namespace, locale) {
+  const source = catalogue[locale] ?? catalogue.en;
+  return Object.fromEntries(
+    Object.entries(source).map(([k, v]) => [toMobileKey(namespace, k), v]),
+  );
+}
+
 export function mobileAuthStrings(locale) {
-  const source = AUTH_STRINGS[locale] ?? AUTH_STRINGS.en;
-  return Object.fromEntries(Object.entries(source).map(([k, v]) => [toMobileKey(k), v]));
+  return flatten(AUTH_STRINGS, "auth", locale);
+}
+
+export function mobileNavStrings(locale) {
+  return flatten(NAV_STRINGS, "nav", locale);
+}
+
+/** Every flat key a mobile bundle gains, across both namespaces. */
+export function mobileStringsFor(locale) {
+  return { ...mobileAuthStrings(locale), ...mobileNavStrings(locale) };
 }

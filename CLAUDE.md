@@ -159,6 +159,30 @@ Copy shared by web and mobile is defined once in `src/generate/authStrings.mjs`
 and reshaped per consumer (nested for next-intl, flat `auth_*` for mobile), so a
 new string cannot land on one and go missing on the other.
 
+## Design system
+
+One visual language across `web:app`, `web:admin` and `mobile`, always on like
+auth. Tokens are **appended** to the extracted `globals.css` files and to the
+mobile theme barrel by `src/generate/design.mjs` — Tailwind v4 merges `@theme`
+blocks and later CSS wins, so an append is order-safe and a re-sync cannot
+clobber it.
+
+Mobile is app-local in every `--wyscan` mode. The shared design-system package
+(`wyscan-react-native`) is declared in `mobile/package.json` and aliased in
+`metro.config.js` but **imported by nothing**, and `wyscan.mjs` drops it in
+`registry` and `standalone` — so importing it would break two modes of three.
+`components/ui/` reimplements what is needed.
+
+Copy shared by web and mobile lives in `src/generate/authStrings.mjs` under two
+namespaces — `auth` and `nav` — reshaped per consumer (nested for next-intl,
+flat `auth_*` / `nav_*` for mobile), so a string cannot land on one and go
+missing on the other.
+
+`templates/authored.json` has grown past hand-editing; `npm run manifest`
+reconciles it with the file tree and `npm run manifest:check` fails when they
+drift. It only adds and removes entries — every field of an existing entry is
+left exactly as written.
+
 ## Invariants worth preserving
 
 - **Rollback removes only what the run wrote.** `--force` on a populated

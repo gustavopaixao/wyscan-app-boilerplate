@@ -1,52 +1,52 @@
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, useColorScheme } from "react-native";
-import { AuthButton } from "@/components/auth/AuthButton";
-import { AuthFormError } from "@/components/auth/AuthFormError";
+import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import { AuthBrandLogo } from "@/components/auth/AuthBrandLogo";
 import { AuthScreen } from "@/components/auth/AuthScreen";
-import { AuthTextField } from "@/components/auth/AuthTextField";
+import { AuthTextField } from "@/components/ui/AuthTextField";
+import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { authErrorMessage } from "@/lib/auth/authErrors";
 import { useStrings } from "@/lib/i18n";
-import { semanticColors } from "@/lib/theme";
+import { BUTTON_STACK_GAP, appColors, resolveScheme, typography } from "@/lib/theme";
 
 export default function ForgotPasswordScreen() {
 	const { t } = useStrings();
 	const router = useRouter();
+	const c = appColors(resolveScheme(useColorScheme()));
 	const { forgotPassword } = useAuth();
-	const colors = semanticColors(useColorScheme() === "dark" ? "dark" : "light");
 
 	const [email, setEmail] = useState("");
 	const [error, setError] = useState<string | null>(null);
-	const [pending, setPending] = useState(false);
+	const [busy, setBusy] = useState(false);
 
-	async function handleSubmit() {
+	async function onSubmit() {
 		setError(null);
-		setPending(true);
+		setBusy(true);
 		try {
 			await forgotPassword(email.trim());
 			// The API answers identically for known and unknown addresses, so we
-			// always advance. Branching on the response would reintroduce the
-			// account oracle the API is careful to avoid.
+			// always advance. Branching here would reintroduce the account oracle
+			// the API is careful to avoid.
 			router.push({ pathname: "/(auth)/reset-password", params: { email: email.trim() } });
 		} catch (cause) {
 			setError(authErrorMessage(cause, t));
 		} finally {
-			setPending(false);
+			setBusy(false);
 		}
 	}
 
 	return (
-		<AuthScreen
-			title={t("auth_forgot_title")}
-			subtitle={t("auth_forgot_subtitle")}
-			footer={
-				<Link href="/(auth)/login" style={[styles.link, { color: colors.accent }]}>
-					{t("auth_back_to_sign_in")}
-				</Link>
-			}
-		>
-			<AuthFormError message={error} />
+		<AuthScreen>
+			<AuthBrandLogo />
+
+			<Text style={[typography.titleLarge, styles.title, { color: c.foreground }]}>
+				{t("auth_forgot_title")}
+			</Text>
+			<Text style={[typography.bodySmall, styles.hint, { color: c.muted }]}>
+				{t("auth_forgot_subtitle")}
+			</Text>
 
 			<AuthTextField
 				label={t("auth_email_label")}
@@ -56,15 +56,32 @@ export default function ForgotPasswordScreen() {
 				autoCapitalize="none"
 				autoComplete="email"
 				textContentType="emailAddress"
-				onSubmitEditing={handleSubmit}
+				onSubmitEditing={() => void onSubmit()}
 				returnKeyType="go"
 			/>
 
-			<AuthButton label={t("auth_forgot_submit")} onPress={handleSubmit} pending={pending} />
+			{error ? (
+				<Text
+					accessibilityRole="alert"
+					style={[typography.caption, styles.error, { color: c.error }]}
+				>
+					{error}
+				</Text>
+			) : null}
+
+			<PrimaryButton title={t("auth_forgot_submit")} onPress={() => void onSubmit()} loading={busy} />
+			<View style={styles.gap} />
+			<SecondaryButton
+				title={t("auth_back_to_sign_in")}
+				onPress={() => router.replace("/(auth)/login")}
+			/>
 		</AuthScreen>
 	);
 }
 
 const styles = StyleSheet.create({
-	link: { fontWeight: "600" },
+	title: { marginBottom: 8 },
+	hint: { marginBottom: 16 },
+	error: { marginBottom: 12 },
+	gap: { height: BUTTON_STACK_GAP },
 });

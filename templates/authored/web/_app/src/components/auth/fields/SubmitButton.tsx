@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { PRIMARY_BUTTON_CLASS } from "@/lib/styles/formControlClassName";
 
 type Props = {
   children: ReactNode;
@@ -16,7 +17,7 @@ export function SubmitButton({ children, pending, disabled }: Props) {
       // register would mean two accounts, and on resend two codes.
       disabled={pending || disabled}
       aria-busy={pending}
-      className="w-full rounded-lg bg-foreground px-4 py-2.5 text-base font-medium text-background transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+      className={PRIMARY_BUTTON_CLASS}
     >
       {children}
     </button>

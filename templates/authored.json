@@ -186,14 +186,6 @@
       "dotEscaped": false
     },
     {
-      "src": "authored/mobile/app/(app)/index.tsx",
-      "dest": "mobile/app/(app)/index.tsx",
-      "group": "mobile",
-      "mode": 644,
-      "raw": false,
-      "dotEscaped": false
-    },
-    {
       "src": "authored/mobile/app/(auth)/_layout.tsx",
       "dest": "mobile/app/(auth)/_layout.tsx",
       "group": "mobile",
@@ -250,22 +242,6 @@
       "dotEscaped": false
     },
     {
-      "src": "authored/mobile/components/auth/AuthButton.tsx",
-      "dest": "mobile/components/auth/AuthButton.tsx",
-      "group": "mobile",
-      "mode": 644,
-      "raw": false,
-      "dotEscaped": false
-    },
-    {
-      "src": "authored/mobile/components/auth/AuthFormError.tsx",
-      "dest": "mobile/components/auth/AuthFormError.tsx",
-      "group": "mobile",
-      "mode": 644,
-      "raw": false,
-      "dotEscaped": false
-    },
-    {
       "src": "authored/mobile/components/auth/AuthLoadingScreen.tsx",
       "dest": "mobile/components/auth/AuthLoadingScreen.tsx",
       "group": "mobile",
@@ -276,14 +252,6 @@
     {
       "src": "authored/mobile/components/auth/AuthScreen.tsx",
       "dest": "mobile/components/auth/AuthScreen.tsx",
-      "group": "mobile",
-      "mode": 644,
-      "raw": false,
-      "dotEscaped": false
-    },
-    {
-      "src": "authored/mobile/components/auth/AuthTextField.tsx",
-      "dest": "mobile/components/auth/AuthTextField.tsx",
       "group": "mobile",
       "mode": 644,
       "raw": false,
@@ -877,6 +845,350 @@
       "src": "authored/web/_app/src/hooks/__tests__/safeNext.test.ts",
       "dest": "web/__PROJECT_SLUG__-app/src/hooks/__tests__/safeNext.test.ts",
       "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/app/(app)/(tabs)/_layout.tsx",
+      "dest": "mobile/app/(app)/(tabs)/_layout.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/app/(app)/(tabs)/explore.tsx",
+      "dest": "mobile/app/(app)/(tabs)/explore.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/app/(app)/(tabs)/index.tsx",
+      "dest": "mobile/app/(app)/(tabs)/index.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/app/(app)/(tabs)/profile.tsx",
+      "dest": "mobile/app/(app)/(tabs)/profile.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/home/TabPlaceholder.tsx",
+      "dest": "mobile/components/home/TabPlaceholder.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/navigation/AccountMenu.tsx",
+      "dest": "mobile/components/navigation/AccountMenu.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/navigation/AppMainToolbar.tsx",
+      "dest": "mobile/components/navigation/AppMainToolbar.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/navigation/NavigationChrome.test.ts",
+      "dest": "mobile/components/navigation/NavigationChrome.test.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/navigation/NavigationChrome.tsx",
+      "dest": "mobile/components/navigation/NavigationChrome.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/navigation/StackScreenToolbar.tsx",
+      "dest": "mobile/components/navigation/StackScreenToolbar.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/navigation/UserAvatar.tsx",
+      "dest": "mobile/components/navigation/UserAvatar.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/navigation/tabBarMetrics.ts",
+      "dest": "mobile/components/navigation/tabBarMetrics.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/navigation/tabChromeCallSites.test.ts",
+      "dest": "mobile/components/navigation/tabChromeCallSites.test.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/ui/AuthTextField.tsx",
+      "dest": "mobile/components/ui/AuthTextField.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/ui/BrandWordmark.tsx",
+      "dest": "mobile/components/ui/BrandWordmark.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/ui/DividerWithLabel.tsx",
+      "dest": "mobile/components/ui/DividerWithLabel.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/ui/OAuthIconButton.tsx",
+      "dest": "mobile/components/ui/OAuthIconButton.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/ui/PrimaryButton.tsx",
+      "dest": "mobile/components/ui/PrimaryButton.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/ui/SecondaryButton.tsx",
+      "dest": "mobile/components/ui/SecondaryButton.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/ui/ToolbarBackButton.tsx",
+      "dest": "mobile/components/ui/ToolbarBackButton.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/ui/index.ts",
+      "dest": "mobile/components/ui/index.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/lib/theme/appColors.ts",
+      "dest": "mobile/lib/theme/appColors.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/lib/theme/radii.ts",
+      "dest": "mobile/lib/theme/radii.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/lib/theme/screenChromeOptions.ts",
+      "dest": "mobile/lib/theme/screenChromeOptions.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/lib/theme/spacing.ts",
+      "dest": "mobile/lib/theme/spacing.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/lib/theme/typography.ts",
+      "dest": "mobile/lib/theme/typography.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/layout/AppShell.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/layout/AppShell.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/layout/BrandWordmark.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/layout/BrandWordmark.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/layout/Header.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/layout/Header.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/layout/PageHeader.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/layout/PageHeader.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/layout/Sidebar.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/layout/Sidebar.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/layout/SidebarGroup.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/layout/SidebarGroup.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/layout/navItems.test.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/layout/navItems.test.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/layout/navItems.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/layout/navItems.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/hooks/useDrawerA11y.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/hooks/useDrawerA11y.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/i18n/navStrings.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/i18n/navStrings.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/stores/ui-store.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/stores/ui-store.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/lib/styles/formControlClassName.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/styles/formControlClassName.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/auth/AuthBrandLogo.tsx",
+      "dest": "mobile/components/auth/AuthBrandLogo.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/auth/AuthLegalNotice.tsx",
+      "dest": "mobile/components/auth/AuthLegalNotice.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/auth/LoginView.tsx",
+      "dest": "mobile/components/auth/LoginView.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/_claude/rules/mobile-navigation-toolbar.md",
+      "dest": ".claude/rules/mobile-navigation-toolbar.md",
+      "group": "ai:claude",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "authored/docs/runbooks/design-system.md",
+      "dest": "docs/runbooks/design-system.md",
+      "group": "api",
       "mode": 644,
       "raw": false,
       "dotEscaped": false

@@ -67,7 +67,7 @@ export function VerifyForm() {
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
         <FormError message={error} />
-        {notice ? <p className="text-sm text-foreground/70">{notice}</p> : null}
+        {notice ? <p className="text-sm text-muted">{notice}</p> : null}
 
         <TextField
           label={t("codeLabel")}

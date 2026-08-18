@@ -14,6 +14,13 @@ import {
 import { buildClaudeMd } from "./claudemd.mjs";
 import { rewritePreCommitGate, rewriteValidateEdit } from "./hooks.mjs";
 import {
+  appendAdminTokens,
+  appendMobileThemeBarrel,
+  appendWebAppTokens,
+  buildAdminDashboardPage,
+  mountAdminShell,
+} from "./design.mjs";
+import {
   appendApiEnvExample,
   buildMobileIndex,
   mergeMobileLocale,
@@ -211,6 +218,19 @@ export function transform(dest, text, cfg) {
 
   const mobileLocale = dest.match(/^mobile\/locales\/([\w-]+)\.json$/);
   if (mobileLocale) out = mergeMobileLocale(out, mobileLocale[1]);
+
+  // --- Design system (see src/generate/design.mjs) -----------------------
+  // Tokens are appended to the extracted stylesheets; the admin additionally
+  // gains the shell mount and a dashboard page that lives inside it.
+  if (dest.match(/^web\/.*-(app|site)\/src\/app\/globals\.css$/)) {
+    out = appendWebAppTokens(out, dest);
+  }
+  if (dest.match(/^web\/.*-admin\/src\/app\/globals\.css$/)) {
+    out = appendAdminTokens(out, dest);
+  }
+  if (dest.match(/^web\/.*-admin\/src\/app\/layout\.tsx$/)) out = mountAdminShell(out, dest);
+  if (dest.match(/^web\/.*-admin\/src\/app\/page\.tsx$/)) out = buildAdminDashboardPage();
+  if (dest === "mobile/lib/theme/index.ts") out = appendMobileThemeBarrel(out, dest);
 
   // The reference relies on the author's *global* gitignore to keep machine-local
   // assistant settings out of the repo, so anyone else cloning it would commit

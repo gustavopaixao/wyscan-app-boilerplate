@@ -28,28 +28,26 @@ export function SignInForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex w-full max-w-sm flex-col gap-4"
+      className="flex w-full flex-col gap-4"
       noValidate
     >
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">
+        <h1 className="text-xl font-semibold text-foreground">
           {ta("auth_sign_in_title")}
         </h1>
-        <p className="mt-1.5 text-sm text-foreground/70">
-          {ta("auth_sign_in_subtitle")}
-        </p>
+        <p className="mt-1.5 text-sm text-muted">{ta("auth_sign_in_prompt")}</p>
       </div>
 
       {error ? (
         <p
           role="alert"
-          className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-400"
+          className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger"
         >
           {error}
         </p>
       ) : null}
 
-      <label className="flex flex-col gap-1.5 text-sm font-medium">
+      <label className="flex flex-col gap-1.5 text-sm font-medium text-foreground">
         {ta("auth_email_label")}
         <input
           type="email"
@@ -58,11 +56,11 @@ export function SignInForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-lg border border-black/10 bg-transparent px-3 py-2.5 text-base font-normal outline-none focus:ring-2 focus:ring-current dark:border-white/15"
+          className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-base font-normal text-foreground outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25 sm:text-sm min-h-[44px]"
         />
       </label>
 
-      <label className="flex flex-col gap-1.5 text-sm font-medium">
+      <label className="flex flex-col gap-1.5 text-sm font-medium text-foreground">
         {ta("auth_password_label")}
         <input
           type="password"
@@ -71,7 +69,7 @@ export function SignInForm() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full rounded-lg border border-black/10 bg-transparent px-3 py-2.5 text-base font-normal outline-none focus:ring-2 focus:ring-current dark:border-white/15"
+          className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-base font-normal text-foreground outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/25 sm:text-sm min-h-[44px]"
         />
       </label>
 
@@ -79,7 +77,7 @@ export function SignInForm() {
         type="submit"
         disabled={signIn.isPending}
         aria-busy={signIn.isPending}
-        className="w-full rounded-lg bg-foreground px-4 py-2.5 text-base font-medium text-background transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+        className="min-h-[44px] w-full rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:cursor-not-allowed disabled:opacity-60"
       >
         {ta("auth_sign_in_submit")}
       </button>

@@ -13,7 +13,9 @@
     "test": "node --test \"test/*.test.mjs\"",
     "sync": "node scripts/sync-from-reference.mjs --from ../botonistas",
     "sync:check": "node scripts/sync-from-reference.mjs --from ../botonistas --check",
-    "format:authored": "node scripts/format-authored.mjs"
+    "format:authored": "node scripts/format-authored.mjs",
+    "manifest": "node scripts/sync-authored-manifest.mjs",
+    "manifest:check": "node scripts/sync-authored-manifest.mjs --check"
   },
   "license": "UNLICENSED",
   "private": false

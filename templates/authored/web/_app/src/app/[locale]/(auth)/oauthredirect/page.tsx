@@ -20,7 +20,7 @@ export default async function Page() {
         aria-hidden
         className="size-6 animate-spin rounded-full border-2 border-current border-t-transparent"
       />
-      <p className="text-sm text-foreground/70">{t("loading")}</p>
+      <p className="text-sm text-muted">{t("loading")}</p>
     </div>
   );
 }

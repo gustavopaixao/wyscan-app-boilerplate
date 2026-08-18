@@ -11,8 +11,17 @@
  * });
  * ```
  */
-import type { AuthenticatedUser } from "__NPM_SCOPE__/auth-api/utils/auth";
-import { getOptionalUser, requireAuth } from "__NPM_SCOPE__/auth-api/utils/auth";
+// The type is imported in the same statement as the values on purpose: split
+// across two lines, the value import is 75-81 characters depending on how long
+// the npm scope is, so the formatter wraps it for some projects and not others
+// and `biome check` fails on whichever it was not formatted for. Merged, the
+// statement is too long to inline at any scope width, so the wrapping is
+// stable. Same reasoning as the suppressions in src/tokens/patches.mjs.
+import {
+  type AuthenticatedUser,
+  getOptionalUser,
+  requireAuth,
+} from "__NPM_SCOPE__/auth-api/utils/auth";
 import {
   requireAdmin,
   requireModerator,
