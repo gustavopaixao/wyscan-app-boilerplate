@@ -19,11 +19,28 @@ project.
 `sync:check` — which compares the full `manifest.files` JSON against a fresh
 extraction — would report drift forever.
 
-Some content simply has no reference to extract from. The Fastlane setup is the
-first case: the generated project already shipped `scripts/ship-it.mjs`, the
-`/ship-it` command, the build-number scripts and the Fastlane `.gitignore` block,
-but the reference project has no `mobile/fastlane/` at all — so `make ship-it`
-called `make mobile-beta-select`, a target that did not exist.
+Some content simply has no reference to extract from.
+
+**Fastlane** was the first case: the generated project already shipped
+`scripts/ship-it.mjs`, the `/ship-it` command, the build-number scripts and the
+Fastlane `.gitignore` block, but the reference project has no `mobile/fastlane/`
+at all — so `make ship-it` called `make mobile-beta-select`, a target that did
+not exist.
+
+**Auth** is the largest case. The reference has no authentication whatsoever —
+only the holes left for it: `mobile/app/(auth)/README.md` ("Screens land with
+the auth feature"), `web/_app/src/proxy.ts` ("Session gating plugs in here once
+auth lands"), and an `api/.env.example` that already declares `JWT_SECRET` and
+the OAuth client ids. The whole feature therefore lives here, across
+`api/`, `mobile/`, `web/_app/` and `web/_admin/`.
+
+Auth also needs to *hook into* reference files that cannot be hand-edited (the
+Hono app must register the routes, the web proxy must gate sessions). Those
+hooks live in `src/generate/auth.mjs` and are applied by `transform()` at write
+time — anchored on a unique string, and throwing if the anchor is gone, so a
+re-sync that reshapes one of those files fails loudly instead of silently
+producing a project whose auth was never wired. `test/auth.test.mjs` asserts
+every anchor still exists.
 
 `authored/` gives that content a home that survives a re-sync. Because
 `sync-from-reference.mjs` only ever writes `templates/tree/` and

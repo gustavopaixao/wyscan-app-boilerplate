@@ -22,6 +22,7 @@ initFirebaseAdminFromEnv();
 const app = await createApp(env);
 
 const port = env.PORT;
+// biome-ignore format: width depends on the generated project name
 console.log(`__PROJECT_NAME__ API listening on http://0.0.0.0:${port}`);
 
 serve({

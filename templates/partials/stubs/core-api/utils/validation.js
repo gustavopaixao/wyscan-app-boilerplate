@@ -13,3 +13,36 @@ export function stripHtmlTags(value) {
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"');
 }
+
+/** Reject rather than sanitize — used by the auth schemas on `displayName`. */
+export function hasNoHtmlTags(value) {
+  return !/<[^>]*>/.test(value);
+}
+
+export function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email));
+}
+
+export function isValidObjectId(value) {
+  return /^[0-9a-fA-F]{24}$/.test(String(value));
+}
+
+/**
+ * Minimum bar for a new password: 8+ chars with lower, upper and a digit.
+ * Returns the first failure so the caller can surface a specific message.
+ */
+export function validatePasswordStrength(password) {
+  if (password.length < 8) {
+    return { isValid: false, error: "Password must be at least 8 characters" };
+  }
+  if (!/[a-z]/.test(password)) {
+    return { isValid: false, error: "Password must contain at least one lowercase letter" };
+  }
+  if (!/[A-Z]/.test(password)) {
+    return { isValid: false, error: "Password must contain at least one uppercase letter" };
+  }
+  if (!/[0-9]/.test(password)) {
+    return { isValid: false, error: "Password must contain at least one number" };
+  }
+  return { isValid: true };
+}

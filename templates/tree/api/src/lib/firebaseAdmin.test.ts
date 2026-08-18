@@ -35,6 +35,7 @@ vi.mock("firebase-admin/app", () => ({
 
 const SERVICE_ACCOUNT = JSON.stringify({
   project_id: "__PROJECT_SLUG__-test",
+  // biome-ignore format: width depends on the generated project name
   client_email: "svc@__PROJECT_SLUG__-test.iam.gserviceaccount.com",
   private_key: "-----BEGIN PRIVATE KEY-----\\nfake\\n-----END PRIVATE KEY-----",
 });

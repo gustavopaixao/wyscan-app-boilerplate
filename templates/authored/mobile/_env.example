@@ -1,0 +1,32 @@
+# Copy to .env. Never commit the real file — mobile/.gitignore already covers it.
+#
+# Everything here is EXPO_PUBLIC_*, which means it is embedded in the app bundle
+# and readable by anyone who downloads it. That is correct for API URLs and
+# OAuth client ids; never put a secret in this file.
+
+# API base URL. On a physical device "localhost" is the DEVICE, not your Mac —
+# use your machine's LAN IP (the Expo dev server prints it on startup).
+EXPO_PUBLIC_API_URL=http://localhost:3000
+
+# --- Google Sign In (optional) ---------------------------------------------
+# Leave blank to hide the Google button; email/password still works.
+# Create three OAuth client ids in Google Cloud Console (Web, iOS, Android).
+# The WEB id is the audience the API verifies against, so it must also appear
+# in the API's GOOGLE_CLIENT_ID list — as must the iOS and Android ids.
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=
+EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=
+EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID=
+#
+# The Android client id requires your signing certificate's SHA-1 fingerprint.
+# Get it with: sh scripts/android-google-oauth-sha1.sh
+#
+# app.config.ts derives the reversed-client-id URL schemes and Android intent
+# filters from the ids above, so no manual native configuration is needed —
+# but you must re-run `expo prebuild` after changing them.
+
+# --- Apple Sign In ----------------------------------------------------------
+# No client id is needed on device: the native flow uses the app's bundle id,
+# and `usesAppleSignIn: true` is already set in app.config.ts. The API's
+# APPLE_CLIENT_ID must be set to that same bundle id.
+# Requires a paid Apple Developer account and the "Sign In with Apple"
+# capability enabled for the App ID.

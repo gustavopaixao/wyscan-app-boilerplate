@@ -13,6 +13,17 @@ import {
 } from "./firebase.mjs";
 import { buildClaudeMd } from "./claudemd.mjs";
 import { rewritePreCommitGate, rewriteValidateEdit } from "./hooks.mjs";
+import {
+  appendApiEnvExample,
+  buildMobileIndex,
+  mergeMobileLocale,
+  mergeWebMessages,
+  wireApiApp,
+  wireMobileRootLayout,
+  wireWebAdminLayout,
+  wireWebAppLocaleLayout,
+  wireWebAppProxy,
+} from "./auth.mjs";
 
 const COMPOSE_FILES = new Set([
   "docker/docker-compose.yml",
@@ -178,6 +189,28 @@ export function transform(dest, text, cfg) {
 
   // The reference CLAUDE.md is stale and imports nothing; generate a real one.
   if (dest === "CLAUDE.md") out = buildClaudeMd(cfg);
+
+  // --- Auth wiring (see src/generate/auth.mjs) ---------------------------
+  // The auth feature ships as authored templates; these are the reference
+  // files that have to call into it. Anchored, and they throw when the anchor
+  // is gone, so a re-sync that reshapes them fails loudly.
+  if (dest === "api/src/app.ts") out = wireApiApp(out, dest);
+  if (dest === "api/.env.example") out = appendApiEnvExample(out, cfg);
+
+  if (dest.match(/^web\/.*-app\/src\/proxy\.ts$/)) out = wireWebAppProxy(out, dest);
+  if (dest.match(/^web\/.*-app\/src\/app\/\[locale\]\/layout\.tsx$/)) {
+    out = wireWebAppLocaleLayout(out, dest);
+  }
+  if (dest.match(/^web\/.*-admin\/src\/app\/layout\.tsx$/)) out = wireWebAdminLayout(out, dest);
+
+  if (dest === "mobile/app/_layout.tsx") out = wireMobileRootLayout(out, dest);
+  if (dest === "mobile/app/index.tsx") out = buildMobileIndex();
+
+  const webMessages = dest.match(/^web\/.*-app\/messages\/([\w-]+)\.json$/);
+  if (webMessages) out = mergeWebMessages(out, webMessages[1]);
+
+  const mobileLocale = dest.match(/^mobile\/locales\/([\w-]+)\.json$/);
+  if (mobileLocale) out = mergeMobileLocale(out, mobileLocale[1]);
 
   // The reference relies on the author's *global* gitignore to keep machine-local
   // assistant settings out of the repo, so anyone else cloning it would commit

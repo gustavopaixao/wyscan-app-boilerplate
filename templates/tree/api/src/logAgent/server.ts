@@ -19,6 +19,7 @@ if (!secret || secret.length < 16) {
 const server = createServer((req, res) => {
   if (req.url === "/health" && req.method === "GET") {
     res.writeHead(200, { "Content-Type": "application/json" });
+    // biome-ignore format: width depends on the generated project name
     res.end(JSON.stringify({ ok: true, service: "__PROJECT_SLUG__-log-agent" }));
     return;
   }
@@ -27,5 +28,6 @@ const server = createServer((req, res) => {
 });
 
 server.listen(port, "0.0.0.0", () => {
+  // biome-ignore format: width depends on the generated project name
   console.log(`__PROJECT_NAME__ log agent listening on http://0.0.0.0:${port}`);
 });

@@ -12,6 +12,8 @@ import {
   apiClaudeMd,
   mobileClaudeMd,
   sharedPackagesDoc,
+  adminEnvExample,
+  adminEnvLocal,
   webAppEnvExample,
   webAppEnvLocal,
 } from "../src/generate/extradocs.mjs";
@@ -192,6 +194,11 @@ async function main() {
     const appDir = `web/${cfg.slug}-app`;
     extras.push({ dest: `${appDir}/.env.example`, content: webAppEnvExample(cfg) });
     extras.push({ dest: `${appDir}/.env.local`, content: webAppEnvLocal(cfg) });
+  }
+  if (cfg.workspaces.includes("web:admin")) {
+    const adminDir = `web/${cfg.slug}-admin`;
+    extras.push({ dest: `${adminDir}/.env.example`, content: adminEnvExample(cfg) });
+    extras.push({ dest: `${adminDir}/.env.local`, content: adminEnvLocal(cfg) });
   }
   if (cfg.aiTools.includes("claude")) {
     if (cfg.workspaces.includes("api")) extras.push({ dest: "api/CLAUDE.md", content: apiClaudeMd(cfg) });

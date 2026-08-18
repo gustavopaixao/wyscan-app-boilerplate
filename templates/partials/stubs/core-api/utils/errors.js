@@ -13,6 +13,50 @@ export class AppError extends Error {
   }
 }
 
+/**
+ * `Object.setPrototypeOf` after `super()` keeps `instanceof` working when this
+ * is transpiled down — without it every subclass collapses to AppError.
+ */
+export class ValidationError extends AppError {
+  constructor(message) {
+    super(message, 400, "VALIDATION_ERROR");
+    this.name = "ValidationError";
+    Object.setPrototypeOf(this, ValidationError.prototype);
+  }
+}
+
+export class UnauthorizedError extends AppError {
+  constructor(message = "Authentication required") {
+    super(message, 401, "UNAUTHORIZED");
+    this.name = "UnauthorizedError";
+    Object.setPrototypeOf(this, UnauthorizedError.prototype);
+  }
+}
+
+export class ForbiddenError extends AppError {
+  constructor(message = "Access denied") {
+    super(message, 403, "FORBIDDEN");
+    this.name = "ForbiddenError";
+    Object.setPrototypeOf(this, ForbiddenError.prototype);
+  }
+}
+
+export class NotFoundError extends AppError {
+  constructor(resource) {
+    super(`${resource} not found`, 404, "NOT_FOUND");
+    this.name = "NotFoundError";
+    Object.setPrototypeOf(this, NotFoundError.prototype);
+  }
+}
+
+export class ConflictError extends AppError {
+  constructor(message) {
+    super(message, 409, "CONFLICT");
+    this.name = "ConflictError";
+    Object.setPrototypeOf(this, ConflictError.prototype);
+  }
+}
+
 const json = (status, code, message) => NextResponse.json({ code, message }, { status });
 
 /** Convert any thrown value into a JSON error response. */

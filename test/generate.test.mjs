@@ -223,7 +223,12 @@ describe("firebase opt-in", () => {
   test("--firebase adds nothing to a project without the mobile workspace", () => {
     const dir = generate(["--slug", "fb-api", "--workspaces", "api", "--firebase"]);
     assert.ok(!existsSync(join(dir, "mobile")));
-    assert.ok(!existsSync(join(dir, "docs/runbooks/integrations")));
+    // Assert the mobile-only runbook specifically, not the whole directory:
+    // `docs/runbooks/integrations/` also holds the OAuth runbook, which ships
+    // with the api workspace.
+    assert.ok(
+      !existsSync(join(dir, "docs/runbooks/integrations/push-notifications-fcm-expo.md")),
+    );
     rmSync(dir, { recursive: true, force: true });
   });
 });

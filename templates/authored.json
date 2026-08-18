@@ -120,6 +120,766 @@
       "mode": 644,
       "raw": false,
       "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/middleware/authRateLimit.test.ts",
+      "dest": "api/src/middleware/authRateLimit.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/middleware/authRateLimit.ts",
+      "dest": "api/src/middleware/authRateLimit.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/authRoutes.test.ts",
+      "dest": "api/src/v1/authRoutes.test.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/authRoutes.ts",
+      "dest": "api/src/v1/authRoutes.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/nextAdapter.ts",
+      "dest": "api/src/v1/nextAdapter.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/api/src/v1/routeHelpers.ts",
+      "dest": "api/src/v1/routeHelpers.ts",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/_env.example",
+      "dest": "mobile/.env.example",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "authored/mobile/app/(app)/_layout.tsx",
+      "dest": "mobile/app/(app)/_layout.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/app/(app)/index.tsx",
+      "dest": "mobile/app/(app)/index.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/app/(auth)/_layout.tsx",
+      "dest": "mobile/app/(auth)/_layout.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/app/(auth)/forgot-password.tsx",
+      "dest": "mobile/app/(auth)/forgot-password.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/app/(auth)/login.tsx",
+      "dest": "mobile/app/(auth)/login.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/app/(auth)/register.tsx",
+      "dest": "mobile/app/(auth)/register.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/app/(auth)/reset-password.tsx",
+      "dest": "mobile/app/(auth)/reset-password.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/app/(auth)/verify.tsx",
+      "dest": "mobile/app/(auth)/verify.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/app/oauthredirect.tsx",
+      "dest": "mobile/app/oauthredirect.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/auth/AuthButton.tsx",
+      "dest": "mobile/components/auth/AuthButton.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/auth/AuthFormError.tsx",
+      "dest": "mobile/components/auth/AuthFormError.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/auth/AuthLoadingScreen.tsx",
+      "dest": "mobile/components/auth/AuthLoadingScreen.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/auth/AuthScreen.tsx",
+      "dest": "mobile/components/auth/AuthScreen.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/auth/AuthTextField.tsx",
+      "dest": "mobile/components/auth/AuthTextField.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/components/auth/OAuthButtons.tsx",
+      "dest": "mobile/components/auth/OAuthButtons.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/lib/auth/AuthContext.tsx",
+      "dest": "mobile/lib/auth/AuthContext.tsx",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/lib/auth/authApi.ts",
+      "dest": "mobile/lib/auth/authApi.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/lib/auth/authErrors.ts",
+      "dest": "mobile/lib/auth/authErrors.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/lib/auth/googleOAuthConfig.ts",
+      "dest": "mobile/lib/auth/googleOAuthConfig.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/mobile/lib/auth/storage.ts",
+      "dest": "mobile/lib/auth/storage.ts",
+      "group": "mobile",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/app/(auth)/sign-in/page.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/app/(auth)/sign-in/page.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/app/api/auth/login/route.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/app/api/auth/login/route.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/app/api/auth/logout/route.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/app/api/auth/logout/route.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/app/api/auth/session/route.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/app/api/auth/session/route.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/app/api/v1/[...path]/route.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/app/api/v1/[...path]/route.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/auth/AuthGuard.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/auth/AuthGuard.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/components/auth/SignInForm.tsx",
+      "dest": "web/__PROJECT_SLUG__-admin/src/components/auth/SignInForm.tsx",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/hooks/useAuth.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/hooks/useAuth.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/admin-access.test.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/admin-access.test.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/admin-access.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/admin-access.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/auth/handle-unauthorized.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/auth/handle-unauthorized.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/auth/verify-client-session.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/auth/verify-client-session.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/i18n/authStrings.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/i18n/authStrings.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/server/auth-cookies.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/server/auth-cookies.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/server/csrf.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/server/csrf.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/server/internal-api-client.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/server/internal-api-client.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/server/require-app-admin.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/server/require-app-admin.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/server/session-gate.test.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/server/session-gate.test.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/server/session-gate.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/server/session-gate.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/lib/server/upstream-api.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/lib/server/upstream-api.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/middleware.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/middleware.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_admin/src/stores/auth-store.ts",
+      "dest": "web/__PROJECT_SLUG__-admin/src/stores/auth-store.ts",
+      "group": "web:admin",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/[locale]/(auth)/forgot-password/page.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/[locale]/(auth)/forgot-password/page.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/[locale]/(auth)/layout.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/[locale]/(auth)/layout.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/[locale]/(auth)/oauthredirect/page.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/[locale]/(auth)/oauthredirect/page.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/[locale]/(auth)/register/page.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/[locale]/(auth)/register/page.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/[locale]/(auth)/reset-password/page.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/[locale]/(auth)/reset-password/page.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/[locale]/(auth)/sign-in/page.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/[locale]/(auth)/sign-in/page.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/[locale]/(auth)/verify/page.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/[locale]/(auth)/verify/page.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/api/auth/apple/route.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/api/auth/apple/route.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/api/auth/forgot-password/route.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/api/auth/forgot-password/route.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/api/auth/google/route.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/api/auth/google/route.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/api/auth/login/route.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/api/auth/login/route.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/api/auth/logout/route.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/api/auth/logout/route.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/api/auth/register/route.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/api/auth/register/route.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/api/auth/resend-code/route.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/api/auth/resend-code/route.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/api/auth/reset-password/route.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/api/auth/reset-password/route.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/api/auth/session/route.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/api/auth/session/route.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/api/auth/verify-email/route.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/api/auth/verify-email/route.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/app/api/v1/[...path]/route.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/app/api/v1/[...path]/route.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/components/auth/AuthCard.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/auth/AuthCard.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/components/auth/AuthGuard.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/auth/AuthGuard.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/components/auth/AuthLegalNotice.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/auth/AuthLegalNotice.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/components/auth/ForgotPasswordForm.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/auth/ForgotPasswordForm.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/components/auth/OAuthButtons.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/auth/OAuthButtons.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/components/auth/RegisterForm.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/auth/RegisterForm.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/components/auth/ResetPasswordForm.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/auth/ResetPasswordForm.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/components/auth/SignInForm.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/auth/SignInForm.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/components/auth/VerifyForm.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/auth/VerifyForm.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/components/auth/fields/FormError.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/auth/fields/FormError.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/components/auth/fields/SubmitButton.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/auth/fields/SubmitButton.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/components/auth/fields/TextField.tsx",
+      "dest": "web/__PROJECT_SLUG__-app/src/components/auth/fields/TextField.tsx",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/hooks/useAuth.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/hooks/useAuth.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/lib/auth/auth-client.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/auth/auth-client.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/lib/auth/oauth-config.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/auth/oauth-config.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/lib/auth/oauth-loaders.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/auth/oauth-loaders.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/lib/auth/verify-client-session.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/auth/verify-client-session.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/lib/server/auth-bff.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/server/auth-bff.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/lib/server/auth-cookies.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/server/auth-cookies.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/lib/server/csrf.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/server/csrf.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/lib/server/internal-api-client.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/server/internal-api-client.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/lib/server/session-gate.test.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/server/session-gate.test.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/lib/server/session-gate.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/server/session-gate.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/lib/server/upstream-api.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/lib/server/upstream-api.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/stores/auth-store.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/stores/auth-store.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/docs/runbooks/auth.md",
+      "dest": "docs/runbooks/auth.md",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/docs/runbooks/integrations/oauth-google-apple-facebook.md",
+      "dest": "docs/runbooks/integrations/oauth-google-apple-facebook.md",
+      "group": "api",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
+    },
+    {
+      "src": "authored/web/_app/src/hooks/__tests__/safeNext.test.ts",
+      "dest": "web/__PROJECT_SLUG__-app/src/hooks/__tests__/safeNext.test.ts",
+      "group": "web:app",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": false
     }
   ]
 }

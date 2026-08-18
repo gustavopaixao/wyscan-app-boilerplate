@@ -7,6 +7,21 @@ import { NextResponse } from "next/server.js";
 const buckets = new Map();
 
 /**
+ * Bucket key for a request: `<prefix>:<client ip>`.
+ *
+ * Reads `x-forwarded-for` first, so it is only trustworthy behind a proxy that
+ * overwrites (not appends) that header — the same caveat as `TRUST_PROXY` on
+ * the API itself.
+ */
+export function getClientKey(request, prefix) {
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+    request.headers.get("x-real-ip") ||
+    "unknown";
+  return prefix ? `${prefix}:${ip}` : ip;
+}
+
+/**
  * @returns {import("next/server.js").NextResponse | null}
  *   A 429 carrying `Retry-After` when limited, otherwise null.
  */

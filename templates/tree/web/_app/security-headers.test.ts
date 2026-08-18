@@ -39,8 +39,10 @@ describe("securityHeaders", () => {
   });
 
   it("allows the wss:// upgrade of an https api origin (socket.io)", async () => {
+    // biome-ignore format: width depends on the generated project name
     vi.stubEnv("NEXT_PUBLIC_API_URL", "https://__API_DOMAIN__");
     const csp = await cspForEnv("production");
+    // biome-ignore format: width depends on the generated project name
     expect(csp).toContain("wss://__API_DOMAIN__");
   });
 

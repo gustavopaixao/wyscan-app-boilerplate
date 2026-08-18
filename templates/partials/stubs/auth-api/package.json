@@ -3,11 +3,39 @@
   "version": "0.0.0-stub",
   "private": true,
   "type": "module",
-  "description": "STUB replacement for the shared auth-api package. Replace when adopting the shared packages.",
+  "description": "Local auth implementation for standalone mode. Drop-in replacement for the shared auth-api package: same subpath exports, same request/response contracts. Swap for the published package by re-running the generator with --wyscan local|registry.",
   "exports": {
-    "./utils/jwt": { "types": "./utils/jwt.d.ts", "default": "./utils/jwt.js" }
+    "./models": { "types": "./models/index.d.ts", "default": "./models/index.js" },
+    "./models/index": { "types": "./models/index.d.ts", "default": "./models/index.js" },
+    "./models/user.model": { "types": "./models/user.model.d.ts", "default": "./models/user.model.js" },
+    "./models/auth-token.model": { "types": "./models/auth-token.model.d.ts", "default": "./models/auth-token.model.js" },
+    "./utils/jwt": { "types": "./utils/jwt.d.ts", "default": "./utils/jwt.js" },
+    "./utils/password": { "types": "./utils/password.d.ts", "default": "./utils/password.js" },
+    "./utils/oauth": { "types": "./utils/oauth.d.ts", "default": "./utils/oauth.js" },
+    "./utils/auth": { "types": "./utils/auth.d.ts", "default": "./utils/auth.js" },
+    "./utils/tokens": { "types": "./utils/tokens.d.ts", "default": "./utils/tokens.js" },
+    "./utils/authorization": { "types": "./utils/authorization.d.ts", "default": "./utils/authorization.js" },
+    "./utils/transactional-email": { "types": "./utils/transactional-email.d.ts", "default": "./utils/transactional-email.js" },
+    "./routes/auth/login": { "types": "./routes/auth/login.d.ts", "default": "./routes/auth/login.js" },
+    "./routes/auth/register": { "types": "./routes/auth/register.d.ts", "default": "./routes/auth/register.js" },
+    "./routes/auth/logout": { "types": "./routes/auth/logout.d.ts", "default": "./routes/auth/logout.js" },
+    "./routes/auth/refresh": { "types": "./routes/auth/refresh.d.ts", "default": "./routes/auth/refresh.js" },
+    "./routes/auth/verify-email": { "types": "./routes/auth/verify-email.d.ts", "default": "./routes/auth/verify-email.js" },
+    "./routes/auth/resend-code": { "types": "./routes/auth/resend-code.d.ts", "default": "./routes/auth/resend-code.js" },
+    "./routes/auth/forgot-password": { "types": "./routes/auth/forgot-password.d.ts", "default": "./routes/auth/forgot-password.js" },
+    "./routes/auth/reset-password": { "types": "./routes/auth/reset-password.d.ts", "default": "./routes/auth/reset-password.js" },
+    "./routes/auth/google": { "types": "./routes/auth/google.d.ts", "default": "./routes/auth/google.js" },
+    "./routes/auth/apple": { "types": "./routes/auth/apple.d.ts", "default": "./routes/auth/apple.js" },
+    "./routes/auth/facebook": { "types": "./routes/auth/facebook.d.ts", "default": "./routes/auth/facebook.js" },
+    "./routes/me/profile": { "types": "./routes/me/profile.d.ts", "default": "./routes/me/profile.js" },
+    "./routes/me/update": { "types": "./routes/me/update.d.ts", "default": "./routes/me/update.js" },
+    "./routes/me/delete": { "types": "./routes/me/delete.d.ts", "default": "./routes/me/delete.js" }
   },
   "peerDependencies": {
-    "jsonwebtoken": "*"
+    "bcryptjs": "*",
+    "jsonwebtoken": "*",
+    "jwks-rsa": "*",
+    "mongoose": "*",
+    "zod": "*"
   }
 }

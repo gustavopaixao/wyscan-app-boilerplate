@@ -137,21 +137,86 @@ export function webAppEnvExample(cfg) {
   return `# Copy to .env.local and fill in. Required by next.config.ts whenever
 # NODE_ENV=production, which includes \`pnpm build\`.
 
-# Shared secret between this app's BFF routes and the API.
-INTERNAL_API_SECRET=
+# The API as reached from THIS Next.js server (the BFF calls it server-side).
+# Under Docker Compose that is the service name, e.g. http://api:3000.
+API_URL=https://${cfg.apiDomain}
 
 NEXT_PUBLIC_API_URL=https://${cfg.apiDomain}
 NEXT_PUBLIC_SITE_URL=https://${cfg.webDomain}
+
+# --- BFF <-> API shared secret --------------------------------------------
+# Must match the values in api/.env. Optional in development: leave the secret
+# blank and the API will not require the header. Set both before exposing
+# either service. Generate: openssl rand -base64 32
+INTERNAL_API_CLIENT_ID=app-bff
+INTERNAL_API_SECRET=
+
+# --- OAuth (optional) ------------------------------------------------------
+# Leave blank to hide the buttons entirely; email/password still works.
+# Client IDs are public by design — the secrets live on the API.
+# This Google client ID must also appear in the API's GOOGLE_CLIENT_ID list.
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=
+
+# Apple needs BOTH of these; with only one, the button stays hidden. The
+# redirect URI must match what is registered in your Apple developer account.
+NEXT_PUBLIC_APPLE_CLIENT_ID=
+NEXT_PUBLIC_APPLE_REDIRECT_URI=https://${cfg.webDomain}/en/oauthredirect
 `;
 }
 
 export function webAppEnvLocal(cfg) {
+  const port = cfg.ports?.app ?? 4500;
   return `# Local development only — gitignored, never deployed.
 # Replace INTERNAL_API_SECRET with a real value before shipping.
 INTERNAL_API_SECRET=dev-insecure-internal-api-secret-change-me
+INTERNAL_API_CLIENT_ID=app-bff
+
+# Server-side (BFF -> API). Point straight at the API rather than through nginx
+# so the auth proxy has one less hop to misconfigure.
+API_URL=http://localhost:${cfg.ports?.api ?? 3000}
 
 NEXT_PUBLIC_API_URL=http://localhost:${cfg.ports?.nginx ?? 8080}
-NEXT_PUBLIC_SITE_URL=http://localhost:${cfg.ports?.app ?? 4500}
+NEXT_PUBLIC_SITE_URL=http://localhost:${port}
+
+# OAuth is off until you add client IDs — the buttons stay hidden and
+# email/password sign-in works as-is. See docs/runbooks/auth.md.
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=
+NEXT_PUBLIC_APPLE_CLIENT_ID=
+NEXT_PUBLIC_APPLE_REDIRECT_URI=http://localhost:${port}/en/oauthredirect
+`;
+}
+
+/**
+ * The admin console needs the same BFF plumbing as the member app, minus OAuth
+ * (admins are provisioned by role, not self-registered).
+ */
+export function adminEnvExample(cfg) {
+  return `# Copy to .env.local and fill in.
+
+# The API as reached from THIS Next.js server. Under Docker Compose that is the
+# service name, e.g. http://api:3000.
+API_URL=https://${cfg.apiDomain}
+
+NEXT_PUBLIC_API_URL=https://${cfg.apiDomain}
+
+# --- BFF <-> API shared secret --------------------------------------------
+# Must match the values in api/.env. A distinct client id from the member
+# app's, so API logs can tell the two apart.
+INTERNAL_API_CLIENT_ID=admin-bff
+INTERNAL_API_SECRET=
+
+# No OAuth and no self-registration here: grant access by setting a user's
+# role to "admin" in the database.
+`;
+}
+
+export function adminEnvLocal(cfg) {
+  return `# Local development only — gitignored, never deployed.
+INTERNAL_API_SECRET=dev-insecure-internal-api-secret-change-me
+INTERNAL_API_CLIENT_ID=admin-bff
+
+API_URL=http://localhost:${cfg.ports?.api ?? 3000}
+NEXT_PUBLIC_API_URL=http://localhost:${cfg.ports?.nginx ?? 8080}
 `;
 }
 

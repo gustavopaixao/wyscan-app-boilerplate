@@ -22,6 +22,10 @@ node --test --test-name-pattern "lockfile" # one test by name
 npm run sync         # rebuild templates/tree + manifest.json from ../botonistas
 npm run sync:check   # exit 1 if templates/ has drifted from the reference
 
+# Reformat templates/authored/ the way the generated project's Biome will want
+# it. Needs a generated project with deps installed; see the script header.
+npm run format:authored -- /tmp/demo
+
 node bin/create.mjs --slug demo --dry-run          # file plan, nothing written
 node bin/create.mjs --slug demo --print-config     # resolved config as JSON
 node bin/create.mjs --slug demo --yes /tmp/demo    # non-interactive generate
@@ -128,6 +132,32 @@ ranges, `standalone` (default) strips them and vendors the stubs. Import
 specifiers are never rewritten, so graduating between modes is a dependency swap.
 Anything mode-dependent — lockfile invalidation, `ECOSYSTEM_ONLY_FILES`, the
 Metro config rewrite, compose mounts — hangs off `cfg.wyscanMode`.
+
+## Auth
+
+Auth is **always on** — there is no flag. It rides the existing `api`,
+`mobile`, `web:app` and `web:admin` groups, and works in all three `--wyscan`
+modes:
+
+- `local` / `registry` → the real `<scope>/auth-api` package.
+- `standalone` (default) → `templates/partials/stubs/auth-api/`, a full local
+  implementation with the same subpath exports and wire contracts.
+
+The reference has no auth at all, so everything lives in `templates/authored/`.
+The hooks into reference files that must *call* it (`api/src/app.ts` registering
+the routes, `web/_app/src/proxy.ts` gating sessions, `mobile/app/_layout.tsx`
+mounting the provider, the locale catalogues) live in `src/generate/auth.mjs`
+and run from `transform()`.
+
+**Every hook is anchored on a unique string and throws when the anchor is
+missing.** A re-sync that reshapes one of those files must fail loudly rather
+than quietly produce a project whose auth was never wired.
+`test/auth.test.mjs` asserts each anchor still exists, so the failure lands in
+CI instead of in a user's project.
+
+Copy shared by web and mobile is defined once in `src/generate/authStrings.mjs`
+and reshaped per consumer (nested for next-intl, flat `auth_*` for mobile), so a
+new string cannot land on one and go missing on the other.
 
 ## Invariants worth preserving
 

@@ -56,6 +56,7 @@ describe("validateProductionEnv", () => {
       validateProductionEnv(
         makeEnv({
           NODE_ENV: "production",
+          // biome-ignore format: width depends on the generated project name
           CORS_ORIGIN: "https://__PROJECT_DOMAIN__",
         }),
       ),

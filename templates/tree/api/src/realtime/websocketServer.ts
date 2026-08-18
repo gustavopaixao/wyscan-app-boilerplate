@@ -27,6 +27,7 @@ const redisConnectionUrl: string = redisUrl;
 
 /** Redis channel the API publishes realtime emit envelopes on. */
 export function realtimeEmitChannel(): string {
+  // biome-ignore format: width depends on the generated project name
   return (
     process.env.REALTIME_EMIT_CHANNEL?.trim() || "__PROJECT_SLUG__:realtime:emit"
   );
@@ -157,6 +158,7 @@ async function start(): Promise<void> {
   }
 
   httpServer.listen(port, "0.0.0.0", () => {
+    // biome-ignore format: width depends on the generated project name
     console.log(`__PROJECT_NAME__ realtime listening on http://0.0.0.0:${port}`);
   });
 }
