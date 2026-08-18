@@ -178,6 +178,57 @@ describe("auth string catalogue", () => {
   });
 });
 
+/**
+ * `docs/runbooks/auth.md` documents exactly where the stub is NARROWER than the
+ * shared package: `user.location` carries only `city` and `country`, and the
+ * package's extra fields are silently dropped rather than rejected in
+ * standalone mode.
+ *
+ * That is a factual claim about the stub which nothing else pins. Widening the
+ * stub is a perfectly good change — but it would leave the runbook quietly
+ * wrong, and the whole point of that section is that the failure is silent.
+ */
+describe("documented stub/package divergence", () => {
+  const STUB_MODEL = "partials/stubs/auth-api/models/user.model.js";
+  const RUNBOOK = "authored/docs/runbooks/auth.md";
+
+  test("the stub's location is still only city and country", () => {
+    const model = readFileSync(join(TEMPLATES, STUB_MODEL), "utf8");
+    const location = model.match(/const LocationSchema = new Schema\(([\s\S]*?)\n\);/);
+    assert.ok(location, `LocationSchema not found in ${STUB_MODEL}`);
+
+    for (const field of ["coordinates", "precision", "source", "updatedAt"]) {
+      assert.ok(
+        !location[1].includes(`${field}:`),
+        `The stub's LocationSchema now has \`${field}\`, which the shared package ` +
+          `also has. That is an improvement — but templates/${RUNBOOK} lists it as ` +
+          `absent under "Where the stub is narrower than the package". Update the ` +
+          `table there, or the runbook now understates what standalone supports.`,
+      );
+    }
+  });
+
+  test("the stub still exports no location enums", () => {
+    // The package exports LocationPrecision and LocationSource from ./models;
+    // the runbook says importing them fails to resolve in standalone.
+    const barrel = readFileSync(join(TEMPLATES, "partials/stubs/auth-api/models/index.js"), "utf8");
+    for (const name of ["LocationPrecision", "LocationSource"]) {
+      assert.ok(
+        !barrel.includes(name),
+        `The stub now exports ${name}. templates/${RUNBOOK} says it does not — update it.`,
+      );
+    }
+  });
+
+  test("the runbook still carries the divergence section it is guarding", () => {
+    // Otherwise the two tests above guard a claim that is no longer made, and
+    // would fail for no reason a reader could act on.
+    const runbook = readFileSync(join(TEMPLATES, RUNBOOK), "utf8");
+    assert.match(runbook, /Where the stub is narrower than the package/);
+    assert.match(runbook, /location\.coordinates/);
+  });
+});
+
 describe("standalone auth-api stub", () => {
   const pkg = JSON.parse(
     readFileSync(join(TEMPLATES, "partials/stubs/auth-api/package.json"), "utf8"),

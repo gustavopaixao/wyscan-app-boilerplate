@@ -64,6 +64,49 @@ If you generated in `standalone` and later adopt the shared packages, delete
 `packages/stubs/auth-api` and point the dependency at the published package.
 No application code changes.
 
+### Where the stub is narrower than the package
+
+The stub matches the package on every **wire contract** — `toPublicJSON()`
+returns the same fields, and the routes take and return the same JSON. It is
+not a field-for-field copy of the stored documents, and `user.location` is the
+one place that matters today:
+
+| | stub | package |
+|---|---|---|
+| `location.city` | ✅ | ✅ |
+| `location.country` | ✅ | ✅ |
+| `location.coordinates` | — | GeoJSON `Point`, `[longitude, latitude]` |
+| `location.precision` | — | `EXACT` / `CITY` / `COUNTRY` / `HIDDEN` |
+| `location.source` | — | `GPS` / `MANUAL` / `IP` |
+| `location.updatedAt` | — | `Date` |
+
+`toPublicJSON()` only ever flattens `city` and `country`, so this is invisible
+over the wire and no client can tell the two apart.
+
+**The trap is that writing the extra fields in `standalone` does not fail.**
+Mongoose strips unknown paths on save, so this succeeds and silently stores
+only `city` and `country`:
+
+```js
+await User.create({
+  email, passwordHash, displayName,
+  location: { city: "Lisbon", country: "PT",
+              coordinates: { type: "Point", coordinates: [-9.14, 38.72] } },
+});
+// stored: { city: "Lisbon", country: "PT" } — the coordinates are gone, no error
+```
+
+So a geospatial feature developed against `local` loses its data the moment
+someone generates in `standalone`, with nothing in the logs. If you need those
+fields, either widen `packages/stubs/auth-api/models/user.model.js` to match
+(it is yours to edit) or commit to the shared package. The same applies to
+`LocationPrecision` and `LocationSource`, which the package exports from
+`__NPM_SCOPE__/auth-api/models` and the stub does not — importing them
+type-checks in `local` and fails to resolve in `standalone`.
+
+Nothing shipped reads or writes `location`, including the
+[root user seed](#seeded-root-user), so today the divergence costs nothing.
+
 ## Seeded root user
 
 **A root user is created automatically the first time the API connects to
