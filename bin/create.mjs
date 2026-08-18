@@ -7,8 +7,11 @@ import { parseArgs } from "node:util";
 import { runFlow, summarize } from "../src/cli/flow.mjs";
 import {
   describeMissing,
+  describeScopeMismatch,
+  describeUnresolvable,
   findEcosystem,
   remedyLines,
+  scanEcosystem,
 } from "../src/cli/preflight.mjs";
 import { closePrompts, interactive, colors as c } from "../src/cli/prompt.mjs";
 import {
@@ -215,6 +218,34 @@ async function main() {
         fail("local checkout not found; nothing was written", 2);
       }
       console.error(`  ${c.red("!")} continuing anyway — the file: links will not resolve`);
+      console.error("");
+    }
+  }
+
+  /*
+   * The checkout is where it should be — but "present" is not "usable". Its
+   * packages depend on each other with `workspace:*`, which only resolves
+   * inside their own monorepo, so a generated project has to override every one
+   * of those specs by the dependency's real name. Read the checkout to learn
+   * those names, and answer two questions the path check cannot:
+   *
+   *   - a `workspace:` dep naming a package the checkout does not contain is
+   *     unresolvable, so refuse — `pnpm install` would fail on it regardless;
+   *   - a scope that differs from ours is survivable, because the overrides are
+   *     mirrored under the real names, but say so: it used to be silent, and
+   *     surfaced as ERR_PNPM_WORKSPACE_PKG_NOT_FOUND naming a package the
+   *     project never mentioned.
+   */
+  if (needsEcosystem && !ecosystemMissing) {
+    const eco = scanEcosystem(targetDir, cfg.ecosystemDir);
+    if (eco.missing.length > 0) {
+      console.error(describeUnresolvable(eco));
+      console.error("");
+      fail("shared-package checkout is incomplete; nothing was written", 2);
+    }
+    cfg.ecosystem = eco;
+    if (eco.packages.length > 0 && !eco.scopes.includes(cfg.npmScope)) {
+      console.error(describeScopeMismatch(eco, cfg.npmScope));
       console.error("");
     }
   }

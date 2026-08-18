@@ -133,6 +133,29 @@ specifiers are never rewritten, so graduating between modes is a dependency swap
 Anything mode-dependent — lockfile invalidation, `ECOSYSTEM_ONLY_FILES`, the
 Metro config rewrite, compose mounts — hangs off `cfg.wyscanMode`.
 
+The shared packages depend on **each other** with `workspace:*`, which resolves
+only inside their own monorepo. Linked from outside it, every one of those specs
+has to be rewritten by a `pnpm.overrides` entry keyed on the dependency's *real*
+name — and the templates key theirs on `__NPM_SCOPE__`, i.e. `@<owner>` (or
+`@local` when the owner prompt is left blank). When the two scopes differ the
+overrides match nothing and `pnpm install` dies with
+`ERR_PNPM_WORKSPACE_PKG_NOT_FOUND` naming a package the project never mentions.
+
+So `local` mode reads the checkout instead of assuming its scope:
+`scanEcosystem()` in `preflight.mjs` expands the checkout's own
+`pnpm-workspace.yaml` globs, collects `name` + `workspace:` edges, and hands
+them to `cfg.ecosystem`. `addEcosystemOverrides()` in `wyscan.mjs` then walks
+those edges from whatever the workspace links — matching on the **`file:` path
+tail, never the dependency key**, since the key is exactly what may not match —
+and mirrors an override for every package reachable, three levels deep if need
+be. Matching scopes are a no-op, so the generated `api/package.json` stays
+byte-identical to the reference. A `workspace:` dep naming a package the
+checkout does *not* publish is unrepairable, so preflight refuses with exit 2
+rather than letting `pnpm install` discover it. Mirroring invalidates the
+shipped `api/pnpm-lock.yaml` (pnpm treats a changed override set as a full
+re-resolve, and `--frozen-lockfile` hard-fails), so `plan.mjs` drops it in that
+case only.
+
 `local` mode requires the checkout to sit **beside the generated project** —
 `ecosystemPathFor()` in `derive.mjs` is the one place that says so, and the
 `../../` depth it encodes is template text in ~20 files (compose volumes and

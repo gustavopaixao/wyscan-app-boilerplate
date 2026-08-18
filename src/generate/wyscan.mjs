@@ -31,11 +31,80 @@ function isEcosystemDep(name, spec, cfg) {
 const STUBBED = new Set(["core-api", "auth-api", "notify-api", "core-react-native"]);
 
 /**
+ * The shared packages depend on each other with `workspace:*`, which resolves
+ * only inside their own monorepo. Linked from outside it with `file:`, every
+ * one of those specs has to be rewritten by a `pnpm.overrides` entry keyed on
+ * the dependency's REAL name — and the templates key theirs on `__NPM_SCOPE__`,
+ * the generated project's scope, which is `@<owner>` or `@local`.
+ *
+ * When that scope matches the checkout's, the entries are already right and
+ * this returns the text untouched. When it does not, the overrides match
+ * nothing, and `pnpm install` fails with `ERR_PNPM_WORKSPACE_PKG_NOT_FOUND`
+ * naming a package the project never mentioned — so mirror them under the names
+ * the checkout actually publishes.
+ *
+ * Driven by `cfg.ecosystem` (read off disk by `scanEcosystem`) rather than by a
+ * hand-kept list, so a new internal dependency upstream is covered without an
+ * edit here. Absent — standalone mode, or `--allow-missing-ecosystem` with no
+ * checkout to read — nothing is injected.
+ */
+export function addEcosystemOverrides(text, cfg) {
+  const eco = cfg.ecosystem;
+  if (!eco?.packages?.length) return text;
+
+  const pkg = JSON.parse(text);
+  const byName = new Map(eco.packages.map((p) => [p.name, p]));
+
+  /*
+   * Which checkout packages does THIS workspace link? Matched on the tail of
+   * the `file:` specifier, never on the dependency key: the key carries the
+   * project's scope, which is exactly the thing that may not match.
+   */
+  const specs = Object.values({ ...pkg.dependencies, ...pkg.devDependencies }).map(String);
+  const queue = eco.packages.filter((p) => specs.some((s) => s.endsWith(p.path))).map((p) => p.name);
+
+  /*
+   * Then walk the `workspace:` edges. Every edge target needs an override, and
+   * being linked directly does not excuse one: the project declares that link
+   * under ITS scope, and the dependent package asks for the checkout's — two
+   * different keys for the same directory. Reachability, not just the direct
+   * links, because the failure this fixes surfaced three levels in
+   * (ads-api -> auth-api -> notify-api -> auth-shared).
+   */
+  const needed = new Map();
+  const visited = new Set(queue);
+  while (queue.length > 0) {
+    const from = queue.shift();
+    for (const edge of eco.edges) {
+      const target = byName.get(edge.dep);
+      if (edge.from !== from || !target) continue; // unresolvable: preflight refused
+      needed.set(edge.dep, target);
+      if (visited.has(edge.dep)) continue; // recorded already; do not re-walk
+      visited.add(edge.dep);
+      queue.push(edge.dep);
+    }
+  }
+
+  const overrides = pkg.pnpm?.overrides ?? {};
+  let added = false;
+  for (const [name, target] of needed) {
+    if (name in overrides) continue; // scopes match, or the template said it already
+    overrides[name] = `file:../../${cfg.ecosystemDir}/${target.path}`;
+    added = true;
+  }
+  if (!added) return text;
+
+  pkg.pnpm ??= {};
+  pkg.pnpm.overrides = overrides;
+  return JSON.stringify(pkg, null, 2) + "\n";
+}
+
+/**
  * Rewrite a package.json for the chosen mode.
  * @returns {string} serialized package.json
  */
 export function rewritePackageJson(text, cfg, workspace) {
-  if (cfg.wyscanMode === "local") return text;
+  if (cfg.wyscanMode === "local") return addEcosystemOverrides(text, cfg);
 
   const pkg = JSON.parse(text);
   const deps = pkg.dependencies ?? {};

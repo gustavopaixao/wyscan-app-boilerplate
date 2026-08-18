@@ -137,6 +137,20 @@ function isStaleWithoutFirebase(file, cfg) {
 }
 
 /**
+ * Same shape, for the other injected rewrite: when the project's scope differs
+ * from the checkout's, `addEcosystemOverrides` adds keys to api/package.json
+ * that the reference lockfile's `overrides:` block does not carry. pnpm treats
+ * a changed override set as a full invalidation — it re-resolves anyway, and
+ * `--frozen-lockfile` fails outright — so shipping the lockfile would only
+ * promise a reproducibility it cannot keep.
+ */
+function isStaleUnderMirroredOverrides(file, cfg) {
+  if (file.dest !== "api/pnpm-lock.yaml" || cfg.wyscanMode !== "local") return false;
+  const eco = cfg.ecosystem;
+  return Boolean(eco?.packages?.length) && !eco.scopes.includes(cfg.npmScope);
+}
+
+/**
  * @returns {{ops: Array, skipped: Array}} ops = {src, dest, mode, raw}
  */
 export function planFiles(manifest, cfg, templatesDir) {
@@ -165,6 +179,10 @@ export function planFiles(manifest, cfg, templatesDir) {
     }
     if (isStaleWithoutFirebase(file, cfg)) {
       skipped.push({ ...file, reason: "lockfile stale once Firebase deps are pruned" });
+      continue;
+    }
+    if (isStaleUnderMirroredOverrides(file, cfg)) {
+      skipped.push({ ...file, reason: "lockfile stale once shared-package overrides are mirrored" });
       continue;
     }
     // These clone or prebuild the sibling checkout, which only `local` has.
