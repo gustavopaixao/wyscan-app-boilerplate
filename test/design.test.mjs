@@ -207,7 +207,12 @@ describe("mobile never imports the shared design-system package", () => {
 
   test("the generated app does not import it either", () => {
     // Covers the extracted tree/ templates too, not just the authored ones.
-    const dir = generate(["--slug", "demo-ds", "--workspaces", "mobile", "--wyscan", "local"]);
+    // Asserting template content, not install feasibility: these run in a
+    // tmpdir with no sibling checkout, which local mode now refuses by default.
+    const dir = generate([
+      "--slug", "demo-ds", "--workspaces", "mobile",
+      "--wyscan", "local", "--allow-missing-ecosystem",
+    ]);
     try {
       const offenders = walk(join(dir, "mobile"))
         .filter((f) => /\.(ts|tsx|js|jsx)$/.test(f) && !f.includes("node_modules"))

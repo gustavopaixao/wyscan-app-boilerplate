@@ -97,7 +97,14 @@ export function createGithubRepo(targetDir, { owner, slug, visibility = "private
   }
 }
 
-/** Install dependencies per workspace, sequentially. */
+/**
+ * Install dependencies per workspace, sequentially.
+ *
+ * Returns `{ dir, reason }[]` rather than bare directory names: "failed in api"
+ * is the same message whether pnpm is missing, a registry is unreachable or a
+ * `file:` link points at nothing, and the caller needs to tell them apart to
+ * say anything useful.
+ */
 export function installWorkspaces(targetDir, workspaces, cfg, log) {
   const dirs = [];
   if (workspaces.includes("api")) dirs.push("api");
@@ -106,13 +113,21 @@ export function installWorkspaces(targetDir, workspaces, cfg, log) {
     if (workspaces.includes(`web:${w}`)) dirs.push(`web/${cfg.slug}-${w}`);
   }
 
+  // Checked once, like initRepo and createGithubRepo do for git and gh. Without
+  // it a missing binary reports identically to a broken dependency.
+  if (dirs.length && !has("pnpm")) {
+    log?.("  pnpm not found on PATH — skipping install");
+    return dirs.map((dir) => ({ dir, reason: "missing-pnpm" }));
+  }
+
   const failures = [];
   for (const d of dirs) {
     log?.(`  installing ${d}…`);
     try {
       execFileSync("pnpm", ["install"], { cwd: `${targetDir}/${d}`, stdio: "inherit" });
-    } catch {
-      failures.push(d);
+    } catch (error) {
+      // A web workspace does not depend on api having installed, so keep going.
+      failures.push({ dir: d, reason: "install-failed", status: error.status });
     }
   }
   return failures;

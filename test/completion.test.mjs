@@ -98,7 +98,12 @@ describe("make completion", () => {
     // zsh's builtin _make follows `include` lines but expands only plain $(VAR),
     // so `include $(wildcard make/*.mk)` leaves it offering `help` alone. The
     // shipped harvester reads the fragments; .PHONY is the independent check.
-    const dir = generate(["--slug", "cmp-all", "--owner", "octocat", "--wyscan", "local"]);
+    // Asserting template content, not install feasibility: these run in a
+    // tmpdir with no sibling checkout, which local mode now refuses by default.
+    const dir = generate([
+      "--slug", "cmp-all", "--owner", "octocat",
+      "--wyscan", "local", "--allow-missing-ecosystem",
+    ]);
 
     const harvested = harvestZsh(dir).map((l) => l.split(":")[0]).sort();
     assert.deepEqual(harvested, phonyTargets(dir));

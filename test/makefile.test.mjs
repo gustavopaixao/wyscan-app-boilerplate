@@ -31,7 +31,12 @@ describe("generated Makefile", () => {
   test("every mapped target resolves", () => {
     // local mode keeps the shared-package bootstrap targets, so this is the
     // configuration in which the full target set should exist.
-    const dir = generate(["--slug", "mk-full", "--owner", "octocat", "--wyscan", "local"]);
+    // Asserting template content, not install feasibility: these run in a
+    // tmpdir with no sibling checkout, which local mode now refuses by default.
+    const dir = generate([
+      "--slug", "mk-full", "--owner", "octocat",
+      "--wyscan", "local", "--allow-missing-ecosystem",
+    ]);
     const unresolved = TARGETS.filter((t) => make(dir, ["-n", t]).includes("No rule to make target"));
     assert.deepEqual(unresolved, []);
     rmSync(dir, { recursive: true, force: true });
@@ -200,7 +205,11 @@ describe("generated compose", () => {
     // Stripping the ecosystem lines must not leave a childless mapping key
     // (compose rejects `additional_contexts:` with nothing under it).
     for (const mode of ["standalone", "local", "registry"]) {
-      const dir = generate(["--slug", `ym-${mode}`, "--workspaces", "api", "--wyscan", mode]);
+      const dir = generate([
+        "--slug", `ym-${mode}`, "--workspaces", "api",
+        // Template content, not install feasibility; see above.
+        "--wyscan", mode, "--allow-missing-ecosystem",
+      ]);
       const yml = readFileSync(join(dir, "docker/docker-compose.yml"), "utf8");
       const bareKeys = yml
         .split("\n")

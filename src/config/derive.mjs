@@ -3,6 +3,7 @@
  * Kept side-effect free so it can be unit-tested directly.
  */
 
+import { resolve } from "node:path";
 import { ALL_SERVICES } from "../generate/compose.mjs";
 import { ALL_MAKE_GROUPS } from "../generate/plan.mjs";
 
@@ -12,6 +13,22 @@ const ALL_SERVICE_NAMES = ALL_SERVICES;
 const ALL_MAKE_GROUP_NAMES = ALL_MAKE_GROUPS;
 
 const RESERVED = new Set(["node_modules", "test", "src", "api", "web", "mobile", "docker"]);
+
+/**
+ * Where `local` mode's `file:` links actually point.
+ *
+ * `api/package.json` carries `file:../../<ecosystem>/Packages/...`, which from
+ * `<target>/api` resolves to the directory BESIDE the project — not beside the
+ * shell you happened to run the CLI from. Everything else that assumes the
+ * sibling layout agrees: the compose volume mounts and build contexts,
+ * `metro.config.js`, the `.code-workspace` folders and `.claude/settings.json`.
+ *
+ * Path arithmetic only, so it stays usable from this I/O-free module; the
+ * filesystem half lives in `src/cli/preflight.mjs`.
+ */
+export function ecosystemPathFor(targetDir, ecosystemDir = "WyscanDev") {
+  return resolve(targetDir, "..", ecosystemDir, "Packages");
+}
 
 export function titleCase(slug) {
   return slug

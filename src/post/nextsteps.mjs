@@ -20,17 +20,30 @@ export function nextSteps(cfg, targetDir, { warnings = [], committed, sha }) {
   // determines whether `pnpm install` can succeed at all.
   if (cfg.wyscanMode === "local") {
     L.push(`  make wyscan-dev-setup      ${c.dim("# clone the shared package repos first")}`);
+    if (cfg.ecosystemPath) {
+      L.push(`  ${c.dim(`# file: links resolve against ${cfg.ecosystemPath}`)}`);
+    }
   } else if (cfg.wyscanMode === "registry") {
     L.push(`  export NPM_TOKEN=…         ${c.dim("# needed to resolve scoped packages")}`);
     L.push(`  ${c.dim("# pin the placeholder version ranges before installing")}`);
   }
 
   if (!cfg.installed) {
-    if (has("api")) L.push(`  cd api && pnpm install && cd -`);
+    // Only what still needs installing. Listing every workspace after one of
+    // them failed sends people to re-run installs that already succeeded.
+    const failed = cfg.installFailures;
+    const pending = (w, dir) => (failed ? failed.includes(dir) || failed.includes(w) : has(w));
+
+    if (has("api") && pending("api", "api")) L.push(`  cd api && pnpm install && cd -`);
     for (const w of ["site", "app", "admin"]) {
-      if (has(`web:${w}`)) L.push(`  cd web/${cfg.slug}-${w} && pnpm install && cd -`);
+      const dir = `web/${cfg.slug}-${w}`;
+      if (has(`web:${w}`) && pending(`web:${w}`, dir)) {
+        L.push(`  cd ${dir} && pnpm install && cd -`);
+      }
     }
-    if (has("mobile")) L.push(`  cd mobile && pnpm install && cd -`);
+    if (has("mobile") && pending("mobile", "mobile")) {
+      L.push(`  cd mobile && pnpm install && cd -`);
+    }
   }
 
   if (has("api")) {

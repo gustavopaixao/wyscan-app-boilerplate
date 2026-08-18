@@ -609,7 +609,12 @@ describe("auth in every shared-package mode", () => {
 
   for (const { mode, expectStub } of cases) {
     test(`${mode} wires auth and ${expectStub ? "vendors" : "omits"} the stub`, () => {
-      const dir = generate(["--slug", "demo-mode", "--owner", "octocat", "--wyscan", mode]);
+      const dir = generate([
+        "--slug", "demo-mode", "--owner", "octocat",
+        // Template content, not install feasibility: no sibling checkout exists
+        // in a tmpdir, which local mode now refuses by default.
+        "--wyscan", mode, "--allow-missing-ecosystem",
+      ]);
       try {
         assert.match(readFileSync(join(dir, "api/src/app.ts"), "utf8"), /registerV1AuthRoutes/);
         assert.ok(existsSync(join(dir, "api/src/v1/authRoutes.ts")));

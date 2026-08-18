@@ -182,7 +182,12 @@ describe("firebase opt-in", () => {
   test("drops the mobile lockfile it would invalidate", () => {
     // `local` is the only mode that ships mobile/pnpm-lock.yaml at all; pruning
     // dependencies would leave it describing packages that are no longer declared.
-    const pruned = generate(["--slug", "fb-lock", "--workspaces", "mobile", "--wyscan", "local"]);
+    // Asserting template content, not install feasibility: these run in a
+    // tmpdir with no sibling checkout, which local mode now refuses by default.
+    const pruned = generate([
+      "--slug", "fb-lock", "--workspaces", "mobile",
+      "--wyscan", "local", "--allow-missing-ecosystem",
+    ]);
     assert.ok(!existsSync(join(pruned, "mobile/pnpm-lock.yaml")));
     rmSync(pruned, { recursive: true, force: true });
 
@@ -190,6 +195,7 @@ describe("firebase opt-in", () => {
       "--slug", "fb-lock-on",
       "--workspaces", "mobile",
       "--wyscan", "local",
+      "--allow-missing-ecosystem",
       "--firebase",
     ]);
     assert.ok(existsSync(join(kept, "mobile/pnpm-lock.yaml")));

@@ -47,7 +47,12 @@ describe("standalone mode", () => {
   });
 
   test("keeps the linkage in local mode", () => {
-    const dir = generate(["--slug", "lo-demo", "--owner", "octocat", "--wyscan", "local"]);
+    // Asserting template content, not install feasibility: these run in a
+    // tmpdir with no sibling checkout, which local mode now refuses by default.
+    const dir = generate([
+      "--slug", "lo-demo", "--owner", "octocat",
+      "--wyscan", "local", "--allow-missing-ecosystem",
+    ]);
     const api = readJson(join(dir, "api/package.json"));
     assert.ok(Object.values(api.dependencies).some((s) => String(s).includes("WyscanDev")));
     assert.ok(existsSync(join(dir, "scripts/init-wyscan-dev.sh")));

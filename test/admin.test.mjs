@@ -298,7 +298,12 @@ describe("admin directory in every shared-package mode", () => {
     try {
       const seen = new Set();
       for (const mode of ["local", "registry", "standalone"]) {
-        const dir = generate(["--slug", "demo-shop", "--owner", "octocat", "--wyscan", mode]);
+        // Template content, not install feasibility: no sibling checkout
+        // exists in a tmpdir, which local mode now refuses by default.
+        const dir = generate([
+          "--slug", "demo-shop", "--owner", "octocat",
+          "--wyscan", mode, "--allow-missing-ecosystem",
+        ]);
         dirs.push(dir);
         seen.add(readFileSync(join(dir, "api/src/v1/admin/users.ts"), "utf8"));
         assert.ok(

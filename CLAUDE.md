@@ -133,6 +133,17 @@ specifiers are never rewritten, so graduating between modes is a dependency swap
 Anything mode-dependent — lockfile invalidation, `ECOSYSTEM_ONLY_FILES`, the
 Metro config rewrite, compose mounts — hangs off `cfg.wyscanMode`.
 
+`local` mode requires the checkout to sit **beside the generated project** —
+`ecosystemPathFor()` in `derive.mjs` is the one place that says so, and the
+`../../` depth it encodes is template text in ~20 files (compose volumes and
+build contexts, the `api/Dockerfile` absolute `/WyscanDev` mount, metro,
+`.code-workspace`, `.claude/settings.json`, four `scripts/*.sh`). There is no
+flag to point elsewhere, so `src/cli/preflight.mjs` checks the path **before
+anything is written** and refuses with exit 2, rather than producing a tree that
+only fails at `pnpm install`. `--allow-missing-ecosystem` overrides it; tests
+that assert local-mode *template content* pass that flag, since a tmpdir never
+has a sibling checkout.
+
 ## Auth
 
 Auth is **always on** — there is no flag. It rides the existing `api`,

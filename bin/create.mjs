@@ -5,8 +5,19 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 
 import { runFlow, summarize } from "../src/cli/flow.mjs";
+import {
+  describeMissing,
+  findEcosystem,
+  remedyLines,
+} from "../src/cli/preflight.mjs";
 import { closePrompts, interactive, colors as c } from "../src/cli/prompt.mjs";
-import { derive, validate, DEFAULT_PORTS, ALL_WORKSPACES } from "../src/config/derive.mjs";
+import {
+  derive,
+  validate,
+  ecosystemPathFor,
+  DEFAULT_PORTS,
+  ALL_WORKSPACES,
+} from "../src/config/derive.mjs";
 import { ALL_SERVICES } from "../src/generate/compose.mjs";
 import {
   apiClaudeMd,
@@ -53,6 +64,9 @@ Options
   --install              run pnpm install in each workspace afterwards
   --gh-repo              create a GitHub repo via the gh CLI and push
   --force                allow a non-empty target directory
+  --allow-missing-ecosystem
+                         with --wyscan local, generate even when the
+                         sibling checkout is absent (links will not resolve)
   -y, --yes              accept all defaults, ask nothing
   -h, --help             show this help
 `;
@@ -85,6 +99,7 @@ async function main() {
       install: { type: "boolean", default: false },
       "gh-repo": { type: "boolean", default: false },
       force: { type: "boolean", default: false },
+      "allow-missing-ecosystem": { type: "boolean", default: false },
       yes: { type: "boolean", short: "y", default: false },
       help: { type: "boolean", short: "h", default: false },
     },
@@ -165,6 +180,43 @@ async function main() {
   const preExisting = existsSync(targetDir) && readdirSync(targetDir).length > 0;
   if (preExisting && !values.force) {
     fail(`${targetDir} is not empty (use --force to override)`, 2);
+  }
+
+  /*
+   * `local` mode links into a checkout beside the project. When it is absent
+   * the links cannot resolve, so refuse here — before a single file is written
+   * — rather than producing a tree that only reveals the problem at
+   * `pnpm install`, several minutes and one git commit later.
+   *
+   * The interactive flow has already offered to switch or abort, so reaching
+   * this with `ecosystemMissing` set means the answer was "continue anyway".
+   */
+  const needsEcosystem =
+    cfg.wyscanMode === "local" &&
+    (cfg.workspaces.includes("api") || cfg.workspaces.includes("mobile"));
+  let ecosystemMissing = Boolean(answers.ecosystemMissing);
+
+  if (needsEcosystem) {
+    // Named in the closing summary: "clone the repos first" is not actionable
+    // without saying where they have to end up.
+    cfg.ecosystemPath = ecosystemPathFor(targetDir, cfg.ecosystemDir);
+  }
+
+  if (needsEcosystem && !ecosystemMissing) {
+    const search = findEcosystem(targetDir, cfg.ecosystemDir);
+    if (search.found !== search.expected) {
+      ecosystemMissing = true;
+      const allowed = values["allow-missing-ecosystem"] || values["dry-run"];
+      console.error(describeMissing(search, targetDir));
+      console.error("");
+      if (!allowed) {
+        console.error(remedyLines(search));
+        console.error("");
+        fail("local checkout not found; nothing was written", 2);
+      }
+      console.error(`  ${c.red("!")} continuing anyway — the file: links will not resolve`);
+      console.error("");
+    }
   }
 
   // Two template roots: `tree/` is extracted from the reference project and its
@@ -264,10 +316,22 @@ async function main() {
     if (r.warning) warnings.push(r.warning);
   }
 
-  if (cfg.runInstall) {
+  if (cfg.runInstall && ecosystemMissing) {
+    // Every `file:` link points at a directory that is not there, so pnpm can
+    // only fail. Saying that beats shelling out and letting it dump a raw
+    // ERR_PNPM_LINKED_PKG_DIR_NOT_FOUND once per workspace.
+    warnings.push(
+      "skipped pnpm install: the local checkout is missing, so no file: link can resolve",
+    );
+    cfg.installFailures = cfg.workspaces.slice();
+  } else if (cfg.runInstall) {
     const failures = installWorkspaces(targetDir, cfg.workspaces, cfg, (m) => console.log(m));
-    if (failures.length) warnings.push(`pnpm install failed in: ${failures.join(", ")}`);
-    else cfg.installed = true;
+    if (failures.length) {
+      cfg.installFailures = failures.map((f) => f.dir);
+      warnings.push(`pnpm install failed in: ${cfg.installFailures.join(", ")}`);
+      const missingPnpm = failures.some((f) => f.reason === "missing-pnpm");
+      if (missingPnpm) warnings.push("pnpm is not on PATH");
+    } else cfg.installed = true;
   }
 
   console.log(

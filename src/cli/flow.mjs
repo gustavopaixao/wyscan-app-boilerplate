@@ -9,6 +9,11 @@ import { hostname } from "node:os";
 import { resolve } from "node:path";
 
 import { text, confirm, select, multiselect, colors as c } from "./prompt.mjs";
+import {
+  describeMissing,
+  ecosystemIsUsable,
+  findEcosystem,
+} from "./preflight.mjs";
 import { titleCase, DEFAULT_PORTS, ALL_WORKSPACES } from "../config/derive.mjs";
 import { makeGroupsFor } from "../generate/plan.mjs";
 import { ALL_SERVICES } from "../generate/compose.mjs";
@@ -106,8 +111,15 @@ export async function runFlow(known) {
         { value: "local", label: "local checkout", hint: "file: links into a sibling repo" },
         { value: "registry", label: "private registry", hint: "scoped packages, needs NPM_TOKEN" },
       ],
-      default: existsSync(resolve("../WyscanDev/Packages")) ? "local" : "standalone",
+      // Probed at the target, not at the shell's cwd. Getting this wrong is
+      // what recommended `local` to someone whose checkout was one level away
+      // from where the generated `file:` links would look for it.
+      default: ecosystemIsUsable(resolve(a.targetDir), a.ecosystemDir)
+        ? "local"
+        : "standalone",
     });
+
+    a.wyscanMode = await resolveMissingEcosystem(a);
   }
   a.wyscanMode ??= "standalone";
 
@@ -138,6 +150,51 @@ export async function runFlow(known) {
   a.runInstall ??= await confirm({ message: "Run pnpm install now?", default: false });
 
   return a;
+}
+
+/**
+ * `local` was chosen but the checkout is not where the links will look.
+ *
+ * Asked here rather than after generation because every option is still cheap:
+ * nothing has been written, so switching modes or walking away costs nothing.
+ * Returns the mode to proceed with, and records `ecosystemMissing` when the
+ * answer is "carry on regardless" so the install can be skipped rather than
+ * left to fail.
+ */
+async function resolveMissingEcosystem(a) {
+  if (a.wyscanMode !== "local") return a.wyscanMode;
+
+  const targetDir = resolve(a.targetDir);
+  const search = findEcosystem(targetDir, a.ecosystemDir);
+  if (search.found === search.expected) return a.wyscanMode;
+
+  console.log(describeMissing(search, targetDir));
+  console.log("");
+
+  const choice = await select({
+    message: "How would you like to proceed?",
+    choices: [
+      {
+        value: "standalone",
+        label: "switch to standalone",
+        hint: "vendored stubs; installs from public npm alone",
+      },
+      { value: "abort", label: "abort", hint: "re-run beside the checkout" },
+      { value: "continue", label: "continue anyway", hint: "I will fix the links myself" },
+    ],
+    default: "standalone",
+  });
+
+  if (choice === "abort") {
+    console.log("");
+    console.log("  Nothing was written.");
+    process.exit(2);
+  }
+  if (choice === "continue") {
+    a.ecosystemMissing = true;
+    return "local";
+  }
+  return "standalone";
 }
 
 /** One-line summary printed before writing anything. */
