@@ -45,7 +45,7 @@ describe("generated project", () => {
     files = walk(dir);
   });
 
-  after(() => rmSync(dir, { recursive: true, force: true }));
+  after(() => rmSync(dir, { recursive: true, force: true, maxRetries: 5 }));
 
   test("contains no reference-project identity", () => {
     const offenders = [];
@@ -132,7 +132,7 @@ describe("workspace pruning", () => {
     assert.equal(files.filter((f) => f.includes("/mobile/")).length, 0);
     assert.equal(files.filter((f) => f.includes("/web/")).length, 0);
     assert.ok(files.some((f) => f.includes("/api/")));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("deselecting AI tooling removes those trees", () => {
@@ -140,7 +140,7 @@ describe("workspace pruning", () => {
     assert.ok(!existsSync(join(dir, ".claude")));
     assert.ok(!existsSync(join(dir, ".cursor")));
     assert.ok(existsSync(join(dir, ".github")));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });
 
@@ -164,7 +164,7 @@ describe("firebase opt-in", () => {
     assert.match(appConfig, /useFrameworks: "static"/);
 
     assert.ok(existsSync(join(dir, "docs/runbooks/integrations/push-notifications-fcm-expo.md")));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("--firebase restores the packages and the iOS build setting", () => {
@@ -176,7 +176,7 @@ describe("firebase opt-in", () => {
 
     const appConfig = readFileSync(join(dir, "mobile/app.config.ts"), "utf8");
     assert.match(appConfig, /buildReactNativeFromSource: true/);
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("drops the mobile lockfile it would invalidate", () => {
@@ -189,7 +189,7 @@ describe("firebase opt-in", () => {
       "--wyscan", "local", "--allow-missing-ecosystem",
     ]);
     assert.ok(!existsSync(join(pruned, "mobile/pnpm-lock.yaml")));
-    rmSync(pruned, { recursive: true, force: true });
+    rmSync(pruned, { recursive: true, force: true, maxRetries: 5 });
 
     const kept = generate([
       "--slug", "fb-lock-on",
@@ -199,7 +199,7 @@ describe("firebase opt-in", () => {
       "--firebase",
     ]);
     assert.ok(existsSync(join(kept, "mobile/pnpm-lock.yaml")));
-    rmSync(kept, { recursive: true, force: true });
+    rmSync(kept, { recursive: true, force: true, maxRetries: 5 });
   });
 
   /**
@@ -222,7 +222,7 @@ describe("firebase opt-in", () => {
         appConfig.includes('"./plugins/withIosFirebaseCocoaPods.js"'),
         "app.config.ts registers the plugin",
       );
-      rmSync(dir, { recursive: true, force: true });
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -235,7 +235,7 @@ describe("firebase opt-in", () => {
     assert.ok(
       !existsSync(join(dir, "docs/runbooks/integrations/push-notifications-fcm-expo.md")),
     );
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });
 
@@ -253,7 +253,7 @@ describe("fastlane release tooling", () => {
     dir = generate(["--slug", "demo-shop", "--name", "Demo Shop!", "--workspaces", "api,mobile"]);
   });
 
-  after(() => rmSync(dir, { recursive: true, force: true }));
+  after(() => rmSync(dir, { recursive: true, force: true, maxRetries: 5 }));
 
   test("ships with the mobile workspace", () => {
     for (const f of [
@@ -317,6 +317,6 @@ describe("fastlane release tooling", () => {
     assert.ok(!existsSync(join(apiOnly, "mobile")));
     assert.ok(!existsSync(join(apiOnly, "make/mobile-release.mk")));
     assert.ok(!existsSync(join(apiOnly, "docs/runbooks/release-deploy-checklist.md")));
-    rmSync(apiOnly, { recursive: true, force: true });
+    rmSync(apiOnly, { recursive: true, force: true, maxRetries: 5 });
   });
 });

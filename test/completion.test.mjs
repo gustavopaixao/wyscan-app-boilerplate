@@ -91,7 +91,7 @@ describe("make completion", () => {
     const bashSnippet = make(dir, ["completion"], { SHELL: "/bin/bash" });
     assert.ok(bashSnippet.includes(join(dir, "scripts", "completion", "make.bash")));
 
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("offers exactly the targets the fragments declare", { skip: !has("zsh") }, () => {
@@ -114,7 +114,7 @@ describe("make completion", () => {
     const described = harvestZsh(dir).filter((l) => l.split(":").slice(1).join(":").trim());
     assert.equal(described.length, harvested.length, "every target should carry its ## help");
 
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("only offers targets that survived group pruning", { skip: !has("zsh") }, () => {
@@ -126,7 +126,7 @@ describe("make completion", () => {
     const harvested = harvestZsh(dir).map((l) => l.split(":")[0]);
     assert.ok(harvested.includes("api-lint"));
     assert.ok(!harvested.includes("mobile-dev"), "a pruned target must not be completable");
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("claims the fragment layout only, from any depth", { skip: !has("zsh") }, () => {
@@ -141,8 +141,8 @@ describe("make completion", () => {
     // `make` works from a subdirectory, so completion has to walk up too.
     assert.equal(rootZsh(dir, join(dir, "api", "src")), dir);
 
-    rmSync(plain, { recursive: true, force: true });
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(plain, { recursive: true, force: true, maxRetries: 5 });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("bash completion filters by prefix", { skip: !has("bash") }, () => {
@@ -157,7 +157,7 @@ describe("make completion", () => {
     const reply = out.split("\n").filter(Boolean);
     assert.ok(reply.length > 0);
     assert.ok(reply.every((t) => t.startsWith("mobile-a")), out);
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("deselecting the group leaves no completion files", () => {
@@ -168,6 +168,6 @@ describe("make completion", () => {
     ]);
     assert.ok(!existsSync(join(dir, "make", "completion.mk")));
     assert.ok(!existsSync(join(dir, "scripts", "completion")));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });

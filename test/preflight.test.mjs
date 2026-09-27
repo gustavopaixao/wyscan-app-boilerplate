@@ -90,7 +90,7 @@ describe("findEcosystem", () => {
       assert.equal(r.expected, expected);
       assert.ok(ecosystemIsUsable(target));
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -107,7 +107,7 @@ describe("findEcosystem", () => {
       assert.equal(r.levelsUp, 2);
       assert.ok(!ecosystemIsUsable(nestedTarget));
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -118,7 +118,7 @@ describe("findEcosystem", () => {
       assert.equal(r.found, null);
       assert.match(r.expected, /WyscanDev[/\\]Packages$/);
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 });
@@ -134,7 +134,7 @@ describe("looksNested", () => {
 
       assert.equal(looksNested(join(outer, "inner")), outer);
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -143,7 +143,7 @@ describe("looksNested", () => {
     try {
       assert.equal(looksNested(join(box, "proj")), null);
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 });
@@ -163,7 +163,7 @@ describe("local mode refuses before writing", () => {
       assert.match(r.out, /local checkout not found/);
       assert.ok(!existsSync(target), "the target directory must not exist");
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -180,7 +180,7 @@ describe("local mode refuses before writing", () => {
       assert.match(r.out, /one level higher/);
       assert.ok(r.out.includes(join(box, "WyscanDev", "Packages")), r.out);
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -204,7 +204,7 @@ describe("local mode refuses before writing", () => {
       assert.match(r.out, /continuing anyway/);
       assert.ok(readdirSync(target).length > 0, "should have written the project");
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -221,7 +221,7 @@ describe("local mode refuses before writing", () => {
       assert.equal(r.status, 0, r.out);
       assert.ok(!/local checkout not found/.test(r.out), r.out);
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -238,7 +238,7 @@ describe("local mode refuses before writing", () => {
       assert.ok(!/local checkout/.test(r.out));
       assert.ok(existsSync(join(target, "packages/stubs")));
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -253,7 +253,7 @@ describe("local mode refuses before writing", () => {
       assert.match(r.out, /local checkout not found/);
       assert.ok(!existsSync(target), "dry-run must not write");
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -276,7 +276,7 @@ describe("local mode refuses before writing", () => {
       assert.equal(r.status, 0, r.out);
       assert.ok(!/local checkout not found/.test(r.out), r.out);
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 });
@@ -309,7 +309,7 @@ describe("install is not attempted when it cannot work", () => {
       assert.ok(!/ERR_PNPM_LINKED_PKG_DIR_NOT_FOUND/.test(r.out), r.out);
       assert.ok(!existsSync(join(target, "api", "node_modules")), "must not have installed");
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 });
@@ -365,7 +365,7 @@ describe("scanEcosystem", () => {
       assert.deepEqual(eco.missing, []);
       assert.equal(eco.edges.length, 2);
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -379,7 +379,7 @@ describe("scanEcosystem", () => {
 
       assert.deepEqual(eco.missing, [{ from: "@acme/auth-api", dep: "@acme/gone-api" }]);
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -391,7 +391,7 @@ describe("scanEcosystem", () => {
       assert.deepEqual(eco.packages, []);
       assert.deepEqual(eco.scopes, []);
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 });
@@ -431,7 +431,7 @@ describe("shared-package scope", () => {
       // A lockfile whose overrides: block no longer matches is worse than none.
       assert.ok(!existsSync(join(target, "api/pnpm-lock.yaml")), "stale lockfile must be dropped");
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -454,7 +454,7 @@ describe("shared-package scope", () => {
       assert.ok(!Object.keys(api.pnpm.overrides).some((k) => k.startsWith("@acme/")));
       assert.ok(existsSync(join(target, "api/pnpm-lock.yaml")), "lockfile is still valid");
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -475,7 +475,7 @@ describe("shared-package scope", () => {
       assert.match(r.out, /@acme\/gone-api/);
       assert.ok(!existsSync(target), "nothing may be written");
     } finally {
-      rmSync(box, { recursive: true, force: true });
+      rmSync(box, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 });

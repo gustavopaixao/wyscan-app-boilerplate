@@ -36,7 +36,7 @@ describe("admin user directory", () => {
   before(() => {
     dir = generate(["--slug", "demo-shop", "--owner", "octocat", "--wyscan", "standalone"]);
   });
-  after(() => rmSync(dir, { recursive: true, force: true }));
+  after(() => rmSync(dir, { recursive: true, force: true, maxRetries: 5 }));
 
   const admin = (p) => join(dir, "web/demo-shop-admin", p);
 
@@ -170,7 +170,7 @@ describe("admin system overview and logs", () => {
   before(() => {
     dir = generate(["--slug", "demo-shop", "--owner", "octocat", "--wyscan", "standalone"]);
   });
-  after(() => rmSync(dir, { recursive: true, force: true }));
+  after(() => rmSync(dir, { recursive: true, force: true, maxRetries: 5 }));
 
   const admin = (p) => join(dir, "web/demo-shop-admin", p);
 
@@ -313,7 +313,7 @@ describe("admin directory in every shared-package mode", () => {
       }
       assert.equal(seen.size, 1, "admin/users.ts differs between --wyscan modes");
     } finally {
-      for (const d of dirs) rmSync(d, { recursive: true, force: true });
+      for (const d of dirs) rmSync(d, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -337,7 +337,7 @@ describe("admin directory respects workspace selection", () => {
       assert.ok(existsSync(join(dir, "api/src/v1/admin/users.ts")));
       assert.deepEqual(walk(dir).filter((f) => f.includes("/web/")), []);
     } finally {
-      rmSync(dir, { recursive: true, force: true });
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -349,7 +349,7 @@ describe("admin directory respects workspace selection", () => {
       assert.ok(!existsSync(join(dir, "api/src/v1/admin/users.ts")));
       assert.ok(existsSync(join(dir, "web/demo-admin-admin/src/app/users/page.tsx")));
     } finally {
-      rmSync(dir, { recursive: true, force: true });
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 });

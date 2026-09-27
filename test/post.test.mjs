@@ -28,13 +28,13 @@ describe("post-scaffold git", () => {
     assert.equal(git(dir, ["status", "--porcelain"]), "", "working tree should be clean");
     assert.ok(Number(git(dir, ["ls-files"]).split("\n").length) > 50);
 
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("--no-git leaves the tree unversioned", () => {
     const dir = generate(["--slug", "nogit-demo", "--workspaces", "api", "--no-git"]);
     assert.ok(!existsSync(join(dir, ".git")));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("ignores machine-local assistant settings in the project's own gitignore", () => {
@@ -50,7 +50,7 @@ describe("post-scaffold git", () => {
       { cwd: dir, encoding: "utf8" },
     );
     assert.ok(rule.startsWith(".gitignore:"), `should match the project gitignore, got: ${rule}`);
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });
 
@@ -63,7 +63,7 @@ describe("non-interactive behaviour", () => {
       timeout: 60_000,
     });
     assert.match(out, /files written/);
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("--print-config resolves derivations without writing anything", () => {

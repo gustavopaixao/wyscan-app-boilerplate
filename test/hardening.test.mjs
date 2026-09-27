@@ -63,7 +63,7 @@ describe("rollback safety", () => {
 
     assert.equal(readFileSync(join(dir, "important.txt"), "utf8"), "IRREPLACEABLE");
     assert.ok(existsSync(join(dir, "mywork/db.sql")));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });
 
@@ -75,7 +75,7 @@ describe("hyphenated slugs", () => {
     const cfgFile = readFileSync(join(dir, "mobile/app.config.ts"), "utf8");
     assert.ok(!/const\s+[\w-]*-[\w-]*SchemeFilter/.test(cfgFile), "identifier must not contain a hyphen");
     assert.match(cfgFile, /const appSchemeFilter/);
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });
 
@@ -89,7 +89,7 @@ describe("shared-package modes leave a buildable project", () => {
         assert.ok(!metro.includes(ref), `${mode}: ${ref} should not survive`);
       }
       execFileSync("node", ["--check", join(dir, "mobile/metro.config.js")]);
-      rmSync(dir, { recursive: true, force: true });
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -101,7 +101,7 @@ describe("shared-package modes leave a buildable project", () => {
     for (const line of dockerfile.split("\n").filter((l) => l.includes("prepare-deps.sh"))) {
       assert.match(line, /\|\| true/, `unguarded reference: ${line}`);
     }
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("registry mode drops the dev-script prebuild that needs a sibling checkout", () => {
@@ -109,7 +109,7 @@ describe("shared-package modes leave a buildable project", () => {
     const pkg = JSON.parse(readFileSync(join(dir, "api/package.json"), "utf8"));
     assert.ok(!pkg.scripts["dev:watch"].includes("ensure-auth-api-dist"));
     assert.ok(!existsSync(join(dir, "api/scripts/ensure-auth-api-dist.sh")));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });
 
@@ -117,13 +117,13 @@ describe("workspace-targeted CI", () => {
   test("no workflow ships for a project without the web app it targets", () => {
     const dir = generate(["--slug", "ci-api", "--workspaces", "api", "--ai", "github", "--yes"]);
     assert.ok(!existsSync(join(dir, ".github/workflows/ci-api-app.yml")));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("the workflow ships when its web app is selected", () => {
     const dir = generate(["--slug", "ci-web", "--workspaces", "web:app", "--ai", "github", "--yes"]);
     assert.ok(existsSync(join(dir, ".github/workflows/ci-web-app.yml")));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });
 
@@ -137,7 +137,7 @@ describe("ports affect generated output, not just docs", () => {
     const dir = generate(["--config", cfgPath, "--yes"]);
     const pkg = JSON.parse(readFileSync(join(dir, "web/port-demo-site/package.json"), "utf8"));
     assert.match(pkg.scripts.dev, /-p 3999/);
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("a custom api port reaches the compose default", () => {
@@ -149,7 +149,7 @@ describe("ports affect generated output, not just docs", () => {
     const dir = generate(["--config", cfgPath, "--yes"]);
     const yml = readFileSync(join(dir, "docker/docker-compose.yml"), "utf8");
     assert.match(yml, /\$\{API_PORT:-3999\}/);
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });
 
@@ -165,6 +165,6 @@ describe("compose service selection", () => {
     ]);
     const yml = readFileSync(join(dir, "docker/docker-compose.yml"), "utf8");
     assert.ok(yml.includes("container_name: svc-demo-nginx"));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });

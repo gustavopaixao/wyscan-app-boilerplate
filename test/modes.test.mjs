@@ -43,7 +43,7 @@ describe("standalone mode", () => {
       assert.ok(existsSync(join(dir, "packages/stubs", p, "package.json")), `${p} stub missing`);
     }
 
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("keeps the linkage in local mode", () => {
@@ -59,7 +59,7 @@ describe("standalone mode", () => {
     assert.ok(!existsSync(join(dir, "packages/stubs")));
     // Lockfiles are only valid when the linkage is intact.
     assert.ok(existsSync(join(dir, "api/pnpm-lock.yaml")));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("registry mode replaces file: specs with ranges and drops stale lockfiles", () => {
@@ -69,7 +69,7 @@ describe("standalone mode", () => {
     assert.ok(scoped.length > 0, "scoped deps should remain");
     assert.ok(scoped.every(([, v]) => !String(v).startsWith("file:")), "none may stay file:");
     assert.ok(!existsSync(join(dir, "api/pnpm-lock.yaml")));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });
 
@@ -83,7 +83,7 @@ describe("generated CLAUDE.md", () => {
     // ...and must not repeat the reference's false claims.
     assert.ok(!md.includes("no code yet"));
     assert.ok(!md.includes("not yet a git repository"));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("documents only the selected workspaces", () => {
@@ -91,7 +91,7 @@ describe("generated CLAUDE.md", () => {
     const md = readFileSync(join(dir, "CLAUDE.md"), "utf8");
     assert.ok(md.includes("`api/`"));
     assert.ok(!md.includes("make mobile-dev"));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });
 
@@ -103,7 +103,7 @@ describe("Claude hooks", () => {
     for (const ws of ["api/", "web/hk-demo-site/", "web/hk-demo-app/", "web/hk-demo-admin/", "mobile/"]) {
       assert.ok(gate.includes(`'^${ws}'`), `pre-commit gate should cover ${ws}`);
     }
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("gate nothing that was not generated", () => {
@@ -112,7 +112,7 @@ describe("Claude hooks", () => {
     assert.ok(gate.includes("'^api/'"));
     assert.ok(!gate.includes("web/"));
     assert.ok(!gate.includes("mobile"));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });
 
@@ -124,6 +124,6 @@ describe("promised-but-missing docs", () => {
     // The mobile one is the only route by which the safe-area rule is loaded.
     assert.ok(readFileSync(join(dir, "mobile/CLAUDE.md"), "utf8").includes("useSafeAreaInsets"));
     assert.ok(existsSync(join(dir, "docs/shared-packages.md")));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });

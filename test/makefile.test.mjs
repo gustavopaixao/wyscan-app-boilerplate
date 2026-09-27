@@ -39,7 +39,7 @@ describe("generated Makefile", () => {
     ]);
     const unresolved = TARGETS.filter((t) => make(dir, ["-n", t]).includes("No rule to make target"));
     assert.deepEqual(unresolved, []);
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("help lists targets from every included group", () => {
@@ -48,7 +48,7 @@ describe("generated Makefile", () => {
     for (const t of ["api-build", "mobile-dev", "site-dev", "ship-it", "features-index"]) {
       assert.ok(help.includes(t), `help should list ${t}`);
     }
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("deselected groups leave no fragment and no target", () => {
@@ -66,7 +66,7 @@ describe("generated Makefile", () => {
 
     // ...while an included one still resolves.
     assert.ok(!make(dir, ["-n", "api-lint"]).includes("No rule to make target"));
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("cross-group prerequisites stay valid for any subset", () => {
@@ -81,7 +81,7 @@ describe("generated Makefile", () => {
     assert.ok(!out.includes("No rule to make target"), "push-check should resolve");
     assert.ok(out.includes("pnpm lint"), "should run the API lint half");
     assert.ok(!out.includes("mobile"), "should not reference the absent mobile workspace");
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("mobile release targets follow the mobile workspace", () => {
@@ -92,12 +92,12 @@ describe("generated Makefile", () => {
     }
     // ship-it drives mobile-beta-select; without it the shipped release path is dead.
     assert.ok(!make(withMobile, ["-n", "ship-it"]).includes("No rule to make target"));
-    rmSync(withMobile, { recursive: true, force: true });
+    rmSync(withMobile, { recursive: true, force: true, maxRetries: 5 });
 
     const apiOnly = generate(["--slug", "mk-norel", "--workspaces", "api"]);
     assert.ok(!existsSync(join(apiOnly, "make", "mobile-release.mk")));
     assert.ok(make(apiOnly, ["-n", "mobile-ios-beta"]).includes("No rule to make target"));
-    rmSync(apiOnly, { recursive: true, force: true });
+    rmSync(apiOnly, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("a dry-run beta neither bumps the build nor commits", () => {
@@ -122,7 +122,7 @@ describe("generated Makefile", () => {
       "",
       "a dry run must leave the tree clean",
     );
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("aliases are declared phony alongside their primary target", () => {
@@ -132,7 +132,7 @@ describe("generated Makefile", () => {
     for (const alias of ["dev-up", "dev-down", "recreate", "dev-restart", "dev-fresh"]) {
       assert.ok(phony.includes(alias), `.PHONY should include the alias ${alias}`);
     }
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 });
 
@@ -162,7 +162,7 @@ describe("generated compose", () => {
         assert.ok(!b.includes(dropped), `depends_on still references ${dropped}`);
       }
     }
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("keeps every service when none are deselected", () => {
@@ -171,7 +171,7 @@ describe("generated compose", () => {
     for (const s of ["redis", "mongodb", "api", "realtime", "log-agent", "nginx"]) {
       assert.ok(yml.includes(`container_name: cp-full-${s}`), `${s} should be present`);
     }
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("serialises the install across services sharing api node_modules", () => {
@@ -198,7 +198,7 @@ describe("generated compose", () => {
         `${svc} must wait for api to be healthy`,
       );
     }
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
   test("stays valid YAML in every shared-package mode", () => {
@@ -220,7 +220,7 @@ describe("generated compose", () => {
           return !next || indent(next) <= indent(l);
         });
       assert.deepEqual(bareKeys, [], `${mode}: keys left with no children`);
-      rmSync(dir, { recursive: true, force: true });
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 });

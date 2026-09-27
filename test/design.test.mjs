@@ -66,7 +66,7 @@ describe("generated design system", () => {
     dir = generate(["--slug", "demo-shop", "--owner", "octocat", "--wyscan", "standalone"]);
   });
 
-  after(() => rmSync(dir, { recursive: true, force: true }));
+  after(() => rmSync(dir, { recursive: true, force: true, maxRetries: 5 }));
 
   test("every web surface exposes the full token set", () => {
     for (const app of ["app", "admin", "site"]) {
@@ -223,7 +223,7 @@ describe("mobile never imports the shared design-system package", () => {
         .map((f) => relative(dir, f));
       assert.deepEqual(offenders, [], `generated mobile app imports ${PACKAGE}`);
     } finally {
-      rmSync(dir, { recursive: true, force: true });
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -241,7 +241,7 @@ describe("design respects workspace selection", () => {
       const stray = walk(dir).filter((f) => f.includes("/web/") || f.includes("/mobile/"));
       assert.deepEqual(stray, []);
     } finally {
-      rmSync(dir, { recursive: true, force: true });
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 });

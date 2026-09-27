@@ -379,7 +379,7 @@ describe("generated project (standalone, all workspaces)", () => {
     files = walk(dir);
   });
 
-  after(() => rmSync(dir, { recursive: true, force: true }));
+  after(() => rmSync(dir, { recursive: true, force: true, maxRetries: 5 }));
 
   test("registers the auth routes and their rate limiter in the Hono app", () => {
     const app = readFileSync(join(dir, "api/src/app.ts"), "utf8");
@@ -527,7 +527,7 @@ describe("auth respects workspace selection", () => {
       assert.ok(existsSync(join(dir, "api/src/v1/authRoutes.ts")));
       assert.ok(existsSync(join(dir, "packages/stubs/auth-api/routes/auth/login.js")));
     } finally {
-      rmSync(dir, { recursive: true, force: true });
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -546,7 +546,7 @@ describe("auth respects workspace selection", () => {
       // The seed is api-gated; a mobile-only project has nothing to seed into.
       assert.ok(!existsSync(join(dir, "api/src/lib/seedRootUser.ts")));
     } finally {
-      rmSync(dir, { recursive: true, force: true });
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 });
@@ -576,7 +576,7 @@ describe("the closing summary hands over the credentials", () => {
       assert.ok(stdout.includes(ROOT_USER.email), "the summary must print the root email");
       assert.ok(stdout.includes(ROOT_USER.password), "the summary must print the root password");
     } finally {
-      rmSync(dir, { recursive: true, force: true });
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 
@@ -593,7 +593,7 @@ describe("the closing summary hands over the credentials", () => {
       assert.ok(!stdout.includes(ROOT_USER.email));
       assert.ok(!stdout.includes(ROOT_USER.password));
     } finally {
-      rmSync(dir, { recursive: true, force: true });
+      rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
     }
   });
 });
@@ -634,7 +634,7 @@ describe("auth in every shared-package mode", () => {
         assert.match(seed, /@octocat\/auth-api\/models/);
         assert.ok(!seed.includes("__NPM_SCOPE__"), "unresolved sentinel in seedRootUser.ts");
       } finally {
-        rmSync(dir, { recursive: true, force: true });
+        rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
       }
     });
   }
