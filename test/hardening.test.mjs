@@ -126,6 +126,38 @@ describe("workspace-targeted CI", () => {
     rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
 
+  test("every workspace gets a workflow that runs scripts it actually has", () => {
+    const dir = generate(["--slug", "ci-all", "--ai", "github", "--yes"]);
+    const workflows = {
+      "ci-all-api.yml": "api",
+      "ci-all-mobile.yml": "mobile",
+      "ci-all-site.yml": "web/ci-all-site",
+      "ci-all-app.yml": "web/ci-all-app",
+      "ci-all-admin.yml": "web/ci-all-admin",
+    };
+    for (const [file, workspace] of Object.entries(workflows)) {
+      const yml = readFileSync(join(dir, ".github/workflows", file), "utf8");
+      assert.match(yml, new RegExp(`working-directory: ${workspace}\\n`), `${file}: wrong workspace`);
+      assert.ok(!/__[A-Z_]+__/.test(yml), `${file}: unrendered sentinel`);
+      const { scripts } = JSON.parse(readFileSync(join(dir, workspace, "package.json"), "utf8"));
+      for (const [, script] of yml.matchAll(/run: pnpm (?!install)(\S+)/g)) {
+        assert.ok(scripts[script], `${file}: runs "${script}", which ${workspace} does not define`);
+      }
+    }
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
+  });
+
+  test("api and mobile workflows ship only where CI can install the shared packages", () => {
+    const dir = generate([
+      "--slug", "ci-reg", "--workspaces", "api,mobile,web:site", "--wyscan", "registry",
+      "--ai", "github", "--yes",
+    ]);
+    assert.ok(!existsSync(join(dir, ".github/workflows/ci-reg-api.yml")));
+    assert.ok(!existsSync(join(dir, ".github/workflows/ci-reg-mobile.yml")));
+    assert.ok(existsSync(join(dir, ".github/workflows/ci-reg-site.yml")));
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
+  });
+
   test("next steps say to commit the lockfiles a workspace ships without", () => {
     const dir = mkdtempSync(join(tmpdir(), "wab-hard-"));
     const out = execFileSync(

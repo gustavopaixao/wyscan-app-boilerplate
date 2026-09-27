@@ -37,6 +37,8 @@ const GROUPS = [
   // Assistant rules ship only when the matching tooling was selected.
   ["authored/_claude/", "ai:claude"],
   ["authored/_cursor/", "ai:cursor"],
+  // CI workflows; plan.mjs additionally drops one whose workspace is absent.
+  ["authored/_github/", "ai:github"],
 ];
 
 /** Storage path -> path inside the generated project. */
@@ -45,6 +47,7 @@ function destFor(src) {
     .replace(/^authored\//, "")
     .replace(/^_claude\//, ".claude/")
     .replace(/^_cursor\//, ".cursor/")
+    .replace(/^_github\//, ".github/")
     .replace(/^web\/_app\//, "web/__PROJECT_SLUG__-app/")
     .replace(/^web\/_admin\//, "web/__PROJECT_SLUG__-admin/")
     .replace(/^web\/_site\//, "web/__PROJECT_SLUG__-site/");

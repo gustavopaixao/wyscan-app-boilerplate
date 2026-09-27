@@ -1,0 +1,59 @@
+name: __PROJECT_SLUG__-api
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "api/**"
+      - "packages/stubs/**"
+      - ".github/workflows/__PROJECT_SLUG__-api.yml"
+  pull_request:
+    paths:
+      - "api/**"
+      - "packages/stubs/**"
+      - ".github/workflows/__PROJECT_SLUG__-api.yml"
+
+defaults:
+  run:
+    working-directory: api
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # This workspace is generated without a lockfile: the first local
+      # `pnpm install` writes one. Say so plainly rather than letting
+      # setup-node's cache step or --frozen-lockfile fail cryptically.
+      - name: Require a committed lockfile
+        run: |
+          if [ ! -f pnpm-lock.yaml ]; then
+            echo "::error file=api/package.json::api/pnpm-lock.yaml is not committed. Run pnpm install in api/ and commit the lockfile."
+            exit 1
+          fi
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: api/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build

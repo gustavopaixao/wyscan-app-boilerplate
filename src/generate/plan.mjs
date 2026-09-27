@@ -109,6 +109,8 @@ const DEST_REQUIRES_WORKSPACE = [
   { match: /^\.github\/workflows\/.*-app\.yml$/, workspace: "web:app" },
   { match: /^\.github\/workflows\/.*-site\.yml$/, workspace: "web:site" },
   { match: /^\.github\/workflows\/.*-admin\.yml$/, workspace: "web:admin" },
+  { match: /^\.github\/workflows\/.*-api\.yml$/, workspace: "api" },
+  { match: /^\.github\/workflows\/.*-mobile\.yml$/, workspace: "mobile" },
 ];
 
 /** True when a file targets a workspace that was not selected. */
@@ -116,6 +118,14 @@ function targetsMissingWorkspace(dest, cfg) {
   const rule = DEST_REQUIRES_WORKSPACE.find((r) => r.match.test(dest));
   return Boolean(rule) && !cfg.workspaces.includes(rule.workspace);
 }
+
+/**
+ * The api and mobile workflows install the shared packages, which CI can only
+ * reach in `standalone`: `local` links a sibling checkout the runner never has,
+ * and `registry` needs registry credentials plus pinned versions the scaffold
+ * cannot supply. Shipping them there would guarantee a red first push.
+ */
+const STANDALONE_ONLY_WORKFLOWS = /^\.github\/workflows\/.*-(api|mobile)\.yml$/;
 
 /** Files invalidated by a non-local shared-package mode (stale lockfiles). */
 function isInvalidated(file, cfg) {
@@ -193,6 +203,10 @@ export function planFiles(manifest, cfg, templatesDir) {
     const dest = renderPath(file.dest, cfg);
     if (targetsMissingWorkspace(dest, cfg)) {
       skipped.push({ ...file, reason: "targets a workspace that was not selected" });
+      continue;
+    }
+    if (cfg.wyscanMode !== "standalone" && STANDALONE_ONLY_WORKFLOWS.test(dest)) {
+      skipped.push({ ...file, reason: `CI cannot install shared packages in ${cfg.wyscanMode}` });
       continue;
     }
 

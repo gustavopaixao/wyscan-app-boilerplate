@@ -1,0 +1,50 @@
+name: __PROJECT_SLUG__-admin
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/__PROJECT_SLUG__-admin/**"
+      - ".github/workflows/__PROJECT_SLUG__-admin.yml"
+  pull_request:
+    paths:
+      - "web/__PROJECT_SLUG__-admin/**"
+      - ".github/workflows/__PROJECT_SLUG__-admin.yml"
+
+defaults:
+  run:
+    working-directory: web/__PROJECT_SLUG__-admin
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: web/__PROJECT_SLUG__-admin/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+        env:
+          API_URL: https://__API_DOMAIN__
+          NEXT_PUBLIC_API_URL: https://__API_DOMAIN__

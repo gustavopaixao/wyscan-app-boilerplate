@@ -1568,6 +1568,38 @@
       "mode": 644,
       "raw": false,
       "dotEscaped": false
+    },
+    {
+      "src": "authored/_github/workflows/__PROJECT_SLUG__-admin.yml",
+      "dest": ".github/workflows/__PROJECT_SLUG__-admin.yml",
+      "group": "ai:github",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "authored/_github/workflows/__PROJECT_SLUG__-api.yml",
+      "dest": ".github/workflows/__PROJECT_SLUG__-api.yml",
+      "group": "ai:github",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "authored/_github/workflows/__PROJECT_SLUG__-mobile.yml",
+      "dest": ".github/workflows/__PROJECT_SLUG__-mobile.yml",
+      "group": "ai:github",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
+    },
+    {
+      "src": "authored/_github/workflows/__PROJECT_SLUG__-site.yml",
+      "dest": ".github/workflows/__PROJECT_SLUG__-site.yml",
+      "group": "ai:github",
+      "mode": 644,
+      "raw": false,
+      "dotEscaped": true
     }
   ]
 }
