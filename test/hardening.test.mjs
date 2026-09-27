@@ -125,6 +125,21 @@ describe("workspace-targeted CI", () => {
     assert.ok(existsSync(join(dir, ".github/workflows/ci-web-app.yml")));
     rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   });
+
+  test("next steps say to commit the lockfiles a workspace ships without", () => {
+    const dir = mkdtempSync(join(tmpdir(), "wab-hard-"));
+    const out = execFileSync(
+      "node",
+      [CLI, "--slug", "ci-lock", "--workspaces", "api,web:site", "--yes", dir],
+      { encoding: "utf8" },
+    );
+    const line = out.split("\n").find((l) => l.includes("git add"));
+    assert.ok(line, "no commit-the-lockfile step printed");
+    assert.match(line, /api\/pnpm-lock\.yaml/);
+    // web/ci-lock-site ships its lockfile, so it must not be listed.
+    assert.ok(!line.includes("ci-lock-site"), line);
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
+  });
 });
 
 describe("ports affect generated output, not just docs", () => {

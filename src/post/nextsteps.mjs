@@ -1,5 +1,7 @@
 /** The closing summary: what to run next, tailored to what was generated. */
 
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { colors as c } from "../cli/prompt.mjs";
 import { ROOT_USER } from "../generate/seed.mjs";
 
@@ -43,6 +45,18 @@ export function nextSteps(cfg, targetDir, { warnings = [], committed, sha }) {
     }
     if (has("mobile") && pending("mobile", "mobile")) {
       L.push(`  cd mobile && pnpm install && cd -`);
+    }
+
+    // Some workspaces ship without a lockfile (api and mobile outside `local`
+    // mode). The install above writes one, and CI installs with
+    // --frozen-lockfile, so it has to be committed before the first push.
+    const unlocked = workspaceDirs(cfg).filter(
+      (dir) => !existsSync(join(targetDir, dir, "pnpm-lock.yaml")),
+    );
+    if (unlocked.length) {
+      const paths = unlocked.map((dir) => `${dir}/pnpm-lock.yaml`).join(" ");
+      L.push(`  git add ${paths} && git commit -m "Add lockfiles"`);
+      L.push(`  ${c.dim("# CI installs with --frozen-lockfile and fails without them")}`);
     }
   }
 
@@ -93,4 +107,15 @@ export function nextSteps(cfg, targetDir, { warnings = [], committed, sha }) {
 
   L.push("");
   return L.join("\n");
+}
+
+/** Every generated workspace directory, relative to the project root. */
+function workspaceDirs(cfg) {
+  const dirs = [];
+  if (cfg.workspaces.includes("api")) dirs.push("api");
+  for (const w of ["site", "app", "admin"]) {
+    if (cfg.workspaces.includes(`web:${w}`)) dirs.push(`web/${cfg.slug}-${w}`);
+  }
+  if (cfg.workspaces.includes("mobile")) dirs.push("mobile");
+  return dirs;
 }

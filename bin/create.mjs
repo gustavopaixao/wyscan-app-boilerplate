@@ -333,20 +333,10 @@ async function main() {
   let committed = false;
   let sha;
 
-  if (cfg.gitInit !== false) {
-    const r = initRepo(targetDir, {
-      message: `Initial commit: ${cfg.displayName} monorepo scaffold`,
-    });
-    committed = r.ok;
-    sha = r.sha;
-    if (r.warning) warnings.push(r.warning);
-  }
-
-  if (values["gh-repo"]) {
-    const r = createGithubRepo(targetDir, { owner: cfg.owner, slug: cfg.slug });
-    if (r.warning) warnings.push(r.warning);
-  }
-
+  // Install runs before the first commit: it is what writes the lockfiles for
+  // workspaces that ship without one (api and mobile outside `local` mode), and
+  // CI installs with --frozen-lockfile, so a lockfile left untracked means the
+  // first push fails.
   if (cfg.runInstall && ecosystemMissing) {
     // Every `file:` link points at a directory that is not there, so pnpm can
     // only fail. Saying that beats shelling out and letting it dump a raw
@@ -363,6 +353,20 @@ async function main() {
       const missingPnpm = failures.some((f) => f.reason === "missing-pnpm");
       if (missingPnpm) warnings.push("pnpm is not on PATH");
     } else cfg.installed = true;
+  }
+
+  if (cfg.gitInit !== false) {
+    const r = initRepo(targetDir, {
+      message: `Initial commit: ${cfg.displayName} monorepo scaffold`,
+    });
+    committed = r.ok;
+    sha = r.sha;
+    if (r.warning) warnings.push(r.warning);
+  }
+
+  if (values["gh-repo"]) {
+    const r = createGithubRepo(targetDir, { owner: cfg.owner, slug: cfg.slug });
+    if (r.warning) warnings.push(r.warning);
   }
 
   console.log(

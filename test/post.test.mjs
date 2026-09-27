@@ -1,7 +1,7 @@
 import { test, describe } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, rmSync, readFileSync, existsSync } from "node:fs";
+import { mkdtempSync, rmSync, readFileSync, existsSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -51,6 +51,26 @@ describe("post-scaffold git", () => {
     );
     assert.ok(rule.startsWith(".gitignore:"), `should match the project gitignore, got: ${rule}`);
     rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
+  });
+  test("--install lands the lockfiles it writes in the initial commit", () => {
+    // A pnpm that only writes the lockfile: no network, and proof of ordering —
+    // install used to run after the commit, leaving api/pnpm-lock.yaml untracked
+    // and CI's --frozen-lockfile red on the first push.
+    const bin = mkdtempSync(join(tmpdir(), "wab-fakepnpm-"));
+    writeFileSync(join(bin, "pnpm"), "#!/bin/sh\necho 'lockfileVersion: 9.0' > pnpm-lock.yaml\n", {
+      mode: 0o755,
+    });
+    const dir = mkdtempSync(join(tmpdir(), "wab-post-"));
+    execFileSync("node", [CLI, "--slug", "lock-demo", "--workspaces", "api", "--yes", "--install", dir], {
+      encoding: "utf8",
+      env: { ...process.env, PATH: `${bin}:${process.env.PATH}` },
+    });
+
+    assert.match(git(dir, ["ls-files", "api/pnpm-lock.yaml"]), /api\/pnpm-lock\.yaml/);
+    assert.equal(git(dir, ["rev-list", "--count", "HEAD"]), "1");
+    assert.equal(git(dir, ["status", "--porcelain"]), "", "working tree should be clean");
+    rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
+    rmSync(bin, { recursive: true, force: true, maxRetries: 5 });
   });
 });
 
